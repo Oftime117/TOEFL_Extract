@@ -27,7 +27,7 @@ int main()
 
         /*while (std::getline(file, line))*/ // one line -> when '\n' is found
         {
-            getline(file, line);
+            getLine(file, line);
             Essay e(line);
             essayList.push_back(e);
         }
@@ -36,8 +36,17 @@ int main()
         cout << "list: " << essayList.size() << endl;
         for(Essay &e : essayList)
         {
-            cout << "Essay size: " << e.GetText().size() << endl;
-            cout << e;
+            cout << "Essay size: " << e.getText().size() << endl;
+            cout << e << endl;
+
+            unordered_map<string, int> dictionary;
+            int i = 0;
+
+            for(string word : e.getWordsList())
+            {
+                dictionary.insert(pair(word, i));
+                i++;
+            }
         }
     }
     else

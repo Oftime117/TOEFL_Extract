@@ -12,9 +12,9 @@ class Essay
         virtual ~Essay();
         Essay(const Essay& other);
         Essay& operator=(const Essay& other);
-        std::string GetText() { return m_text; }
-        std::vector<std::string> GetwordsList() { return m_wordsList; }
-        std::string Getlang() { return m_lang; }
+        std::string getText() { return m_text; }
+        std::vector<std::string> getWordsList() { return m_wordsList; }
+        std::string getLang() { return m_lang; }
         std::string getLevel() { return m_level;}
 
         friend std::ostream& operator<< (std::ostream& stream, const Essay& essay);
