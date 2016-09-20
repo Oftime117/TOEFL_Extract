@@ -9,9 +9,12 @@ Essay::Essay(string text)
 {
     m_text = text;
 
-    size_t found = m_text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
-    m_lang = m_text.substr(0, found);
-    string line_cut = m_text.substr(found+1); // line cut do not contain the first word
+    size_t found_firstSpace = m_text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
+    size_t found_firstComa = m_text.find_first_of(',', 0);
+    size_t found_firstClosingParenthesis = m_text.find_first_of(')', 0);
+    m_lang = m_text.substr(1, found_firstComa);
+    m_level = m_text.substr(found_firstComa, found_firstClosingParenthesis);
+    string line_cut = m_text.substr(found_firstSpace+1); // line cut do not contain the first word
     splitEssay(line_cut, ' ');
 
     //cout << GetText().size();
@@ -44,7 +47,7 @@ void Essay::splitEssay(const string &s, char delim)
     stringstream ss;
     ss.str(s);
     string item;
-    while (getline(ss, item, delim))
+    while (getLine(ss, item, delim))
     {
         m_wordsList.push_back(item);
     }
