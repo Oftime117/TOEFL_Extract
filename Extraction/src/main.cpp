@@ -20,6 +20,7 @@ int main()
 {
     ifstream file("data/train.txt", ios::in);
 
+
     if(file)
     {
         string line;
@@ -37,7 +38,10 @@ int main()
         for(Essay &e : essayList)
         {
             cout << "Essay size: " << e.GetText().size() << endl;
-            cout << e;
+            for(string &s : e.GetwordsList() )
+            {
+                cout << s << " ";
+            }
         }
     }
     else
