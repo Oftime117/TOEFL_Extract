@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 
+#include "essay.h"
+
 using namespace std;
 
 void split(const string &s, char delim, vector<string> &elems) {
@@ -21,22 +23,28 @@ int main()
     if(file)
     {
         string line;
-        vector<string> listOfWords;
+        vector<Essay> essayList = vector<Essay>();
 
-        while (std::getline(file, line)) // one line -> when '\n' is found
+        /*while (std::getline(file, line))*/ // one line -> when '\n' is found
         {
-            std::size_t found = line.find_first_of(' ', 10); // (xxx,low)
-            string line_cut = line.substr(found+1); // line cut do not contain the first word
-            split(line_cut, ' ', listOfWords);
+            getline(file, line);
+            Essay e(line);
+            essayList.push_back(e);
         }
-
         file.close();
 
+        cout << "list: " << essayList.size() << endl;
+        for(Essay &e : essayList)
+        {
+            cout << "Essay size: " << e.GetText().size() << endl;
+            cout << e;
+        }
     }
     else
     {
         cerr << "Impossible d'ouvrir le fichier !" << endl;
     }
+
 
     return 0;
 }

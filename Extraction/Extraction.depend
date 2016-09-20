@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1474357968 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\main.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<vector>
+
+1474363883 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\essay.cpp
+	"essay.h"
+	<iostream>
+	<fstream>
+	<sstream>
+
+1474362809 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\essay.h
+	<string>
+	<vector>
+
+1474363950 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\main.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<vector>
+	"essay.h"
+
