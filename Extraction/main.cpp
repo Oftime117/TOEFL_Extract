@@ -1,7 +1,18 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
+
+void split(const string &s, char delim, vector<string> &elems) {
+    stringstream ss;
+    ss.str(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
 
 int main()
 {
@@ -19,9 +30,7 @@ int main()
             split(line_cut, ' ', listOfWords);
         }
 
-        fichier.close();
-
-        std::cout << listOfWords << endl;
+        file.close();
 
     }
     else
@@ -32,11 +41,4 @@ int main()
     return 0;
 }
 
-void split(const string &s, char delim, vector<string> &elems) {
-    stringstream ss;
-    ss.str(s);
-    string item;
-    while (getline(ss, item, delim)) {
-        elems.push_back(item);
-    }
-}
+
