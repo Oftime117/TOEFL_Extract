@@ -30,8 +30,9 @@ int main()
         string line;
         //vector<Essay> essayList = vector<Essay>();
         unordered_map<string, int> dico;
-
-        while (std::getline(file, line)) // one line -> when '\n' is found
+        unordered_set<string> test;
+        test.size();
+        while (std::getline(file, line))
         {
             //getline(file, line);
 
@@ -40,7 +41,7 @@ int main()
         }
         file.close();
         cout << dico.size() << endl;
-//        for(auto &a : dico)
+//        for(auto &a: dico)
 //        {
 //            cout << a.first << " ";
 //        }

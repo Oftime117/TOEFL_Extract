@@ -9,12 +9,12 @@ Essay::Essay(string text, unordered_map<string, int>& dic)
 {
     m_text = text;
 
-    size_t found_firstSpace = m_text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
-    size_t found_firstComa = m_text.find_first_of(',', 0);
-    size_t found_firstClosingParenthesis = m_text.find_first_of(')', 0);
-    m_lang = m_text.substr(1, found_firstComa);
-    m_level = m_text.substr(found_firstComa, found_firstClosingParenthesis);
-    string line_cut = m_text.substr(found_firstSpace+1); // line cut do not contain the first word
+    size_t firstSpace = m_text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
+    size_t firstComa = m_text.find_first_of(',', 0);
+    size_t firstCP = m_text.find_first_of(')', 0);
+    m_lang = m_text.substr(1, firstComa-1);
+    m_level = m_text.substr(firstComa+1, firstCP-firstComa-1);
+    string line_cut = m_text.substr(firstSpace+1); // line cut do not contain the first word
     splitEssay(line_cut, ' ', dic);
 
     //cout << GetText().size();
