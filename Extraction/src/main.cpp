@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <unordered_set>
 
 #include "essay.h"
 
@@ -20,40 +21,30 @@ int main()
 {
     ifstream file("data/train.txt", ios::in);
 
-    if(file)
+    if(!file)
     {
-        string line;
-        vector<Essay> essayList = vector<Essay>();
-
-        /*while (std::getline(file, line))*/ // one line -> when '\n' is found
-        {
-            getLine(file, line);
-            Essay e(line);
-            essayList.push_back(e);
-        }
-        file.close();
-
-        cout << "list: " << essayList.size() << endl;
-        for(Essay &e : essayList)
-        {
-            cout << "Essay size: " << e.getText().size() << endl;
-            cout << e << endl;
-
-            unordered_map<string, int> dictionary;
-            int i = 0;
-
-            for(string word : e.getWordsList())
-            {
-                dictionary.insert(pair(word, i));
-                i++;
-            }
-        }
+       cerr << "Impossible d'ouvrir le fichier !" << endl;
     }
     else
     {
-        cerr << "Impossible d'ouvrir le fichier !" << endl;
-    }
+        string line;
+        //vector<Essay> essayList = vector<Essay>();
+        unordered_map<string, int> dico;
 
+        while (std::getline(file, line)) // one line -> when '\n' is found
+        {
+            //getline(file, line);
+
+            Essay e(line, dico);
+            //essayList.push_back(e);
+        }
+        file.close();
+        cout << dico.size() << endl;
+//        for(auto &a : dico)
+//        {
+//            cout << a.first << " ";
+//        }
+    }
 
     return 0;
 }

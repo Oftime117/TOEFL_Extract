@@ -3,12 +3,13 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 
 class Essay
 {
     public:
-        Essay(std::string text);
+        Essay(std::string text, std::unordered_map<std::string, int>& dic);
         virtual ~Essay();
         Essay(const Essay& other);
         Essay& operator=(const Essay& other);
@@ -25,8 +26,9 @@ class Essay
         std::vector<std::string> m_wordsList;
         std::string m_lang;
         std::string m_level;
+        //unordered_set& m_dictionnary;
 
-        void splitEssay(const std::string &s, char delim);
+        void splitEssay(const std::string &s, char delim, std::unordered_map<std::string, int>& dic);
 };
 
 #endif // ESSAY_H

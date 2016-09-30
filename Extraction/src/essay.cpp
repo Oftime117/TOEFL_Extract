@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Essay::Essay(string text)
+Essay::Essay(string text, unordered_map<string, int>& dic)
 {
     m_text = text;
 
@@ -15,7 +15,7 @@ Essay::Essay(string text)
     m_lang = m_text.substr(1, found_firstComa);
     m_level = m_text.substr(found_firstComa, found_firstClosingParenthesis);
     string line_cut = m_text.substr(found_firstSpace+1); // line cut do not contain the first word
-    splitEssay(line_cut, ' ');
+    splitEssay(line_cut, ' ', dic);
 
     //cout << GetText().size();
     //cout << *this << endl;
@@ -42,14 +42,15 @@ Essay& Essay::operator=(const Essay& rhs)
     return *this;
 }
 
-void Essay::splitEssay(const string &s, char delim)
+void Essay::splitEssay(const string &s, char delim, unordered_map<string, int>& dic)
 {
     stringstream ss;
     ss.str(s);
     string item;
-    while (getLine(ss, item, delim))
+    while (getline(ss, item, delim))
     {
-        m_wordsList.push_back(item);
+        //m_wordsList.push_back(item);
+        dic.emplace(item, dic.size());
     }
 }
 

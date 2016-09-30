@@ -5,20 +5,22 @@
 	<sstream>
 	<vector>
 
-1474363883 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\essay.cpp
+1474371071 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\essay.cpp
 	"essay.h"
 	<iostream>
 	<fstream>
 	<sstream>
 
-1474362809 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\essay.h
+1474369139 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\essay.h
 	<string>
 	<vector>
+	<unordered_map>
 
-1474363950 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\main.cpp
+1474371071 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\main.cpp
 	<iostream>
 	<fstream>
 	<sstream>
 	<vector>
+	<unordered_set>
 	"essay.h"
 
