@@ -50,7 +50,7 @@ void Essay::splitEssay(const string &s, char delim, map<string, int>& dic)
     while (getline(ss, item, delim))
     {
         //m_wordsList.push_back(item); //to lower
-        dic.emplace(item, dic.size());
+        dic.emplace("NB_W_" + item, dic.size());
     }
 }
 

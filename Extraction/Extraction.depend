@@ -24,3 +24,14 @@
 	<unordered_set>
 	"essay.h"
 
+1475242755 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\essay.cpp
+	"essay.h"
+	<iostream>
+	<fstream>
+	<sstream>
+
+1475230047 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\essay.h
+	<string>
+	<vector>
+	<map>
+
