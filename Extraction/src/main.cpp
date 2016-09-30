@@ -29,9 +29,9 @@ int main()
     {
         string line;
         //vector<Essay> essayList = vector<Essay>();
-        unordered_map<string, int> dico;
+        map<string, int> dico;
         unordered_set<string> test;
-        test.size();
+
         while (std::getline(file, line))
         {
             //getline(file, line);

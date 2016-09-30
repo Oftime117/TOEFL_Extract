@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Essay::Essay(string text, unordered_map<string, int>& dic)
+Essay::Essay(string text, map<string, int>& dic)
 {
     m_text = text;
 
@@ -42,14 +42,14 @@ Essay& Essay::operator=(const Essay& rhs)
     return *this;
 }
 
-void Essay::splitEssay(const string &s, char delim, unordered_map<string, int>& dic)
+void Essay::splitEssay(const string &s, char delim, map<string, int>& dic)
 {
     stringstream ss;
     ss.str(s);
     string item;
     while (getline(ss, item, delim))
     {
-        //m_wordsList.push_back(item);
+        //m_wordsList.push_back(item); //to lower
         dic.emplace(item, dic.size());
     }
 }
