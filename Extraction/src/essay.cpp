@@ -2,10 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 using namespace std;
 
-Essay::Essay(string text, map<string, int>& dic)
+Essay::Essay(string text, map<string, int>& dic, std::set<std::string> &langDico)
 {
     m_text = text;
 
@@ -17,9 +18,7 @@ Essay::Essay(string text, map<string, int>& dic)
     string line_cut = m_text.substr(firstSpace+1); // line cut do not contain the first word
     splitEssay(line_cut, ' ', dic);
 
-    //cout << GetText().size();
-    //cout << *this << endl;
-
+    langDico.emplace(m_lang);
 }
 
 Essay::~Essay()
@@ -27,12 +26,10 @@ Essay::~Essay()
     //dtor
 }
 
-Essay::Essay(const Essay& other)
+//Copy ctor
+Essay::Essay(const Essay& other) :m_text(other.m_text), m_wordsList(other.m_wordsList), m_lang(other.m_lang), m_level(other.m_level)
 {
-    m_text = other.m_text;
-    m_lang = other.m_lang;
-    m_level = other.m_level;
-    m_wordsList = other.m_wordsList;
+
 }
 
 Essay& Essay::operator=(const Essay& rhs)
@@ -49,8 +46,10 @@ void Essay::splitEssay(const string &s, char delim, map<string, int>& dic)
     string item;
     while (getline(ss, item, delim))
     {
-        //m_wordsList.push_back(item); //to lower
-        dic.emplace("NB_W_" + item, dic.size());
+        //to lower
+        string buff = item;
+        transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
+        dic.emplace("NB_W_" + buff, dic.size());
     }
 }
 

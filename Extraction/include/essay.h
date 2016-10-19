@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 
 class Essay
 {
     public:
-        Essay(std::string text, std::map<std::string, int>& dic);
+        Essay(std::string text, std::map<std::string, int>& dic, std::set<std::string> &langDico);
         virtual ~Essay();
         Essay(const Essay& other);
         Essay& operator=(const Essay& other);
