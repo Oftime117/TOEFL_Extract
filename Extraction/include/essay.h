@@ -15,7 +15,7 @@ class Essay
         Essay(const Essay& other);
         Essay& operator=(const Essay& other);
         std::string getText() { return m_text; }
-        std::vector<std::string> getWordsList() { return m_wordsList; }
+        std::vector<std::string>* getWordsListP() { return &m_wordsList; }
         std::string getLang() { return m_lang; }
         std::string getLevel() { return m_level;}
 
@@ -29,7 +29,7 @@ class Essay
         std::string m_level;
         //unordered_set& m_dictionnary;
 
-        void splitEssay(const std::string &s, char delim, std::map<std::string, int>& dic);
+        void splitEssay(char delim, std::map<std::string, int>& dic);
 };
 
 #endif // ESSAY_H

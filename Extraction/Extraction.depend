@@ -24,16 +24,18 @@
 	"essay.h"
 	"model.h"
 
-1475242755 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\essay.cpp
+1477035552 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\essay.cpp
 	"essay.h"
 	<iostream>
 	<fstream>
 	<sstream>
+	<algorithm>
 
-1475230047 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\essay.h
+1477148454 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\essay.h
 	<string>
 	<vector>
 	<map>
+	<set>
 
 1475590785 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\model.cpp
 	<iostream>
@@ -47,4 +49,26 @@
 	<map>
 	<set>
 	<vector>
+
+1477160261 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\main.cpp
+	<string>
+	<sstream>
+	"essay.h"
+	"model.h"
+
+1477154858 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\model.h
+	<algorithm>
+	<map>
+	<set>
+	<vector>
+	"essay.h"
+
+1477180293 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\model.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<map>
+	<cstdlib>
+	"model.h"
+	"essay.h"
 

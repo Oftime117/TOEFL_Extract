@@ -2,25 +2,58 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <cstdlib>
 
 #include "model.h"
 #include "essay.h"
 
 using namespace std;
 
-Model::Model(string corpusPath, string featuresPath, string langMatrixPath)
-    : m_langSet(), m_featuresDico(), m_langMatrix()
-{
-    ifstream featuresFile(featuresPath, ios::in);
-    ifstream langMatrixFile(langMatrixPath, ios::in);
+// Methodes hors classe
 
-    if(!featuresFile || !langMatrixFile)
-    {
-        // Création du modèle
-        initModel(corpusPath);
+float avg(float tab[], size_t taille){
+    float somme = 0.f;
+    for(size_t i=0; i<taille; i++){
+        somme += tab[i];
     }
-    saveFeaturesDictionnary(featuresPath);
-    saveLangMatrix(langMatrixPath);
+    return somme/(float)taille;
+}
+
+int getIndiceMax(const int tab[], size_t taille){
+    int max = 0;
+    for(size_t i=1; i<taille; i++){
+        if(tab[i]>tab[max]) max = i;
+    }
+    return max;
+}
+
+int getLangueIndice(const vector<string> langues, string langue){
+    for(size_t i=0; i<langues.size(); i++){
+        if(langues[i] == langue) return i;
+    }
+    return -1;
+}
+
+// Methodes de Classse Model
+
+Model::Model(string corpusPath, string featuresOut, string langMatrixOut)
+    : trainPath(corpusPath), featuresPath(featuresOut), langMatrixPath(langMatrixOut),
+    m_languages(), m_featuresDico(), m_langMatrix(), m_corpusList()
+{
+    initModel();
+}
+
+Model::Model(string featuresIn, string langMatrixIn):featuresPath(featuresIn), langMatrixPath(langMatrixIn), m_languages(), m_featuresDico(), m_langMatrix(){
+    loadFeaturesDictionnary();
+    loadLangDictionnary();
+}
+
+Model::Model(vector<Essay> &corpusList):m_corpusList(corpusList){
+
+    cout<<"m_corpusList taille ==== "<<m_corpusList.size()<<endl;
+
+    // Initialisation de la matrice avec des 0
+    m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
 }
 
 Model::~Model()
@@ -28,9 +61,161 @@ Model::~Model()
     //dtor
 }
 
-void Model::initModel(string corpusPath)
+//private
+void Model::train(vector<Essay> &corpus){
+    size_t i=0, x=25;
+    float forceCorrection = 32;
+
+    while(i<x){ //TODO Définir condition d'arrêt x
+
+        int nbErrors = 0;
+
+        //evaluer chaque essay de train
+        // shuffle trainCorpus
+        random_shuffle(corpus.begin(), corpus.end());
+        for(size_t j=0; j<corpus.size(); j++){
+            if( ! evaluer(corpus[j], forceCorrection)){
+                nbErrors++;
+            }
+        }
+
+        float err = ((float)nbErrors / (float)corpus.size()) * (float)100;
+        cout << "Step " << i << " - Erreurs : " << nbErrors << " / " << corpus.size() << " (" << err << " %)\n";
+
+        forceCorrection *= 0.9;
+        i++;
+    }
+}
+
+//public
+void Model::trainAll(){
+    train(m_corpusList);
+}
+
+//public
+float Model::trainByDiv(size_t nbDiv){
+    vector<Essay> trainCorpus;
+    vector<Essay> testCorpus;
+
+    float err[nbDiv];
+    for(size_t numTrain=0; numTrain<nbDiv; numTrain++){
+
+        cout<<"=== Train "<<numTrain+1<<" / "<<nbDiv<<" ===\n";
+        // reset avec des 0 partout
+        m_langMatrix.clear();
+        m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
+
+        trainCorpus.clear();
+        testCorpus.clear();
+
+        //prendre un corpus de textes servant a l'évaluation
+        for(size_t i=0; i<m_corpusList.size(); i++){
+
+            if(i%nbDiv == numTrain){
+                testCorpus.push_back(m_corpusList[i]);
+            }
+            else{
+                trainCorpus.push_back(m_corpusList[i]);
+            }
+        }
+
+        //entrainer le trainCorpus
+        train(trainCorpus);
+        //estimer le taux d'erreur sur ce corpus
+        int nbErrors = 0;
+        // shuffle testCorpus
+        random_shuffle(testCorpus.begin(), testCorpus.end());
+        for(size_t j=0; j<testCorpus.size(); j++){
+            if( ! evaluer(testCorpus[j])){
+                nbErrors++;
+            }
+        }
+        err[numTrain] = ((float)nbErrors / (float)testCorpus.size()) * (float)100;
+        //Afficher pourcentage d'erreurs
+        cout << "Erreurs : " << nbErrors << " / " << testCorpus.size() << " (" << err[numTrain] << " %)\n\n";
+    }
+
+    // reset avec des 0 partout
+    m_langMatrix.clear();
+    m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
+
+    float errMoy = avg(err, nbDiv);
+    cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
+
+
+    // Sauvegarder les résultats de chaque train dans un fichier
+    size_t pos = featuresPath.find(".");
+    string path = featuresPath.substr(0, pos) + "_train.txt";
+    cout << path << endl;
+    cout << ">> Sauvegarde des resultats de " << nbDiv << " entrainements\n\n";
+
+    ofstream cFile(path, ios::out);
+    if(!cFile){
+        //throw une exception
+        return -1;
+    }
+    for(size_t i=0; i<nbDiv; i++){
+        cFile << "Train " << i << " = " << err[i] << " %\n";
+    }
+    cFile << "Moyenne = " << errMoy;
+    cFile.close();
+
+    return errMoy;
+}
+
+//retourne l'indice de la langue
+bool Model::evaluer(Essay &e, float forceCorrection){
+    vector<int> found;
+
+    vector<string>* listP; listP = e.getWordsListP();
+    for(size_t i=0; i<listP->size(); i++){
+        string word = (*listP)[i];
+        int ind = m_featuresDico["NB_W_" + word];
+        if(ind >= 0) found.push_back(ind);
+    }
+
+    //calculer le score pour chaque langue
+    int score[m_languages.size()];
+    for(size_t i=0; i<found.size(); i++){
+        for(size_t j=0; j<m_languages.size(); j++){
+            score[j] += m_langMatrix[found[i]][j];
+        }
+    }
+
+    int lang = getIndiceMax(score, m_languages.size());
+    if(m_languages[lang] != e.getLang()){
+        //avoir la numero de la langue du texte
+        int numLangText = getLangueIndice(m_languages, e.getLang());
+        if(forceCorrection > 0){
+            corrigerMatrice(forceCorrection, lang, numLangText, found);
+        }
+        return false;
+    }
+    return true;
+}
+
+void Model::corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, vector<int> &foundFeatures){
+    for(size_t i=0; i<foundFeatures.size(); i++){
+        m_langMatrix[foundFeatures[i]][langMoins] -= forceCorrection;
+        m_langMatrix[foundFeatures[i]][langPlus] += forceCorrection;
+    }
+}
+
+void Model::save(){
+    saveFeaturesDictionnary();
+    saveLangMatrix();
+}
+
+void Model::setOutFiles(string featuresOut, string langMatrixOut){
+    featuresPath=featuresOut;
+    langMatrixPath=langMatrixOut;
+}
+
+//private
+
+void Model::initModel()
 {
-    ifstream corpusFile(corpusPath, ios::in);
+    ifstream corpusFile(trainPath, ios::in);
     if(!corpusFile)
     {
        cerr << "Impossible d'ouvrir le fichier !" << endl;
@@ -38,29 +223,29 @@ void Model::initModel(string corpusPath)
     else
     {
         string line;
-        cout << corpusPath << endl;
+        cout << trainPath << endl;
         cout << ">> Lecture du fichier" << endl << endl;
 
         // Lecture du corpus et enregistrement des caractéristiques (juste les mots for now))
+        set<string> langSet;
         while (getline(corpusFile, line))
         {
-            Essay(line, m_featuresDico, m_langSet);
+            Essay e(line, m_featuresDico, langSet);
+            m_corpusList.push_back(e);
         }
         corpusFile.close();
-
-        cout << caracteristiquePath << endl;
-        cout << ">> Copie de " << m_featuresDico.size() << " caracteristiques" << endl << endl;
-        cout << modelePath << endl;
-        cout << ">> Initialisation d'une matrice [ " << m_featuresDico.size() << " * " << m_langSet.size() << " ]" << endl << endl;
+        langSetToVector(langSet);
 
         // Initialisation de la matrice avec des 0
-        m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_langSet.size()));
+        m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
     }
+    corpusFile.close();
 }
 
-void Model::saveFeaturesDictionnary(string featuresPath)
+void Model::saveFeaturesDictionnary()
 {
-    cout << ">> Sauvegarde des caracteristiques\n";
+    cout << featuresPath << endl;
+    cout << ">> Sauvegarde de " << m_featuresDico.size() << " caracteristiques\n\n";
 
     ofstream cFile(featuresPath, ios::out);
 
@@ -69,7 +254,7 @@ void Model::saveFeaturesDictionnary(string featuresPath)
         //throw une exception
         return;
     }
-    cFile << "NB_FEATURES: " << m_featuresDico.size() << endl;
+    cFile << m_featuresDico.size() << endl;
     for(auto &a: m_featuresDico)
     {
         //ecrire chaque mot unique sous la forme d'une caractéristique
@@ -78,9 +263,11 @@ void Model::saveFeaturesDictionnary(string featuresPath)
     cFile.close();
 }
 
-void Model::saveLangMatrix(string langMatrixPath)
+void Model::saveLangMatrix()
 {
-    cout << ">> Sauvegarde de la matrice des langues\n";
+    cout << langMatrixPath << endl;
+    cout << ">> Sauvegarde de la matrice des langues [ " << m_featuresDico.size() << " * " << m_languages.size() << " ]\n\n";
+
     ofstream mFile(langMatrixPath, ios::out);
 
     if(!mFile)
@@ -89,38 +276,97 @@ void Model::saveLangMatrix(string langMatrixPath)
         return;
     }
 
+    mFile << m_languages.size() << "\t" << m_langMatrix.size() << endl;
+
     // Ajout des headers des langues
-    set<string>::iterator langSet_it = m_langSet.begin();
-    while(langSet_it != m_langSet.end())
+    for(string s : m_languages)
     {
-        mFile << *langSet_it;
-        langSet_it++;
-        if(langSet_it != m_langSet.end())
+        mFile << s;
+        if(s != m_languages.back())
             mFile << "\t";
     }
     mFile << endl;
 
-    for(size_t i = 0; i < m_featuresDico.size(); ++i)
+    for(size_t i = 0; i < m_langMatrix.size(); ++i)
     {
-        for(size_t j = 0; j < m_langSet.size(); ++j)
+        for(size_t j = 0; j < m_langMatrix[0].size(); ++j)
         {
             mFile << m_langMatrix[i][j];
-            if(j < m_langSet.size()-1)
+            if(j < m_langMatrix[i].size()-1)
                 mFile << "\t";
         }
-        if(i < m_featuresDico.size() - 1) mFile << endl;
+        if(i < m_langMatrix.size() - 1) mFile << endl;
     }
     mFile.close();
 }
 
-void Model::loadFeaturesDictionnary(string featuresPath)
+void Model::loadFeaturesDictionnary()
 {
-   istream cFile(featuresPath, ios::in)
-   if(!cFile)
-   {
-       //throw exception
-       return;
-   }
+    cout << ">> Extraction des caracteristiques\n";
 
-   //TODO
+    ifstream cFile(featuresPath, ios::in);
+
+    if(!cFile)
+    {
+        //throw une exception
+        return;
+    }
+    size_t length;
+    cFile >> length;
+
+    map<string, int> featuresDico;
+    size_t i = 0;
+    string feature;
+    while(cFile >> feature)
+    {
+        featuresDico.emplace(feature, i);
+        i++;
+    }
+    cFile.close();
+
+    cout << "(" << length << ") - (" << featuresDico.size() << ")\n\n";
+    m_featuresDico = featuresDico;
+}
+
+void Model::loadLangDictionnary(){
+    cout << ">> Extraction du modele\n";
+    ifstream mFile(langMatrixPath, ios::in);
+
+    if(!mFile){
+        //throw une exception
+        return;
+    }
+    size_t nbLangues, nbLignes;
+    mFile >> nbLangues >> nbLignes;
+
+    set<string> langSet;
+    string lang;
+    // Extraction de la liste des langues
+    size_t l=0;
+    for(l=0; l<nbLangues; l++){
+        mFile >> lang;
+        langSet.emplace(lang);
+    }
+    langSetToVector(langSet);
+    cout << "(" << nbLangues << " langues) * (" << nbLignes << " lignes)\n\n";
+
+    string ligne, score;
+    vector<vector<float>> langMatrix(nbLignes);
+    for(size_t i=0; i<nbLignes; i++){
+        for(l=0; l<nbLangues; l++){
+            mFile >> score;
+            langMatrix[i].push_back(atof(score.c_str()));
+        }
+    }
+    mFile.close();
+
+    m_langMatrix = langMatrix;
+}
+
+void Model::langSetToVector(set<string> langSet){
+    //transformer le set en un vector (plus facile a parcourir)
+    m_languages.clear();
+    for(string s : langSet){
+        m_languages.push_back(s);
+    }
 }

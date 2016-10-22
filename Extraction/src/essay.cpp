@@ -8,16 +8,14 @@ using namespace std;
 
 Essay::Essay(string text, map<string, int>& dic, std::set<std::string> &langDico)
 {
-    m_text = text;
+    size_t firstSpace = text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
+    size_t firstComa = text.find_first_of(',', 0);
+    size_t firstCP = text.find_first_of(')', 0);
+    m_lang = text.substr(1, firstComa-1);
+    m_level = text.substr(firstComa+1, firstCP-firstComa-1);
+    m_text = text.substr(firstSpace+1); //texte sans langue et niveau
 
-    size_t firstSpace = m_text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
-    size_t firstComa = m_text.find_first_of(',', 0);
-    size_t firstCP = m_text.find_first_of(')', 0);
-    m_lang = m_text.substr(1, firstComa-1);
-    m_level = m_text.substr(firstComa+1, firstCP-firstComa-1);
-    string line_cut = m_text.substr(firstSpace+1); // line cut do not contain the first word
-    splitEssay(line_cut, ' ', dic);
-
+    splitEssay(' ', dic);
     langDico.emplace(m_lang);
 }
 
@@ -39,18 +37,21 @@ Essay& Essay::operator=(const Essay& rhs)
     return *this;
 }
 
-void Essay::splitEssay(const string &s, char delim, map<string, int>& dic)
+void Essay::splitEssay(char delim, map<string, int>& dic)
 {
     stringstream ss;
-    ss.str(s);
+    ss.str(m_text);
     string item;
+    vector<string> wordsList;
     while (getline(ss, item, delim))
     {
         //to lower
         string buff = item;
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
         dic.emplace("NB_W_" + buff, dic.size());
+        wordsList.push_back(buff);
     }
+    m_wordsList = wordsList;
 }
 
 std::ostream& operator<< (std::ostream& stream, const Essay& essay)
