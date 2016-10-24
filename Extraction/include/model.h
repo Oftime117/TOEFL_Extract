@@ -18,7 +18,7 @@ public:
     void trainAll();
     float trainByDiv(size_t nbDiv=10);
     bool evaluer(Essay &e, float forceCorrection=0);
-    void corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, std::vector<int> &foundFeatures);
+    void corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, std::set<int> &foundFeatures);
     void save();
     void setOutFiles(std::string featuresIn, std::string langMatrixIn);
     Essay& getFirstEssayP() { return m_corpusList[0]; }
