@@ -64,11 +64,11 @@ Model::~Model()
 //private
 void Model::train(vector<Essay> &corpus){
     size_t i=0, x=25;
-    float forceCorrection = 32;
+    float forceCorrection = 1;
+    int nbErrors = 1;
 
-    while(i<x){ //TODO Définir condition d'arrêt x
-
-        int nbErrors = 0;
+    while(i<x && nbErrors>0){ // Condition d'arrêt : x = nombre de tours max OU zero erreur au tour précédent
+        nbErrors = 0;
 
         //evaluer chaque essay de train
         // shuffle trainCorpus
@@ -149,7 +149,7 @@ float Model::trainByDiv(size_t nbDiv){
     cout << path << endl;
     cout << ">> Sauvegarde des resultats de " << nbDiv << " entrainements\n\n";
 
-    ofstream cFile(path, ios::out);
+    ofstream cFile(path, ios::out | ios::app);
     if(!cFile){
         //throw une exception
         return -1;
@@ -157,7 +157,7 @@ float Model::trainByDiv(size_t nbDiv){
     for(size_t i=0; i<nbDiv; i++){
         cFile << "Train " << i << " = " << err[i] << " %\n";
     }
-    cFile << "Moyenne = " << errMoy;
+    cFile << "Moyenne = " << errMoy << endl << endl;
     cFile.close();
 
     return errMoy;
@@ -165,20 +165,23 @@ float Model::trainByDiv(size_t nbDiv){
 
 //retourne l'indice de la langue
 bool Model::evaluer(Essay &e, float forceCorrection){
-    vector<int> found;
+    set<int> found;
 
     vector<string>* listP; listP = e.getWordsListP();
     for(size_t i=0; i<listP->size(); i++){
         string word = (*listP)[i];
         int ind = m_featuresDico["NB_W_" + word];
-        if(ind >= 0) found.push_back(ind);
+        if(ind >= 0) found.emplace(ind);
     }
 
     //calculer le score pour chaque langue
     int score[m_languages.size()];
-    for(size_t i=0; i<found.size(); i++){
+    for(size_t j=0; j<m_languages.size(); j++){
+        score[j] = 0;
+    }
+    for(int i : found){
         for(size_t j=0; j<m_languages.size(); j++){
-            score[j] += m_langMatrix[found[i]][j];
+            score[j] += m_langMatrix[i][j];
         }
     }
 
@@ -194,10 +197,10 @@ bool Model::evaluer(Essay &e, float forceCorrection){
     return true;
 }
 
-void Model::corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, vector<int> &foundFeatures){
-    for(size_t i=0; i<foundFeatures.size(); i++){
-        m_langMatrix[foundFeatures[i]][langMoins] -= forceCorrection;
-        m_langMatrix[foundFeatures[i]][langPlus] += forceCorrection;
+void Model::corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, set<int> &foundFeatures){
+    for(int ff : foundFeatures){
+        m_langMatrix[ff][langMoins] -= forceCorrection;
+        m_langMatrix[ff][langPlus] += forceCorrection;
     }
 }
 

@@ -45,7 +45,6 @@ void Essay::splitEssay(char delim, map<string, int>& dic)
     vector<string> wordsList;
     while (getline(ss, item, delim))
     {
-        //to lower
         string buff = item;
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
         dic.emplace("NB_W_" + buff, dic.size());
