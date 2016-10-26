@@ -14,7 +14,8 @@ class Essay
         virtual ~Essay();
         Essay(const Essay& other);
         Essay& operator=(const Essay& other);
-        std::string getText() { return m_text; }
+        float getSizeWord() { return m_sizeWord; }
+        std::string* getText() { return &m_text; }
         std::vector<std::string>* getWordsListP() { return &m_wordsList; }
         std::string getLang() { return m_lang; }
         std::string getLevel() { return m_level;}
@@ -24,6 +25,7 @@ class Essay
 
     private:
         std::string m_text;
+        float m_sizeWord;
         std::vector<std::string> m_wordsList;
         std::string m_lang;
         std::string m_level;

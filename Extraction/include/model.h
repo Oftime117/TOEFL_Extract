@@ -29,6 +29,7 @@ private:
     // Methods
     void initModel();
     void train(std::vector<Essay> &corpus);
+    void addIfFound(std::set<int> &found, const std::string &feature);
     void saveFeaturesDictionnary();
     void saveLangMatrix();
     void loadFeaturesDictionnary();
@@ -43,6 +44,14 @@ private:
     std::map<std::string, int> m_featuresDico;
     std::vector<std::vector<float>> m_langMatrix;
     std::vector<Essay> m_corpusList;
+
+    // const
+    static int SZ_CORPUS_INF;
+    static int SZ_CORPUS_SUP;
+    static int NB_LETTER_INF;
+    static int NB_LETTER_SUP;
+    static float SZ_WORD_INF;
+    static float SZ_WORD_SUP;
 };
 
 #endif // MODEL_H

@@ -9,6 +9,15 @@
 
 using namespace std;
 
+// Constantes
+int Model::SZ_CORPUS_INF = 326;
+int Model::SZ_CORPUS_SUP = 372;
+int Model::NB_LETTER_INF = 1660;
+int Model::NB_LETTER_SUP = 1936;
+float Model::SZ_WORD_INF = 5.08;
+float Model::SZ_WORD_SUP = 5.23;
+
+
 // Methodes hors classe
 
 float avg(float tab[], size_t taille){
@@ -157,7 +166,7 @@ float Model::trainByDiv(size_t nbDiv){
     for(size_t i=0; i<nbDiv; i++){
         cFile << "Train " << i << " = " << err[i] << " %\n";
     }
-    cFile << "Moyenne = " << errMoy << endl << endl;
+    cFile << "Moyenne = " << errMoy << endl;
     cFile.close();
 
     return errMoy;
@@ -168,11 +177,34 @@ bool Model::evaluer(Essay &e, float forceCorrection){
     set<int> found;
 
     vector<string>* listP; listP = e.getWordsListP();
-    for(size_t i=0; i<listP->size(); i++){
-        string word = (*listP)[i];
-        int ind = m_featuresDico["NB_W_" + word];
-        if(ind >= 0) found.emplace(ind);
+    // Caractéristiques personnalisées
+    int corpusSize = listP->size();
+    if(corpusSize <= SZ_CORPUS_INF)
+        addIfFound(found, "SZ_CORPUS_INF");
+    else if(corpusSize >= SZ_CORPUS_SUP)
+        addIfFound(found, "SZ_CORPUS_SUP");
+
+    if(e.getText()->size() <= NB_LETTER_INF)
+        addIfFound(found, "NB_LETTER_INF");
+    else if(e.getText()->size() >= NB_LETTER_SUP)
+        addIfFound(found, "NB_LETTER_SUP");
+
+    if(e.getSizeWord() <= NB_LETTER_INF)
+        addIfFound(found, "SZ_WORD_INF");
+    else if(e.getSizeWord() >= NB_LETTER_SUP)
+        addIfFound(found, "SZ_WORD_SUP");
+
+    //Caractéristiques sur les mots
+    for(size_t i=0; i<corpusSize; i++){
+        addIfFound(found, "NB_W_" + (*listP)[i]);
     }
+
+    //Caractéristiques sur les paires de mots
+    for(size_t i=0; i<corpusSize-1; i++){
+        addIfFound(found, "NB_2W_" + (*listP)[i] + "_" + (*listP)[i+1]);
+    }
+
+
 
     //calculer le score pour chaque langue
     int score[m_languages.size()];
@@ -195,6 +227,11 @@ bool Model::evaluer(Essay &e, float forceCorrection){
         return false;
     }
     return true;
+}
+
+void Model::addIfFound(set<int> &found, const string &feature){
+    map<string, int>::iterator it = m_featuresDico.find(feature);
+    if(it!=m_featuresDico.end()) found.emplace(it->second);
 }
 
 void Model::corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, set<int> &foundFeatures){
@@ -231,13 +268,38 @@ void Model::initModel()
 
         // Lecture du corpus et enregistrement des caractéristiques (juste les mots for now))
         set<string> langSet;
+        map<string, int> tempFeatures;
         while (getline(corpusFile, line))
         {
-            Essay e(line, m_featuresDico, langSet);
+            Essay e(line, tempFeatures, langSet);
             m_corpusList.push_back(e);
         }
         corpusFile.close();
         langSetToVector(langSet);
+
+        m_featuresDico = map<string, int>();
+        for(const auto& t: tempFeatures){
+            m_featuresDico.emplace(t.first, t.second);
+        }
+/*
+        //paire de mots
+        for(const auto& t1 : tempFeatures){
+            string s1 = t1.first.substr(5);
+            for(const auto& t2 : tempFeatures){
+                string s2 = "NB_2W_" + s1 + "_" + t2.first.substr(5);
+                m_featuresDico.emplace(s2, m_featuresDico.size());
+            }
+        }
+*/
+
+        //ajout des caractéristiques personnalisées
+        m_featuresDico.emplace("SZ_CORPUS_INF", m_featuresDico.size());
+        m_featuresDico.emplace("SZ_CORPUS_SUP", m_featuresDico.size());
+        m_featuresDico.emplace("NB_LETTER_INF", m_featuresDico.size());
+        m_featuresDico.emplace("NB_LETTER_SUP", m_featuresDico.size());
+        m_featuresDico.emplace("SZ_WORD_INF", m_featuresDico.size());
+        m_featuresDico.emplace("NB_WORD_SUP", m_featuresDico.size());
+
 
         // Initialisation de la matrice avec des 0
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
