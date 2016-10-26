@@ -13,6 +13,7 @@ line1=`cut -d$'\n' -f 1 $filename`
 line2=`cut -d$'\n' -f 2 $filename`
 line3=`cut -d$'\n' -f 3 $filename`
 echo "$line1 $line2 $line3" > temp.txt
+echo "$line1 $line2 $line3" > list3.txt
 
 while read newline ;
 do
@@ -29,11 +30,14 @@ do
 		echo "" >> $outfile
 		
 		> temp.txt
+		echo "" >> list3.txt
 		
+		sed -n "$numline p" listLanguage >> list3.txt # ajout de la langue qui correspond au groupe
 		read line1 $filename
 		read line2 $filename
 		read line3 $filename
 	fi
 
 	echo "$line1 $line2 $line3" >> temp.txt
+	echo "$line1 $line2 $line3" >> list3.txt
 done < ${filename}
