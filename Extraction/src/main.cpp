@@ -14,7 +14,7 @@ int main()
 {
     //Entraînement en partant de rien
 
-    Model modele("data/train.txt", "data/features.txt", "data/model.txt");
+    Model modele("/home/tristan/Documents/Polytech/ET5/EIT/data/train.txt", "/home/tristan/Documents/Polytech/ET5/EIT/data/features.txt", "/home/tristan/Documents/Polytech/ET5/EIT/data/model.txt");
     modele.trainByDiv(10);
 
 /*

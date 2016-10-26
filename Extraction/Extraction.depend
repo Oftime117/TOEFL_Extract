@@ -72,3 +72,38 @@
 	"model.h"
 	"essay.h"
 
+1477336490 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/essay.cpp
+	"essay.h"
+	<iostream>
+	<fstream>
+	<sstream>
+	<algorithm>
+
+1477225531 /media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/include/essay.h
+	<string>
+	<vector>
+	<map>
+	<set>
+
+1477225531 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/main.cpp
+	<string>
+	<sstream>
+	"essay.h"
+	"model.h"
+
+1477336490 /media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/include/model.h
+	<algorithm>
+	<map>
+	<set>
+	<vector>
+	"essay.h"
+
+1477336490 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/model.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<map>
+	<cstdlib>
+	"model.h"
+	"essay.h"
+
