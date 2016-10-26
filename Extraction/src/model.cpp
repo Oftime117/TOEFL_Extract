@@ -63,12 +63,13 @@ Model::~Model()
 
 //private
 void Model::train(vector<Essay> &corpus){
-    size_t i=0, x=25;
+    size_t i=0, x=10;
     float forceCorrection = 1;
     int nbErrors = 1;
 
     while(i<x && nbErrors>0){ // Condition d'arrêt : x = nombre de tours max OU zero erreur au tour précédent
         nbErrors = 0;
+        forceCorrection = (float)1/(float)(i+1);
 
         //evaluer chaque essay de train
         // shuffle trainCorpus
@@ -82,7 +83,6 @@ void Model::train(vector<Essay> &corpus){
         float err = ((float)nbErrors / (float)corpus.size()) * (float)100;
         cout << "Step " << i << " - Erreurs : " << nbErrors << " / " << corpus.size() << " (" << err << " %)\n";
 
-        forceCorrection *= 0.9;
         i++;
     }
 }
