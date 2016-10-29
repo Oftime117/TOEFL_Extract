@@ -25,7 +25,7 @@ Essay::~Essay()
 }
 
 //Copy ctor
-Essay::Essay(const Essay& other) :m_text(other.m_text), m_wordsList(other.m_wordsList), m_lang(other.m_lang), m_level(other.m_level)
+Essay::Essay(const Essay& other) :m_text(other.m_text), m_sizeWord(other.m_sizeWord), m_wordsList(other.m_wordsList), m_lang(other.m_lang), m_level(other.m_level)
 {
 
 }
@@ -43,14 +43,17 @@ void Essay::splitEssay(char delim, map<string, int>& dic)
     ss.str(m_text);
     string item;
     vector<string> wordsList;
+    int somme = 0;
     while (getline(ss, item, delim))
     {
         string buff = item;
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
         dic.emplace("NB_W_" + buff, dic.size());
         wordsList.push_back(buff);
+        somme += buff.size();
     }
     m_wordsList = wordsList;
+    m_sizeWord = somme/(float)m_wordsList.size();
 }
 
 std::ostream& operator<< (std::ostream& stream, const Essay& essay)
