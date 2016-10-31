@@ -25,7 +25,7 @@ do
 		sed -n "$numline p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
 		let "numline = numline + 1"
 		
-		read newline $filename
+		read newline < ${filename}
 	fi
 	
 	echo "$newline" >> $outfile
@@ -37,3 +37,4 @@ cat $outfile | tr "\n" " " | tr "(" "\n" > $outfile
 sed -i '1d' $outfile
 sed -i 's/^/(/' $outfile
 
+echo "Fin de la transformation de la liste en ligne"

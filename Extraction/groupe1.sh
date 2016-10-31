@@ -13,7 +13,7 @@ grep "(" $datatrainLoc | cut -d " " -f -1 > listLanguage
 
 #initialisation
 newline=`cut -d$'\n' -f 1 $filename`
-echo "$newline" > temp.txt
+echo "$newline" > temp1.txt
 
 while read newline ;
 do
@@ -22,19 +22,21 @@ do
 		#traitement à la vollée
 		sed -n "$numline p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
 		let "numline = numline + 1"
-		./supprPonctu.sh temp.txt tempNoPonct.txt
-		sort tempNoPonct.txt | uniq -c | sort -bnr >> $outfile
+		./supprPonctu.sh temp1.txt temp1NoPonct.txt
+		sort temp1NoPonct.txt | uniq -c | sort -bnr >> $outfile
 		echo "" >> $outfile
 		
-		> temp.txt
+		> temp1.txt
 		
-		read newline $filename
+		read newline < ${filename}
 	fi
 
-	echo "$newline" >> temp.txt
+	echo "$newline" >> temp1.txt
 done < ${filename}
 
-rm temp.txt
-rm tempNoPonct.txt
+rm temp1.txt
+rm temp1NoPonct.txt
+
+echo "Fin du calcul des occurences par texte pour un tag seul"
 
 
