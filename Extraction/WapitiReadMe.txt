@@ -15,9 +15,19 @@ Extraire les caractéristiques de wapiti avec les mots:
 Extraire des listes de deux ou trois mots consécutifs:
 1)lancer groupe2.sh et groupe3.sh pour obtenir des listes groupées par deux ou trois mots: ./groupe2.sh <liste de mots ou caractériques> <nomfichier sortie>
 
-Enlever les signes de ponctuation dans une liste de mots (',' '\'' ':' '`' '.'):
+Enlever les signes de ponctuation dans une liste de mots (',' '\'' ':' '`' '.' '(' ')'):
 1)lancer supprPonctu.sh: ./suppPonctu.sh <entree> <sortie>
 
 Convertir un text en une liste de mots (marche avec train):
 1)lancer textToList.sh: ./textToList.sh <entree> <sortie>
 ex: ./textToList.sh data/tain.txt trainwap
+
+Créer un fichier qui calcule des occurences puis le tranformer en fichier parssable facilement
+1)lancer d'abord extract_l.sh pour obtenir la liste des tags
+2)lancer un des fichier groupe(1/2/3).sh pour recevoir le fichier des occurences
+3)lancer listLanguagedToLine.sh <fichieSortieGroupe(1/2/3)> <sortie>
+ex: ./extract_l.sh data/tain.txt trainwap
+./groupe1.sh trainwap occurenceUnMot.txt
+./listLanguagedToLine.sh occurenceUnMot.txt occurenceUnMotLine.txt
+
+

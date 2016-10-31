@@ -1,8 +1,10 @@
 #!/bin/bash
 #Florian TALOUR & Tristan LE NAIR
+
 datatrainLoc=data/train.txt
 filename=$1 #$1 représente train.txt
 outfile=$2 #$2 est le nom du fichier de sortie
+
 
 > $outfile # creation du fichier de sortie
 
@@ -10,19 +12,11 @@ let "numline = 1"
 grep "(" $datatrainLoc | cut -d " " -f -1 > listLanguage
 
 #initialisation
-line1=`cut -d$'\n' -f 1 $filename`
-line2=`cut -d$'\n' -f 2 $filename`
-line3=`cut -d$'\n' -f 3 $filename`
-echo "$line1 $line2 $line3" > temp.txt
-sed -n "$numline p" listLanguage > list3.txt # ajout de la langue qui correspond au groupe
-let "numline = numline + 1"
-echo "$line1 $line2 $line3" > list3.txt
+newline=`cut -d$'\n' -f 1 $filename`
+echo "$newline" > temp.txt
 
 while read newline ;
 do
-	line1=$line2
-	line2=$line3
-	line3=$newline
 
 	if [ -z "$newline" ]; then #on passe au texte suivant
 		#traitement à la vollée
@@ -33,17 +27,14 @@ do
 		echo "" >> $outfile
 		
 		> temp.txt
-		echo "" >> list3.txt
 		
-		sed -n "$numline p" listLanguage >> list3.txt # ajout de la langue qui correspond au groupe
-		read line1 $filename
-		read line2 $filename
-		read line3 $filename
+		read newline $filename
 	fi
 
-	echo "$line1 $line2 $line3" >> temp.txt
-	echo "$line1 $line2 $line3" >> list3.txt
+	echo "$newline" >> temp.txt
 done < ${filename}
 
 rm temp.txt
 rm tempNoPonct.txt
+
+

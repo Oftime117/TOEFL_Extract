@@ -343,6 +343,8 @@ void Model::initModel()
         m_featuresDico.emplace("SZ_WORD_INF", m_featuresDico.size());
         m_featuresDico.emplace("NB_WORD_SUP", m_featuresDico.size());
 
+        //lancement du script (wapiti)
+        //System(script.sh);
 
         // Initialisation de la matrice avec des 0
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));

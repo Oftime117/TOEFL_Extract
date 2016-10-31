@@ -1,17 +1,16 @@
-echo $1 | read newline
-echo $newline | cut -d ")" -f 2- | tr " " "\n" | wapiti-1.5.0/wapiti label -l -m model-pos.en > temp.txt
-sort temp.txt | uniq -c | sort -bnr > $2
+#!/bin/bash
+#Florian TALOUR & Tristan LE NAIR
 
-while read newline ;
-do
 
-	echo $newline | cut -d ")" -f 2- | tr " " "\n" | wapiti-1.5.0/wapiti label -l -m model-pos.en > temp.txt
-	sort temp.txt | uniq -c | sort -bnr >> $2
-	echo "" >> $2
+#utilisation de wapiti
+grep "(" data/train.txt | cut -d ")" -f 2- | tr " " "\n" | wapiti-1.5.0/wapiti label -l -m model-pos.en > tempo.txt
 
-done < $1
+#lancement des scripts comptant les occurences de types
+./groupe1.sh tempo.txt sortie1List.txt
+./occurenceToLine.sh sortie1List.txt sortie1Line.txt
 
-#tr [:space:] '\n' | grep -v "^\s*$" | sort | uniq -c | sort -bnr
-#ou
-#for w in `cat trainwap`; do echo $w; done|sort|uniq -c
+./groupe2.sh tempo.txt sortie2List.txt
+./occurenceToLine.sh sortie2List.txt sortie2Line.txt
 
+./groupe3.sh tempo.txt sortie3List.txt
+./occurenceToLine.sh sortie3List.txt sortie3Line.txt
