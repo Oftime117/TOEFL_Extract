@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Essay::Essay(string text, map<string, int>& dic, std::set<std::string> &langDico)
+Essay::Essay(const string& text, map<string, int>& dic, std::set<std::string> &langDico)
 {
     size_t firstSpace = text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
     size_t firstComa = text.find_first_of(',', 0);
@@ -25,7 +25,8 @@ Essay::~Essay()
 }
 
 //Copy ctor
-Essay::Essay(const Essay& other) :m_text(other.m_text), m_sizeWord(other.m_sizeWord), m_wordsList(other.m_wordsList), m_lang(other.m_lang), m_level(other.m_level)
+Essay::Essay(const Essay& other) :m_text(other.m_text), m_sizeWord(other.m_sizeWord),
+m_wordsList(other.m_wordsList), m_lang(other.m_lang), m_level(other.m_level)
 {
 
 }
@@ -47,6 +48,9 @@ void Essay::splitEssay(char delim, map<string, int>& dic)
     while (getline(ss, item, delim))
     {
         string buff = item;
+        // Faudrait peut être compter le nombre de majuscules avant de tolower
+        // ça peut être une caractéristiques
+        // Amirali
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
         dic.emplace("NB_W_" + buff, dic.size());
         wordsList.push_back(buff);

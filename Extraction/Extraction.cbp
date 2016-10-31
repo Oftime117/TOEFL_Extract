@@ -44,9 +44,11 @@
 		</Compiler>
 		<Unit filename="include/essay.h" />
 		<Unit filename="include/model.h" />
+		<Unit filename="include/tools.h" />
 		<Unit filename="src/essay.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/model.cpp" />
+		<Unit filename="src/tools.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
