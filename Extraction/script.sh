@@ -1,20 +1,11 @@
 #!/bin/bash
-#Tristan LE NAIR
+#Florian TALOUR & Tristan LE NAIR
 
-echo $1 | read newline
-echo $newline | cut -d ")" -f 2- | tr " " "\n" | wapiti-1.5.0/wapiti label -l -m model-pos.en > temp.txt
-sort temp.txt | uniq -c | sort -bnr > $2
 
-while read newline ;
-do
+#utilisation de wapiti
+grep "(" data/train.txt | cut -d ")" -f 2- | tr " " "\n" | wapiti-1.5.0/wapiti label -l -m model-pos.en > tempo.txt
 
-	echo $newline | cut -d ")" -f 2- | tr " " "\n" | wapiti-1.5.0/wapiti label -l -m model-pos.en > temp.txt
-	sort temp.txt | uniq -c | sort -bnr >> $2
-	echo "" >> $2
-
-done < $1
-
-#tr [:space:] '\n' | grep -v "^\s*$" | sort | uniq -c | sort -bnr
-#ou
-#for w in `cat trainwap`; do echo $w; done|sort|uniq -c
-
+#lancement des scripts comptant les occurences de types
+groupe1.sh tempo.txt sortie1.txt
+groupe2.sh tempo.txt sortie2.txt
+groupe3.sh tempo.txt sortie3.txt
