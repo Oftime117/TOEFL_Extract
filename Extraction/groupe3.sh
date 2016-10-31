@@ -1,8 +1,8 @@
 #!/bin/bash
 #Florian TALOUR & Tristan LE NAIR
 datatrainLoc=data/train.txt
-filename=$1
-outfile=$2
+filename=$1 #$1 représente train.txt
+outfile=$2 #$2 est le nom du fichier de sortie
 
 > $outfile # creation du fichier de sortie
 
@@ -44,3 +44,6 @@ do
 	echo "$line1 $line2 $line3" >> temp.txt
 	echo "$line1 $line2 $line3" >> list3.txt
 done < ${filename}
+
+rm temp.txt
+rm tempNoPonct.txt
