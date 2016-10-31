@@ -1,4 +1,5 @@
 #!/bin/bash
+#Florian TALOUR & Tristan LE NAIR
 datatrainLoc=data/train.txt
 filename=$1
 outfile=$2

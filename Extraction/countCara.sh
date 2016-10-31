@@ -1,4 +1,8 @@
 #!/bin/bash
+#Tristan LE NAIR
+#$1 représente train.txt
+#$2 est le nom du fichier de sortie
+
 let "numline = 1"
 grep "(" $1 | cut -d " " -f -1 > listLanguage
 
