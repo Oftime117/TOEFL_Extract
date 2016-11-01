@@ -255,7 +255,7 @@ bool Model::evaluer(Essay &e, float forceCorrection)
     int lang = Tools::getMaxIndex(score, m_languages.size());
     if(m_languages[lang] != e.getLang())
     {
-        //avoir la numero de la langue du texte
+        //avoir le numero de la langue du texte
         int numLangText = Tools::getVectorIndex(m_languages, e.getLang());
         if(forceCorrection > 0)
         {
@@ -297,8 +297,12 @@ void Model::setOutFiles(string featuresOut, string langMatrixOut)
 
 void Model::initModel()
 {
+    //lancement du script (wapiti)
+    //System(script.sh);
+    //ifstream labeledCorpusFile(m_trainPath, ios::in);
+
     ifstream corpusFile(m_trainPath, ios::in);
-    if(!corpusFile)
+    if(!corpusFile /* || !labeledCorpusFile */)
     {
        cerr << "Impossible d'ouvrir le fichier !" << endl;
     }
@@ -310,10 +314,10 @@ void Model::initModel()
         // Lecture du corpus et enregistrement des caractéristiques
         set<string> langSet;
         map<string, int> tempFeatures;
-        string line;
-        while (getline(corpusFile, line))
+        string line/*, labeledline*/;
+        while (getline(corpusFile, line) /* && getline(labeledCorpusFile, labeledline) */)
         {
-            Essay e(line, tempFeatures, langSet);
+            Essay e(line/*, labeledline*/, tempFeatures, langSet);
             m_corpusList.push_back(e);
         }
         corpusFile.close();
@@ -342,9 +346,6 @@ void Model::initModel()
         m_featuresDico.emplace("NB_LETTER_SUP", m_featuresDico.size());
         m_featuresDico.emplace("SZ_WORD_INF", m_featuresDico.size());
         m_featuresDico.emplace("NB_WORD_SUP", m_featuresDico.size());
-
-        //lancement du script (wapiti)
-        //System(script.sh);
 
         // Initialisation de la matrice avec des 0
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));

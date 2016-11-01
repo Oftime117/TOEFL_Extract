@@ -36,6 +36,7 @@ class Essay
         //unordered_set& m_dictionnary;
 
         void splitEssay(char delim, std::map<std::string, int>& dic);
+        void splitLabels(char delim, map<string, int>& dic);
         size_t test;
 };
 
