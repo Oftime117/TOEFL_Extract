@@ -6,21 +6,26 @@
 
 using namespace std;
 
-Essay::Essay(const string& text, /* const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3,*/ map<string, int>& dic, std::set<std::string> &langDico)
+Essay::Essay(const string& essay, /* const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3,*/ map<string, int>& dic, std::set<std::string> &langDico) throw()
 {
-    size_t firstSpace = text.find_first_of(' ', 0); // (LANGUE,NIVEAU)
-    size_t firstComa = text.find_first_of(',', 0);
-    size_t firstCP = text.find_first_of(')', 0);
-    m_lang = text.substr(1, firstComa-1);
-    m_level = text.substr(firstComa+1, firstCP-firstComa-1);
-    m_text = text.substr(firstSpace+1); // texte sans langue et niveau
+    size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)
+    size_t firstComa = essay.find_first_of(',', 0);
+    size_t firstCP = essay.find_first_of(')', 0);
+
+    // gestion d'erreur
+    if(firstSpace == string::npos || firstComa == string::npos || firstCP == string::npos)
+        throw invalid_argument(string("Erreur lors de la lecture du fichier text "+ essay + "\nFichier inccorect."));
+
+    m_lang = essay.substr(1, firstComa-1);
+    m_level = essay.substr(firstComa+1, firstCP-firstComa-1);
+    string text = essay.substr(firstSpace+1); // texte sans langue et niveau
     //m_labels = labels.substr(firstSpace+1); // l'entête est la même
     //m_labelsOcc1 = labelsOcc1.substr(firstSpace+1);
     //m_labelsOcc2 = labelsOcc2.substr(firstSpace+1);
     //m_labelsOcc3 = labelsOcc3.substr(firstSpace+1);
     m_nbSentences = 0;
 
-    splitEssay(' ', dic);
+    splitEssay(' ', dic, text);
     //spitLabels(' ', dic);
     //spitLabelsOcc1(' ', dic);
     //spitLabelsOcc2(' ', dic);
@@ -47,30 +52,34 @@ Essay& Essay::operator=(const Essay& rhs)
     return *this;
 }
 
-void Essay::splitEssay(char delim, map<string, int>& dic)
+void Essay::splitEssay(char delim, map<string, int>& dic, const string& text)
 {
-    stringstream ss;
-    ss.str(m_text);
+    istringstream ss(text);
     string item;
-    vector<string> wordsList;
+    /* Pareil, l'utilité de la variable temporaire?
+     * Amirali
+     */
+    // vector<string> wordsList;
     int somme = 0;
     while (getline(ss, item, delim))
     {
         string buff = item;
-        // Faudrait peut être compter le nombre de majuscules avant de tolower
-        // ça peut être une caractéristiques
-        // Amirali
+        /* Faudrait peut être compter le nombre de majuscules avant de tolower
+         * ça peut être une caractéristiques
+         * Amirali
+         */
         // Compter les points peut suffir à compter les phrases
         // Florian
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
         dic.emplace("NB_W_" + buff, dic.size());
-        wordsList.push_back(buff);
+        m_wordsList.push_back(buff);
         if (buff.compare(".") == 0) m_nbSentences++;
         // somme peut servir à calculer le nombre de lettres dans l'essai
         // Florian
+        /* C'est utile de savoir le nombre de lettre d'un texte?? Amirali */
         somme += buff.size();
     }
-    m_wordsList = wordsList;
+    //m_wordsList = wordsList;
     m_sizeWord = somme/(float)m_wordsList.size();
 }
 
@@ -142,7 +151,7 @@ void Essay::spitLabelsOcc3(char delim, map<string, int>& dic)
     m_labelsMap = labelsMap;
 }*/
 
-std::ostream& operator<< (std::ostream& stream, const Essay& essay)
+ostream& operator<< (ostream& stream, const Essay& essay)
 {
     stream << "Langue: " << essay.m_lang << "\nNiveau: " << essay.m_level << "\nWord count: " << essay.m_wordsList.size() << "\nSentence count: " << essay.m_nbSentences;
     return stream;

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <vector>
 
 #include "essay.h"
 #include "model.h"
@@ -22,7 +23,7 @@ int main(int argc, char** argv)
     //Entraînement en partant de rien
 
     Model modele("data/train.txt", "data/features.txt", "data/model.txt");
-    modele.trainByDiv(10);
+    //modele.trainByDiv(10);
 
     end = chrono::system_clock::now();
 

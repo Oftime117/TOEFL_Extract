@@ -5,26 +5,27 @@
 	<sstream>
 	<vector>
 
-1477929249 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\essay.cpp
+1478022262 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\essay.cpp
 	"essay.h"
 	<iostream>
 	<fstream>
 	<sstream>
 	<algorithm>
 
-1477930286 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\essay.h
+1478022232 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\essay.h
 	<string>
 	<vector>
 	<map>
 	<set>
 
-1477929954 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\main.cpp
+1478029639 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\main.cpp
 	<string>
 	<sstream>
 	<iostream>
 	<iostream>
 	<fstream>
 	<chrono>
+	<vector>
 	"essay.h"
 	"model.h"
 
@@ -41,7 +42,7 @@
 	<map>
 	<set>
 
-1477930573 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\model.cpp
+1478029639 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\model.cpp
 	<iostream>
 	<fstream>
 	<sstream>
@@ -49,7 +50,7 @@
 	"model.h"
 	"essay.h"
 
-1477920660 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\model.h
+1478026995 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\model.h
 	<algorithm>
 	<map>
 	<set>

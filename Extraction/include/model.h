@@ -16,27 +16,27 @@ public:
     virtual ~Model();
 
     void trainAll();
-    float trainByDiv(size_t nbDiv=10);
-    bool evaluer(Essay &e, float forceCorrection=0);
+    float trainByDiv(const size_t& nbDiv=10);
+    bool evaluer(Essay &e, const float& forceCorrection=0);
     void corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, std::set<int> &foundFeatures);
     void save();
     void setOutFiles(std::string featuresIn, std::string langMatrixIn);
-    Essay& getFirstEssayP() { return m_corpusList[0]; }
+    Essay& getFirstEssay() { return m_corpusList[0]; }
 
 protected:
 
 private:
-    // Methods
+    /** Methods **/
     void initModel();
     void train(std::vector<Essay> &corpus);
     void addIfFound(std::set<int> &found, const std::string &feature);
-    void saveFeaturesDictionnary();
-    void saveLangMatrix();
-    void loadFeaturesDictionnary();
-    void loadLangDictionnary();
-    void langSetToVector(std::set<std::string> langSet);
+    void saveFeaturesDictionnary() const throw();
+    void saveLangMatrix()const throw();
+    void loadFeaturesDictionnary() throw();
+    void loadLangDictionnary() throw();
 
-    // Member
+
+    /** Members **/
     std::string m_trainPath;
     std::string m_featuresPath;
     std::string m_langMatrixPath;
@@ -45,7 +45,7 @@ private:
     std::vector<std::vector<float>> m_langMatrix;
     std::vector<Essay> m_corpusList;
 
-    // const
+    /** Const **/
     static unsigned int SZ_CORPUS_INF;
     static unsigned int SZ_CORPUS_SUP;
     static unsigned int NB_LETTER_INF;

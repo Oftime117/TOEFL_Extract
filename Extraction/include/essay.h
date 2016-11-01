@@ -10,7 +10,7 @@
 class Essay
 {
     public:
-        Essay(const std::string& text, std::map<std::string, int>& dic, std::set<std::string> &langDico);
+        Essay(const std::string& essay, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
         virtual ~Essay();
         Essay(const Essay& other);
         Essay& operator=(const Essay& other);
@@ -25,24 +25,30 @@ class Essay
     protected:
 
     private:
+
+        /** Methods **/
+        void splitEssay(char delim, std::map<std::string, int>& dic, const std::string& text);
+//        void splitLabels(char delim, std::map<std::string, int>& dic);
+//        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
+//        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
+//        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
+
+        /** Members **/
         std::string m_text;
-        // Je comprends pas trop ce que c'est
-        // La longueur moyenne des mots de l'essai?
-        // Peut être à renommer du coup? :)
-        // Amirali
-        int m_nbSentences;
+
+        /* Je comprends pas trop ce que c'est
+         * La longueur moyenne des mots de l'essai?
+         * Peut être à renommer du coup? :)
+         * Amirali
+         */
         float m_sizeWord;
+        int m_nbSentences;
         std::vector<std::string> m_wordsList;
         std::vector<std::string> m_labelsList;
         std::string m_lang;
         std::string m_level;
         //unordered_set& m_dictionnary;
 
-        void splitEssay(char delim, std::map<std::string, int>& dic);
-        /*void splitLabels(char delim, std::map<std::string, int>& dic);
-        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
-        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
-        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)*/
         size_t test;
 };
 
