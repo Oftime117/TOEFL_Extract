@@ -6,7 +6,7 @@ outfile=$2 # $2 est le nom du fichier de sortie
 
 > $outfile # creation du fichier de sortie
 
-let "numline3 = 1"
+let "numline = 1"
 grep "(" $datatrainLoc | cut -d " " -f -1 > listLanguage
 
 # initialisation
@@ -14,37 +14,39 @@ line1=`cut -d$'\n' -f 1 $filename`
 line2=`cut -d$'\n' -f 2 $filename`
 line3=`cut -d$'\n' -f 3 $filename`
 echo "$line1 $line2 $line3" > temp3.txt
+> list3.txt
 
-sed -n "$numline3 p" listLanguage > list3.txt # ajout de la langue qui correspond au groupe
-let "numline3 = numline3 + 1"
-echo "$line1 $line2 $line3" >> list3.txt
-
-sed 3d $filename | while read newline ;
+i=1
+while read newline ;
 do
+	test $i -eq 1 && let "i = i + 1" && continue
+	test $i -eq 2 && let "i = i + 1" && continue
+	test $i -eq 3 && let "i = i + 1" && continue
 	line1=$line2
 	line2=$line3
 	line3=$newline
 
 	if [ -z "$newline" ]; then # on passe au texte suivant
 		# traitement à la vollée
-		sed -n "$numline3 p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
-		let "numline3 = numline3 + 1"
-		./supprPonctu.sh temp3.txt temp3NoPonct.txt
-		sort temp3NoPonct.txt | uniq -c | sort -bnr >> $outfile
+		sed -n "$numline p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
+		./supprPonctu.sh temp3.txt temp3NoPonct.txt # on enlève la ponctuation
+		sort temp3NoPonct.txt | uniq -c | sort -bnr >> $outfile # calcul des occurences
 		echo "" >> $outfile
 		
-		> temp3.txt
+		sed -n "$numline p" listLanguage >> list3.txt # ajout de la langue qui correspond au groupe
+		cat temp3.txt >> list3.txt
 		echo "" >> list3.txt
 		
-		sed -n "$numline3 p" listLanguage >> list3.txt # ajout de la langue qui correspond au groupe
+		> temp3.txt
+		
+		let "numline = numline + 1"
 		read line1 < ${filename}
 		read line2 < ${filename}
 		read line3 < ${filename}
 	fi
 
 	echo "$line1 $line2 $line3" >> temp3.txt
-	echo "$line1 $line2 $line3" >> list3.txt
-done
+done < ${filename}
 
 rm temp3.txt
 rm temp3NoPonct.txt
