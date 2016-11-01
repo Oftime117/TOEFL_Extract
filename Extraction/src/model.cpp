@@ -194,6 +194,20 @@ bool Model::evaluer(Essay &e, float forceCorrection){
     else if(e.getSizeWord() >= NB_LETTER_SUP)
         addIfFound(found, "SZ_WORD_SUP");
 
+    //Caractéristiques sur les types
+
+    int sortie1Size = e.getSortie1->size();
+    int sortie2Size = Sortie2->size();
+    int sortie3Size = Sortie3->size();
+
+    for(it = e.getSortie1.begin(); it != e.getSortie1.end(); ++it)
+    {
+        if(it->second <= NB_OCC_INF[it])
+            addIfFound(found, "NB_OCC_" + it->first + "_INF");
+        else if(it->second >= NB_OCC_SUP[it])
+            addIfFound(found, "NB_OCC_" + it->first + "_SUP");
+    }
+
     //Caractéristiques sur les mots
     for(size_t i=0; i<corpusSize; i++){
         addIfFound(found, "NB_W_" + (*listP)[i]);
