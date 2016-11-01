@@ -24,7 +24,7 @@ float floatArrayAVG(float tab[], size_t taille)
 {
     float somme = 0.f;
     for(size_t i=0; i<taille; i++)
-        {
+    {
         somme += tab[i];
     }
     return somme/(float)taille;
@@ -34,7 +34,7 @@ int getIndiceMax(const int tab[], size_t taille)
 {
     int max = 0;
     for(size_t i=1; i<taille; i++)
-        {
+    {
         if(tab[i]>tab[max]) max = i;
     }
     return max;
@@ -43,7 +43,7 @@ int getIndiceMax(const int tab[], size_t taille)
 int getLangueIndice(const vector<string> langues, const string& langue)
 {
     for(size_t i=0; i<langues.size(); i++)
-        {
+    {
         if(langues[i] == langue) return i;
     }
     return -1;
@@ -156,7 +156,7 @@ float Model::trainByDiv(size_t nbDiv)
         // shuffle testCorpus
         random_shuffle(testCorpus.begin(), testCorpus.end());
         for(size_t j=0; j<testCorpus.size(); j++)
-            {
+        {
             if( ! evaluer(testCorpus[j])){
                 nbErrors++;
             }

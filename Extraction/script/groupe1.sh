@@ -6,7 +6,7 @@ outfile=$2 # $2 est le nom du fichier de sortie
 
 > $outfile # creation du fichier de sortie
 
-let "numline1 = 1"
+let "numline = 1"
 grep "(" $datatrainLoc | cut -d " " -f -1 > listLanguage
 
 # initialisation
@@ -18,8 +18,8 @@ do
 
 	if [ -z "$newline" ]; then # on passe au texte suivant
 		# traitement à la vollée
-		sed -n "$numline1 p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
-		let "numline1 = numline1 + 1"
+		sed -n "$numline p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
+		let "numline = numline + 1"
 		./supprPonctu.sh temp1.txt temp1NoPonct.txt
 		sort temp1NoPonct.txt | uniq -c | sort -bnr >> $outfile
 		echo "" >> $outfile
