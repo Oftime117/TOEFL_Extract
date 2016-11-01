@@ -37,19 +37,19 @@ private:
     void langSetToVector(std::set<std::string> langSet);
 
     // Member
-    std::string trainPath;
-    std::string featuresPath;
-    std::string langMatrixPath;
+    std::string m_trainPath;
+    std::string m_featuresPath;
+    std::string m_langMatrixPath;
     std::vector<std::string> m_languages;
     std::map<std::string, int> m_featuresDico;
     std::vector<std::vector<float>> m_langMatrix;
     std::vector<Essay> m_corpusList;
 
     // const
-    static int SZ_CORPUS_INF;
-    static int SZ_CORPUS_SUP;
-    static int NB_LETTER_INF;
-    static int NB_LETTER_SUP;
+    static unsigned int SZ_CORPUS_INF;
+    static unsigned int SZ_CORPUS_SUP;
+    static unsigned int NB_LETTER_INF;
+    static unsigned int NB_LETTER_SUP;
     static float SZ_WORD_INF;
     static float SZ_WORD_SUP;
 };
