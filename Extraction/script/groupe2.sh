@@ -1,6 +1,6 @@
 #!/bin/bash
 # Florian TALOUR & Tristan LE NAIR
-datatrainLoc=data/train.txt
+datatrainLoc=../data/train.txt
 filename=$1 # $1 représente train.txt
 outfile=$2 # $2 est le nom du fichier de sortie
 

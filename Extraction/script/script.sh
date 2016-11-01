@@ -7,7 +7,7 @@
 # utilisation de wapiti
 echo ">> Fabrication des labels"
 if [ ! -f "trainTagList.txt" ] ; then
-	./extract_l.sh data/train.txt trainTagList.txt
+	./extract_l.sh ../data/train.txt trainTagList.txt
 fi
 
 echo ">> Transformation de la liste en ligne"

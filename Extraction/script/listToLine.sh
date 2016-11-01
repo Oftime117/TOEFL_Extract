@@ -1,6 +1,6 @@
 #!/bin/bash
 # Florian TALOUR & Tristan LE NAIR
-datatrainLoc=data/train.txt
+datatrainLoc=../data/train.txt
 filename=$1 #  $1 est la sortie de extract_l.sh
 outfile=$2 #  $2 est le nom de la sortie pour la liste des tags dans le même format que train.txt
 

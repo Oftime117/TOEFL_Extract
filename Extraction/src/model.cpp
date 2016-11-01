@@ -298,13 +298,16 @@ void Model::setOutFiles(string featuresOut, string langMatrixOut)
 void Model::initModel()
 {
     //lancement du script (wapiti)
-    //System(script.sh);
-    //ifstream labeledCorpusFile(m_trainPath, ios::in);
+    //System("../script/script.sh");
+    //ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
+    //ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
+    //ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
+    //ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);
 
     ifstream corpusFile(m_trainPath, ios::in);
-    if(!corpusFile /* || !labeledCorpusFile */)
+    if(!corpusFile /* || !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile || !labeledOcc3CorpusFile */)
     {
-       cerr << "Impossible d'ouvrir le fichier !" << endl;
+       cerr << "Impossible d'ouvrir un des fichiers !" << endl;
     }
     else
     {
@@ -315,9 +318,10 @@ void Model::initModel()
         set<string> langSet;
         map<string, int> tempFeatures;
         string line/*, labeledline*/;
-        while (getline(corpusFile, line) /* && getline(labeledCorpusFile, labeledline) */)
+        while (getline(corpusFile, line) /* && getline(labeledCorpusFile, labeledLine) && getline(labeledOcc1CorpusFile, labeledOcc1Line)
+            && getline(labeledOcc2CorpusFile, labeledOcc2Line) && getline(labeledOcc3CorpusFile, labeledOcc3Line)*/)
         {
-            Essay e(line/*, labeledline*/, tempFeatures, langSet);
+            Essay e(line/*, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line*/, tempFeatures, langSet);
             m_corpusList.push_back(e);
         }
         corpusFile.close();
