@@ -1,11 +1,9 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-//#include <time.h> //calculer le temps d'execution
-#include <iostream>
 #include <fstream>
 #include <chrono>
-#include <vector>
+#include <thread>
 
 #include "essay.h"
 #include "model.h"
@@ -13,7 +11,7 @@
 using namespace std;
 
 
-int main(int argc, char** argv)
+int main(/*int argc, char** argv*/)
 {
     //clock_t tStart = clock();
 
@@ -23,14 +21,20 @@ int main(int argc, char** argv)
     //Entraînement en partant de rien
 
     Model modele("data/train.txt", "data/features.txt", "data/model.txt");
-    //modele.trainByDiv(10);
 
     end = chrono::system_clock::now();
 
-    auto elapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
+    auto loadElapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
                              (end-start).count();
-    cout << "Ellapsed time: " << elapsedMilli;
+    cout << "*** Temps de chargement des caracteristiques: " << loadElapsedMilli << "ms ***"<< endl << endl;
+    cout <<"nb threads " << thread::hardware_concurrency() << endl;
 
+    modele.trainByDiv3(10);
+
+    start = chrono::system_clock::now();
+    auto CVTrainElapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
+                             (start-end).count();
+    cout << "*** Temps de l'entrainement: " << CVTrainElapsedMilli << "ms ***"<< endl << endl;
 /*
     //Estimer la qualité de l'entraînement
     Model modele2("data/train.txt", "data/features.txt", "data/model.txt");

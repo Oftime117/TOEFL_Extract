@@ -2,7 +2,7 @@
 
 using namespace std;
 
-float Tools::floatArrayAVG(const float tab[], const size_t taille)
+float Tools::floatArrayAVG(const float tab[], const size_t& taille)
 {
     if(taille == 0 ) return -1;
     float somme = 0.f;
@@ -10,20 +10,20 @@ float Tools::floatArrayAVG(const float tab[], const size_t taille)
     {
         somme += tab[i];
     }
-    return somme/(float)taille;
+    return somme/static_cast<float>(taille);
 }
 
-int Tools::getMaxIndex(const int tab[], const size_t taille)
+size_t Tools::getMaxIndex(const int tab[], const size_t& taille)
 {
-    int max = 0;
+    size_t maxInd = 0;
     for(size_t i=1; i<taille; i++){
-        if(tab[i]>tab[max]) max = i;
+        if(tab[i]>tab[maxInd]) maxInd = i;
     }
-    return max;
+    return maxInd;
 }
 
 
-int Tools::getVectorIndex(const vector<string> vec, const string& value)
+int Tools::getVectorIndex(const vector<string>& vec, const string& value)
 {
     for(size_t i=0; i<vec.size(); i++){
         if(vec[i] == value) return i;
