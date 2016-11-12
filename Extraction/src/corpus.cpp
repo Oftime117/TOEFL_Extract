@@ -13,16 +13,18 @@ using namespace std;
 
 Corpus::Corpus(const std::vector<std::string>& languages,
                std::map<std::string, int>& featuresDico,
-               std::vector<Essay>& trainingCorpusList, const size_t& nbDiv, const size_t& numTrain)
+              /*const?*/ std::vector<Essay>& trainingCorpusList, const size_t& nbDiv, const size_t& numTrain)
     : m_numTrain(numTrain), m_languages(languages), m_featuresDico(featuresDico),
       m_langMatrix(), m_trainCorpus(), m_testCorpus()
 {
     m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
 
-    /*** Sélection des corpus de textes pour la cross validation ***/
-    for(size_t i=0; i<trainingCorpusList.size(); ++i)
+    int l[m_languages.size()] = {0};
+    /*** Sélection du corpus de textes pour la cross validation ***/
+    for(size_t i=0; i<trainingCorpusList.size(); i++)
     {
-        if(i%nbDiv == numTrain)
+        int indexLang = Tools::getVectorIndex(m_languages, trainingCorpusList[i].getLang());
+        if(l[indexLang]%nbDiv == m_numTrain)
         {
             m_testCorpus.push_back(trainingCorpusList[i]);
         }
@@ -30,6 +32,7 @@ Corpus::Corpus(const std::vector<std::string>& languages,
         {
             m_trainCorpus.push_back(trainingCorpusList[i]);
         }
+        l[indexLang]++;
     }
 }
 
@@ -53,7 +56,7 @@ Corpus::Corpus(const Corpus& other)
 float Corpus::train(bool verbose)
 {
     size_t i=0, x=10;
-    float forceCorrection = 1;
+    float forceCorrection = 1.0f;
     int nbErrors = 1;
     int nbErrTest;
 
@@ -80,7 +83,7 @@ float Corpus::train(bool verbose)
     /* Pourcentage */
     float errorPer = (static_cast<float>(nbErrTest) / static_cast<float>(m_testCorpus.size())) * 100.0f;
 
-    cout << "Erreurs (entrainement n°" << m_numTrain+1 << ", idThread: " << this_thread::get_id() << ") : " << nbErrTest << " / " << m_testCorpus.size() << " (" << errorPer << " %)\n\n";
+    cout << "Erreurs (entrainement nb:" << m_numTrain+1 << ", idThread: " << this_thread::get_id() << ") : " << nbErrTest << " / " << m_testCorpus.size() << " (" << errorPer << " %)\n\n";
 
     return errorPer;
 }
@@ -90,23 +93,39 @@ int Corpus::evaluer(vector<Essay>& subCorpus, const float& forceCorrection)
 {
     int nbErrors = 0;
     size_t subCorpusSize = subCorpus.size();
-    random_shuffle(subCorpus.begin(), subCorpus.end());
+
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    shuffle(subCorpus.begin(), subCorpus.end(), std::default_random_engine(seed));
+    //random_shuffle(subCorpus.begin(), subCorpus.end());
+
     for(size_t j=0; j<subCorpusSize; j++)
     {
         Essay& currentEssay = subCorpus[j];
-        string trueLang = currentEssay.getLang();
         set<int> featuresFound;
+
         if(m_langMatrix.size() == 0)
         {
             cout << "Bug dans corpus::evaluer" << endl;
             this_thread::sleep_for(std::chrono::seconds(30));
         }
         size_t langFoundInd = currentEssay.evaluer(m_languages.size(), m_featuresDico, m_langMatrix, featuresFound);
+        string trueLang = currentEssay.getLang();
+        int numLangText = Tools::getVectorIndex(m_languages, trueLang);
+        /* Comparer directement les indices ->
+         * Amirali
+         */
+        //int numLangText = Tools::getVectorIndex(m_languages, currentEssay.getLang());
+
+        /*** ajouter a la matrice de confusion ***/
+//        if(forceCorrection == 0)
+//        {   /* lorsqu'il y a evaluation sans amelioration de l'entrainement */
+//            m_confusionMatrix[langFoundInd][numLangText] += 1;
+//        }
+
         if(trueLang != m_languages[langFoundInd])
         {
             if(forceCorrection > 0)
             {
-                int numLangText = Tools::getVectorIndex(m_languages, trueLang);
                 corrigerMatrice(forceCorrection, langFoundInd, numLangText, featuresFound);
             }
             nbErrors++;
