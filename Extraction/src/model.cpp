@@ -1,24 +1,21 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <thread>
-#include <future>
 
 #include "tools.h"
 #include "model.h"
 #include "essay.h"
-#include "corpus.h"
 
 using namespace std;
 
 // Constantes
 
-const unsigned int Model::SZ_CORPUS_INF = 326;
-const unsigned int Model::SZ_CORPUS_SUP = 372;
-const unsigned int Model::NB_LETTER_INF = 1660;
-const unsigned int Model::NB_LETTER_SUP = 1936;
-const float Model::SZ_WORD_INF = 5.08;
-const float Model::SZ_WORD_SUP = 5.23;
+unsigned int Model::SZ_CORPUS_INF = 326;
+unsigned int Model::SZ_CORPUS_SUP = 372;
+unsigned int Model::NB_LETTER_INF = 1660;
+unsigned int Model::NB_LETTER_SUP = 1936;
+float Model::SZ_WORD_INF = 5.08;
+float Model::SZ_WORD_SUP = 5.23;
 
 
 Model::Model(string corpusPath, string featuresOut, string langMatrixOut)
@@ -50,6 +47,10 @@ Model::Model(vector<Essay> &corpusList):m_corpusList(corpusList)
     m_langMatrix = vector<vector<float> >(m_featuresDico.size(), vector<float>(m_languages.size(), 0));
 }
 
+Model::~Model()
+{
+    //dtor
+}
 
 /*** Méthodes publiques ***/
 
@@ -59,109 +60,6 @@ Model::Model(vector<Essay> &corpusList):m_corpusList(corpusList)
 void Model::trainAll()
 {
     train(m_corpusList);
-}
-
-float Model::trainByDiv3(const size_t& nbDiv)
-{
-    float err[nbDiv];
-    vector<future<float> > futures;
-    vector<Corpus> corpusTab;
-    /*** Lancement de l'entrainement en cross validation ***/
-    for(size_t numTrain=0; numTrain<nbDiv; ++numTrain)
-    {
-        cout<<"=== Ajout Train "<<numTrain+1<<" / "<<nbDiv<<" ===\n";
-
-        corpusTab.push_back(Corpus(m_languages, m_featuresDico, m_corpusList, nbDiv, numTrain));
-    }
-    for(size_t numTrain=0; numTrain<nbDiv; ++numTrain)
-    {
-        cout<<"=== Train MT "<<numTrain+1<<" / "<<nbDiv<<" ===\n";
-        try
-        {
-            future<float> fut = async(launch::async, &Corpus::train, &corpusTab[numTrain], false);
-            futures.push_back(move(fut));
-        }
-        catch(const exception& e)
-        {
-            cout << "Erreur lors de l'ajout du future: " << e.what();
-        }
-        catch(...)
-        {
-            cout << "Exception inconnu\n";
-        }
-    }
-    size_t i = 0;
-    try
-    {
-        /* On inverse pour avoir les résultats dans le bon ordre
-         * Pas nécessaire je pense
-         * Amirali
-         */
-        //reverse(futures.begin(), futures.end());
-        while(!futures.empty())
-        {
-            future<float> fut = move(futures.back());
-            futures.pop_back();
-            err[i] = fut.get();
-            i++;
-        }
-        float errMoy = Tools::floatArrayAVG(err, nbDiv);
-        cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
-    }
-    catch(const system_error& e)
-    {
-        cout << "System error: " << e.code().message() << endl;
-    }
-    catch(const exception& e)
-    {
-        cout << "Exception: " << e.what() << endl;
-    }
-    catch(...)
-    {
-        cout << "Exception inconnu\n";
-    }
-
-    return 0.0f;
-}
-float Model::trainByDiv2(const size_t& nbDiv)
-{
-    float err[nbDiv];
-    vector<future<float> > futures;
-    /*** Lancement de l'entrainement en cross validation ***/
-    for(size_t numTrain=0; numTrain<nbDiv; ++numTrain)
-    {
-
-        cout<<"=== Train "<<numTrain+1<<" / "<<nbDiv<<" ===\n";
-
-        Corpus trainCorpus(m_languages, m_featuresDico, m_corpusList, nbDiv, numTrain);
-
-        err[numTrain] = trainCorpus.train();
-    }
-
-    float errMoy = Tools::floatArrayAVG(err, nbDiv);
-    cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
-
-
-    /*** Sauvegarde des résultats de chaque train dans un fichier ***/
-    size_t pos = m_featuresPath.find(".");
-    string path = m_featuresPath.substr(0, pos) + "_train.txt";
-    cout << path << endl;
-    cout << ">> Sauvegarde des resultats de " << nbDiv << " entrainements\n\n";
-
-    ofstream cFile(path, ios::out | ios::app);
-    if(!cFile)
-    {
-        //throw une exception
-        return -1;
-    }
-    for(size_t i=0; i<nbDiv; i++)
-    {
-        cFile << "Train " << i << " = " << err[i] << " %\n";
-    }
-    cFile << "Moyenne = " << errMoy << endl;
-    cFile.close();
-
-    return errMoy;
 }
 
 float Model::trainByDiv(const size_t& nbDiv)
@@ -199,18 +97,13 @@ float Model::trainByDiv(const size_t& nbDiv)
         train(trainCorpus);
 
         /* estimation du taux d'erreur sur ce corpus */
+        int nbErrors = 0;
 
         /*** Shuffle et test du programme sur le corpus de test ***/
-        /* Placer la suite dans une fonction?
-         * Le même bout de code apparait dans la méthode train
-         * Amirali
-         */
-        int nbErrors = 0;
         random_shuffle(testCorpus.begin(), testCorpus.end());
         for(size_t j=0; j<testCorpus.size(); j++)
-        {
-            if( ! evaluer(testCorpus[j]))
             {
+            if( ! evaluer(testCorpus[j])){
                 nbErrors++;
             }
         }
@@ -247,142 +140,6 @@ float Model::trainByDiv(const size_t& nbDiv)
     cFile.close();
 
     return errMoy;
-}
-
-void Model::save()
-{
-    try
-    {
-        saveFeaturesDictionnary();
-        saveLangMatrix();
-    } catch(const runtime_error& e)
-    {
-        cerr << e.what() << endl;
-    }
-}
-
-void Model::setOutFiles(string featuresOut, string langMatrixOut)
-{
-    m_featuresPath=featuresOut;
-    m_langMatrixPath=langMatrixOut;
-}
-
-/*** Méthodes Privées ***/
-
-void Model::initModel()
-{
-    /*** lancement du script (wapiti) ***/
-    //System("../script/script.sh");
-    //ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
-    //ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
-    //ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
-    //ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);
-
-    ifstream corpusFile(m_trainPath, ios::in);
-    if(!corpusFile /* || !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile || !labeledOcc3CorpusFile */)
-    {
-       cerr << "Impossible d'ouvrir un des fichiers !" << endl;
-    }
-    else
-    {
-        cout << m_trainPath << endl;
-        cout << ">> Lecture du fichier et initialisation des features" << endl << endl;
-
-        /*** Lecture du corpus et enregistrement des caractéristiques ***/
-        set<string> langSet;
-        //map<string, int> tempFeatures;
-        string line/*, labeledline*/;
-        /* Attention ici mettre des && entre les getlines n'est pas correct ! On sortirait du while
-         * dès que l'on aurait fini de lire un des fichiers
-         * Peut être mieux de lire les fichiers les uns après les autres?
-         * Amirali
-         */
-        while (getline(corpusFile, line) /* && getline(labeledCorpusFile, labeledLine) && getline(labeledOcc1CorpusFile, labeledOcc1Line)
-            && getline(labeledOcc2CorpusFile, labeledOcc2Line) && getline(labeledOcc3CorpusFile, labeledOcc3Line)*/)
-        {
-            try
-            {
-                Essay e(line/*, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line*/, m_featuresDico, langSet);
-                m_corpusList.push_back(std::move(e));
-            }catch(const invalid_argument& e)
-            {
-                cerr << e.what() << endl;
-            }
-        }
-        corpusFile.close();
-        m_languages = Tools::setToVector(langSet);
-
-        /* Je vois pas trop l'utilité de copier le dico d'une variable temp au champ de classe
-         * Autant direct mettre les features dans le champ de la classe m_featuresDico
-         * Amirali
-         */
-//        m_featuresDico = map<string, int>();
-//        for(const auto& t: tempFeatures)
-//        {
-//            m_featuresDico.emplace(t.first, t.second);
-//        }
-        cout << "featuresWords size: " << m_featuresDico.size() << endl;
-
-        /*** Paire de mots ***/
-//        for(const auto& t1 : tempFeatures){
-//            string s1 = t1.first.substr(5);
-//            for(const auto& t2 : tempFeatures){
-//                string s2 = "NB_2W_" + s1 + "_" + t2.first.substr(5);
-//                m_featuresDico.emplace(s2, m_featuresDico.size());
-//            }
-//        }
-
-
-        /*** Ajout des caractéristiques personnalisées ***/
-
-        /* Créer variable locale pour la taille du dico,
-         * Appeler size tout le temps est pas opti
-         * Amirali
-         */
-        m_featuresDico.emplace("SZ_CORPUS_INF", m_featuresDico.size());
-        m_featuresDico.emplace("SZ_CORPUS_SUP", m_featuresDico.size());
-        m_featuresDico.emplace("NB_LETTER_INF", m_featuresDico.size());
-        m_featuresDico.emplace("NB_LETTER_SUP", m_featuresDico.size());
-        m_featuresDico.emplace("SZ_WORD_INF", m_featuresDico.size());
-        m_featuresDico.emplace("NB_WORD_SUP", m_featuresDico.size());
-
-        /*** Initialisation de la matrice avec des 0 ***/
-        m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
-    }
-    /* Pas utile
-     * Amirali
-     */
-    corpusFile.close();
-}
-
-void Model::train(vector<Essay> &corpus)
-{
-    size_t i=0, x=10;
-    float forceCorrection = 1;
-    int nbErrors = 1;
-
-    while(i<x && nbErrors>0)
-    { /* Condition d'arrêt : x = nombre de tours max OU zero erreur au tour précédent */
-        nbErrors = 0;
-        forceCorrection = (float)1/(float)(i+1);
-
-        /* evaluer chaque essay de train
-         * shuffle trainCorpus
-         */
-        random_shuffle(corpus.begin(), corpus.end());
-        for(size_t j=0; j<corpus.size(); j++)
-        {
-            if( ! evaluer(corpus[j], forceCorrection))
-            {
-                nbErrors++;
-            }
-        }
-
-        float err = ((float)nbErrors / (float)corpus.size()) * (float)100;
-        cout << "Step " << i << " - Erreurs : " << nbErrors << " / " << corpus.size() << " (" << err << " %)\n";
-
-        i++;
-    }
 }
 
 //retourne l'indice de la langue
@@ -457,21 +214,151 @@ bool Model::evaluer(Essay &e, const float& forceCorrection)
     return true;
 }
 
-/* Transformer m_featuresDico en local */
-void Model::addIfFound(set<int> &found, const string &feature)
-{
-    map<string, int>::iterator it = m_featuresDico.find(feature);
-    if(it!=m_featuresDico.end()) found.emplace(it->second);
-}
 
-/* Transformer langMatrix en local */
-void Model::corrigerMatrice(const float& forceCorrection, const size_t& langMoins, const size_t& langPlus, const set<int> &foundFeatures)
+void Model::corrigerMatrice(float forceCorrection, size_t langMoins, size_t langPlus, set<int> &foundFeatures)
 {
     for(int ff : foundFeatures)
     {
         m_langMatrix[ff][langMoins] -= forceCorrection;
         m_langMatrix[ff][langPlus] += forceCorrection;
     }
+}
+
+void Model::save()
+{
+    try
+    {
+        saveFeaturesDictionnary();
+        saveLangMatrix();
+    } catch(const runtime_error& e)
+    {
+        cerr << e.what() << endl;
+    }
+}
+
+void Model::setOutFiles(string featuresOut, string langMatrixOut)
+{
+    m_featuresPath=featuresOut;
+    m_langMatrixPath=langMatrixOut;
+}
+
+/*** Méthodes Privées ***/
+
+void Model::initModel()
+{
+    /*** lancement du script (wapiti) ***/
+    //System("../script/script.sh");
+    //ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
+    //ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
+    //ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
+    //ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);
+
+    ifstream corpusFile(m_trainPath, ios::in);
+    if(!corpusFile /* || !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile || !labeledOcc3CorpusFile */)
+    {
+       cerr << "Impossible d'ouvrir un des fichiers !" << endl;
+    }
+    else
+    {
+        cout << m_trainPath << endl;
+        cout << ">> Lecture du fichier" << endl << endl;
+
+        /*** Lecture du corpus et enregistrement des caractéristiques ***/
+        set<string> langSet;
+        //map<string, int> tempFeatures;
+        string line/*, labeledline*/;
+        /* Attention ici mettre des && entre les getlines n'est pas correct ! On sortirait du while
+         * dès que l'on aurait fini de lire un des fichiers
+         * Peut être mieux de lire les fichiers les uns après les autres?
+         * Amirali
+         */
+        while (getline(corpusFile, line) /* && getline(labeledCorpusFile, labeledLine) && getline(labeledOcc1CorpusFile, labeledOcc1Line)
+            && getline(labeledOcc2CorpusFile, labeledOcc2Line) && getline(labeledOcc3CorpusFile, labeledOcc3Line)*/)
+        {
+            try
+            {
+                Essay e(line/*, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line*/, m_featuresDico, langSet);
+                m_corpusList.push_back(e);
+            }catch(const invalid_argument& e)
+            {
+                cerr << e.what() << endl;
+            }
+        }
+        corpusFile.close();
+        m_languages = Tools::setToVector(langSet);
+
+        /* Je vois pas trop l'utilité de copier le dico d'une variable temp au champ de classe
+         * Autant direct mettre les features dans le champ de la classe m_featuresDico
+         * Amirali
+         */
+//        m_featuresDico = map<string, int>();
+//        for(const auto& t: tempFeatures)
+//        {
+//            m_featuresDico.emplace(t.first, t.second);
+//        }
+        cout << "featuresWords size: " << m_featuresDico.size() << endl;
+
+        /*** Paire de mots ***/
+//        for(const auto& t1 : tempFeatures){
+//            string s1 = t1.first.substr(5);
+//            for(const auto& t2 : tempFeatures){
+//                string s2 = "NB_2W_" + s1 + "_" + t2.first.substr(5);
+//                m_featuresDico.emplace(s2, m_featuresDico.size());
+//            }
+//        }
+
+
+        /*** Ajout des caractéristiques personnalisées ***/
+        m_featuresDico.emplace("SZ_CORPUS_INF", m_featuresDico.size());
+        m_featuresDico.emplace("SZ_CORPUS_SUP", m_featuresDico.size());
+        m_featuresDico.emplace("NB_LETTER_INF", m_featuresDico.size());
+        m_featuresDico.emplace("NB_LETTER_SUP", m_featuresDico.size());
+        m_featuresDico.emplace("SZ_WORD_INF", m_featuresDico.size());
+        m_featuresDico.emplace("NB_WORD_SUP", m_featuresDico.size());
+
+        /*** Initialisation de la matrice avec des 0 ***/
+        m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
+    }
+    /* Pas utile
+     * Amirali
+     */
+    corpusFile.close();
+}
+
+void Model::train(vector<Essay> &corpus)
+{
+    size_t i=0, x=10;
+    float forceCorrection = 1;
+    int nbErrors = 1;
+
+    while(i<x && nbErrors>0)
+    { /* Condition d'arrêt : x = nombre de tours max OU zero erreur au tour précédent */
+        nbErrors = 0;
+        forceCorrection = (float)1/(float)(i+1);
+
+        /* evaluer chaque essay de train
+         * shuffle trainCorpus
+         */
+        random_shuffle(corpus.begin(), corpus.end());
+        for(size_t j=0; j<corpus.size(); j++)
+        {
+            if( ! evaluer(corpus[j], forceCorrection))
+            {
+                nbErrors++;
+            }
+        }
+
+        float err = ((float)nbErrors / (float)corpus.size()) * (float)100;
+        cout << "Step " << i << " - Erreurs : " << nbErrors << " / " << corpus.size() << " (" << err << " %)\n";
+
+        i++;
+    }
+}
+
+void Model::addIfFound(set<int> &found, const string &feature)
+{
+    map<string, int>::iterator it = m_featuresDico.find(feature);
+    if(it!=m_featuresDico.end()) found.emplace(it->second);
 }
 
 void Model::saveFeaturesDictionnary() const throw()

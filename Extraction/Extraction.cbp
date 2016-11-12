@@ -17,11 +17,11 @@
 					<Add option="-Wall" />
 					<Add option="-std=c++11" />
 					<Add option="-g" />
-					<Add option="-lpthread -pthread" />
+					<Add option="-v" />
 					<Add directory="include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add option="-lpthread -pthread" />
+					<Add option="-v" />
 				</ResourceCompiler>
 			</Target>
 			<Target title="Release">
@@ -31,7 +31,6 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add option="-std=c++11" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -43,11 +42,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="include/corpus.h" />
 		<Unit filename="include/essay.h" />
 		<Unit filename="include/model.h" />
 		<Unit filename="include/tools.h" />
-		<Unit filename="src/corpus.cpp" />
 		<Unit filename="src/essay.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/model.cpp" />

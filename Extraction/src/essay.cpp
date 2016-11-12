@@ -3,19 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include <thread>
-
-#include "tools.h"
 
 using namespace std;
-
-const unsigned int Essay::SZ_CORPUS_INF = 326;
-const unsigned int Essay::SZ_CORPUS_SUP = 372;
-const unsigned int Essay::NB_LETTER_INF = 1660;
-const unsigned int Essay::NB_LETTER_SUP = 1936;
-const float Essay::SZ_WORD_INF = 5.08;
-const float Essay::SZ_WORD_SUP = 5.23;
-
 
 Essay::Essay(const string& essay, /* const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3,*/ map<string, int>& dic, std::set<std::string> &langDico) throw()
 {
@@ -44,51 +33,16 @@ Essay::Essay(const string& essay, /* const string& labels, const string& labelsO
     langDico.emplace(m_lang);
 }
 
+Essay::~Essay()
+{
+    //dtor
+}
+
 //Copy ctor
 Essay::Essay(const Essay& other) :m_text(other.m_text), m_sizeWord(other.m_sizeWord),
 m_wordsList(other.m_wordsList), m_lang(other.m_lang), m_level(other.m_level)
 {
 
-}
-
-/* À modifier suivant les champs de la classe ajoutés dans le future
- * Amirali
- */
-Essay::Essay(Essay&& rvalue)
-{
-    m_text = move(rvalue.m_text);
-    m_sizeWord = rvalue.m_sizeWord;
-    m_nbSentences = rvalue.m_nbSentences;
-    m_wordsList = move(rvalue.m_wordsList);
-    m_labelsList = move(rvalue.m_labelsList);
-    m_lang = move(rvalue.m_lang);
-    m_level = move(rvalue.m_level);
-
-    rvalue.m_sizeWord = 0.0f;
-    rvalue.m_nbSentences = 0;
-}
-
-/*** Opérateurs ***/
-
-/* À modifier suivant les champs de la classe ajoutés dans le future
- * Amirali
- */
-Essay& Essay::operator=(Essay&& rvalue)
-{
-    if(this != &rvalue)
-    {
-        m_text = move(rvalue.m_text);
-        m_sizeWord = rvalue.m_sizeWord;
-        m_nbSentences = rvalue.m_nbSentences;
-        m_wordsList = move(rvalue.m_wordsList);
-        m_labelsList = move(rvalue.m_labelsList);
-        m_lang = move(rvalue.m_lang);
-        m_level = move(rvalue.m_level);
-
-        rvalue.m_sizeWord = 0.0f;
-        rvalue.m_nbSentences = 0;
-    }
-    return *this;
 }
 
 Essay& Essay::operator=(const Essay& rhs)
@@ -98,85 +52,7 @@ Essay& Essay::operator=(const Essay& rhs)
     return *this;
 }
 
-/*** Méthodes publiques ***/
-
-size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
-        vector<vector<float> >& langMatrix, set<int>& foundFeatures)
-{
-    //set<int> found;
-
-    const vector<string> wordsList = getWordsList();
-    /*** Caractéristiques personnalisées ***/
-    /* Il faudrait une troisième borne pour chaque,
-     * deux ça suffit pas, il faut mettre la caractéristique pour quand
-     * c'est compris entre les deux valeurs
-     * Amirali
-     */
-    size_t corpusSize = wordsList.size();
-    if(corpusSize <= SZ_CORPUS_INF)
-        addIfFound(foundFeatures, "SZ_CORPUS_INF", featuresDico);
-    else if(corpusSize >= SZ_CORPUS_SUP)
-        addIfFound(foundFeatures, "SZ_CORPUS_SUP", featuresDico);
-
-    /* ça ne vas pas du tout ça, on perd du temps
-     * à charger le texte juste pour avoir la taille
-     * De plus, size() donne la taille du texte entier, du coup ponctuation et espaces compris
-     * du coup mauvais calcul vu qu'il compte les ponctuations et espaces comme des lettres.
-     * Amirali
-     */
-    if(m_text.size() <= NB_LETTER_INF)
-        addIfFound(foundFeatures, "NB_LETTER_INF", featuresDico);
-    else if(m_text.size() >= NB_LETTER_SUP)
-        addIfFound(foundFeatures, "NB_LETTER_SUP", featuresDico);
-
-    if(m_sizeWord <= NB_LETTER_INF)
-        addIfFound(foundFeatures, "SZ_WORD_INF", featuresDico);
-    else if(m_sizeWord >= NB_LETTER_SUP)
-        addIfFound(foundFeatures, "SZ_WORD_SUP", featuresDico);
-
-    /*** Caractéristiques sur les mots ***/
-    for(size_t i=0; i<corpusSize; i++)
-    {
-        addIfFound(foundFeatures, "NB_W_" + wordsList[i], featuresDico);
-    }
-
-    /*** Caractéristiques sur les paires de mots ***/
-    for(size_t i=0; i<corpusSize-1; i++)
-    {
-        addIfFound(foundFeatures, "NB_2W_" + wordsList[i] + "_" + wordsList[i+1], featuresDico);
-    }
-
-
-
-    /*** Calcul du score de chaque langue ***/
-    if(langMatrix.size() == 0)
-    {
-        cout << "Bug dans essay::evaluer" << endl;
-    }
-    int score[nbLang] = {0};
-    for(int i : foundFeatures)
-    {
-        for(size_t j=0; j<nbLang; j++)
-        {
-            score[j] += langMatrix[i][j];
-        }
-    }
-    /*** Renvoi de l'indice de la langue avec le plus grand score ***/
-    return Tools::getMaxIndex(score, nbLang);
-}
-
-
-/* Méthodes evaluer pour le test final / À améliorer pour retirer la création du set- Amirali */
- size_t Essay::evaluer(const size_t& nbLang, std::map<std::string, int>& featuresDico,
-        std::vector<std::vector<float> >& langMatrix)
-{
-    set<int> dummy;
-    return evaluer(nbLang, featuresDico, langMatrix, dummy);
-}
-
-/*** Méthodes privées ***/
-
-void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& text)
+void Essay::splitEssay(char delim, map<string, int>& dic, const string& text)
 {
     istringstream ss(text);
     string item;
@@ -187,7 +63,7 @@ void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& t
     int somme = 0;
     while (getline(ss, item, delim))
     {
-        string buff = std::move(item);
+        string buff = item;
         /* Faudrait peut être compter le nombre de majuscules avant de tolower
          * ça peut être une caractéristiques
          * Amirali
@@ -196,21 +72,15 @@ void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& t
         // Florian
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
         dic.emplace("NB_W_" + buff, dic.size());
+        m_wordsList.push_back(buff);
         if (buff.compare(".") == 0) m_nbSentences++;
         // somme peut servir à calculer le nombre de lettres dans l'essai
         // Florian
         /* C'est utile de savoir le nombre de lettre d'un texte?? Amirali */
         somme += buff.size();
-        m_wordsList.push_back(std::move(buff));
     }
     //m_wordsList = wordsList;
     m_sizeWord = somme/(float)m_wordsList.size();
-}
-
-void Essay::addIfFound(set<int> &found, const string &feature, map<string, int>& featuresDico)
-{
-    map<string, int>::iterator it = featuresDico.find(feature);
-    if(it!=featuresDico.end()) found.emplace(it->second);
 }
 
 /* Florian
