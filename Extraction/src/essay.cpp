@@ -18,14 +18,21 @@ Essay::Essay(const string& essay, /* const string& labels, const string& labelsO
 
     m_lang = essay.substr(1, firstComa-1);
     m_level = essay.substr(firstComa+1, firstCP-firstComa-1);
-    string text = essay.substr(firstSpace+1); // texte sans langue et niveau
+    m_text = essay.substr(firstSpace+1); // texte sans langue et niveau
     //m_labels = labels.substr(firstSpace+1); // l'entête est la même
     //m_labelsOcc1 = labelsOcc1.substr(firstSpace+1);
     //m_labelsOcc2 = labelsOcc2.substr(firstSpace+1);
     //m_labelsOcc3 = labelsOcc3.substr(firstSpace+1);
     m_nbSentences = 0;
+    m_nbFinishING = 0;
+    m_nbFirstCaps = 0;
+    m_nbI = 0;
+    m_nbi = 0;
+    m_nbPronoms = 0;
+    m_nbThe = 0;
+    m_nbComma = 0;
 
-    splitEssay(' ', dic, text);
+    splitEssay(' ', dic, m_text);
     //spitLabels(' ', dic);
     //spitLabelsOcc1(' ', dic);
     //spitLabelsOcc2(' ', dic);
@@ -39,7 +46,7 @@ Essay::~Essay()
 }
 
 //Copy ctor
-Essay::Essay(const Essay& other) :m_text(other.m_text), m_sizeWord(other.m_sizeWord),
+Essay::Essay(const Essay& other) :m_text(other.m_text), m_avgSizeWord(other.m_avgSizeWord), m_nbSentences(other.m_nbSentences), m_nbFinishING(other.m_nbFinishING), m_nbFirstCaps(other.m_nbFirstCaps), m_nbI(other.m_nbI), m_nbi(other.m_nbi), m_nbPronoms(other.m_nbPronoms), m_nbThe(other.m_nbThe), m_nbComma(other.m_nbComma),
 m_wordsList(other.m_wordsList), m_lang(other.m_lang), m_level(other.m_level)
 {
 
@@ -56,31 +63,76 @@ void Essay::splitEssay(char delim, map<string, int>& dic, const string& text)
 {
     istringstream ss(text);
     string item;
-    /* Pareil, l'utilité de la variable temporaire?
-     * Amirali
-     */
-    // vector<string> wordsList;
+
     int somme = 0;
     while (getline(ss, item, delim))
     {
         string buff = item;
-        /* Faudrait peut être compter le nombre de majuscules avant de tolower
-         * ça peut être une caractéristiques
-         * Amirali
-         */
+        size_t length = buff.size();
+
+        char first = buff[0];
+        /** mots commençant par une majuscule **/
+        if(isupper(first))
+        {
+            m_nbFirstCaps++;
+            /** pronom I majuscule **/
+            if(buff == "I")
+            {
+                m_nbI++;
+                m_nbPronoms++;
+            }
+        }
+        else{
+            /** pronom I minuscule **/
+            if(buff == "i")
+            {
+                m_nbi++;
+                m_nbPronoms++;
+            }
+        }
+
         // Compter les points peut suffir à compter les phrases
         // Florian
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
+
+
+        /** Pronoms : you, he, she, it, we, they **/
+        if(buff.compare("you")==0 || buff.compare("he")==0 || buff.compare("she")==0 || buff.compare("it")==0 || buff.compare("we")==0 || buff.compare("they")==0 )
+        {
+            m_nbPronoms++;
+        }
+        /** The **/
+        else if(buff.compare("the")==0 )
+        {
+            m_nbThe++;
+        }
+        /** . (point) **/
+        else if(buff.compare(".")==0 )
+        {
+            m_nbSentences++;
+        }
+        /** , (comma) **/
+        else if(buff.compare(",")==0 )
+        {
+            m_nbComma++;
+        }
+
         dic.emplace("NB_W_" + buff, dic.size());
         m_wordsList.push_back(buff);
-        if (buff.compare(".") == 0) m_nbSentences++;
         // somme peut servir à calculer le nombre de lettres dans l'essai
         // Florian
         /* C'est utile de savoir le nombre de lettre d'un texte?? Amirali */
-        somme += buff.size();
+        somme += length;
+
+        /** mots finissant par -ing **/
+        if(length>=3){
+            if(buff.substr(length-3).compare("ing") == 0)
+            {
+                m_nbFinishING++;
+            }
+        }
     }
-    //m_wordsList = wordsList;
-    m_sizeWord = somme/(float)m_wordsList.size();
+    m_avgSizeWord = somme/(float)m_wordsList.size();
 }
 
 /* Florian
@@ -153,6 +205,14 @@ void Essay::spitLabelsOcc3(char delim, map<string, int>& dic)
 
 ostream& operator<< (ostream& stream, const Essay& essay)
 {
-    stream << "Langue: " << essay.m_lang << "\nNiveau: " << essay.m_level << "\nWord count: " << essay.m_wordsList.size() << "\nSentence count: " << essay.m_nbSentences;
+    stream <<   "Langue: " << essay.m_lang <<
+                "\nNiveau: " << essay.m_level <<
+                "\nWord count: " << essay.m_wordsList.size() <<
+                "\nSentence count: " << essay.m_nbSentences <<
+                "\nNbComma: " << essay.m_nbComma <<
+                "\nNbI: " << essay.m_nbI <<
+                "\nNbi: " << essay.m_nbi <<
+                "\nNbPronoms: " << essay.m_nbPronoms <<
+                "\nNbThe: " << essay.m_nbThe;
     return stream;
 }

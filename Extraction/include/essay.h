@@ -14,12 +14,20 @@ class Essay
         virtual ~Essay();
         Essay(const Essay& other);
         Essay& operator=(const Essay& other);
-        int getNbSentences() const { return m_nbSentences; }
-        float getSizeWord() const { return m_sizeWord; }
+        const unsigned int getNbSentences() const { return m_nbSentences; }
+        const float getSizeWord() const { return m_avgSizeWord; }
         const std::string& getText() const { return m_text; }
+        const unsigned int getTextSize() const { return m_text.size(); }
         const std::vector<std::string>& getWordsList() { return m_wordsList; }
-        std::string getLang() const { return m_lang; }
-        std::string getLevel() const { return m_level; }
+        const std::string getLang() const { return m_lang; }
+        const std::string getLevel() const { return m_level; }
+        const unsigned int getNbFinishING() const { return m_nbFinishING; }
+        const unsigned int getNbFirstCaps() const { return m_nbFirstCaps; }
+        const unsigned int getNbI() const { return m_nbI; }
+        const unsigned int getNbi() const { return m_nbi; }
+        const unsigned int getNbPronoms() const { return m_nbPronoms; }
+        const unsigned int getNbThe() const { return m_nbThe; }
+        const unsigned int getNbComma() const { return m_nbComma; }
 
         friend std::ostream& operator<< (std::ostream& stream, const Essay& essay);
     protected:
@@ -36,17 +44,19 @@ class Essay
         /** Members **/
         std::string m_text;
 
-        /* Je comprends pas trop ce que c'est
-         * La longueur moyenne des mots de l'essai?
-         * Peut être à renommer du coup? :)
-         * Amirali
-         */
-        float m_sizeWord;
-        int m_nbSentences;
+        float m_avgSizeWord;
+        unsigned int m_nbSentences;
         std::vector<std::string> m_wordsList;
         std::vector<std::string> m_labelsList;
         std::string m_lang;
         std::string m_level;
+        unsigned int m_nbFinishING;
+        unsigned int m_nbFirstCaps;
+        unsigned int m_nbI;
+        unsigned int m_nbi;
+        unsigned int m_nbPronoms;
+        unsigned int m_nbThe;
+        unsigned int m_nbComma;
         //unordered_set& m_dictionnary;
 
         size_t test;
