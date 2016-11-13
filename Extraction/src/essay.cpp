@@ -24,6 +24,36 @@ const unsigned int Essay::AVG_POINT[2] = {13, 18};
 const unsigned int Essay::AVG_COMMA[2] = {10, 16};
 
 
+Essay::Essay(const string& essay, map<string, int>& dic, std::set<std::string> &langDico) throw()
+{
+    size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)
+    size_t firstComa = essay.find_first_of(',', 0);
+    size_t firstCP = essay.find_first_of(')', 0);
+
+    // gestion d'erreur
+    if(firstSpace == string::npos || firstComa == string::npos || firstCP == string::npos)
+        throw invalid_argument(string("Erreur lors de la lecture du fichier text "
+                                      + essay + "\nFichier inccorect."));
+
+    m_lang = essay.substr(1, firstComa-1);
+    m_level = essay.substr(firstComa+1, firstCP-firstComa-1);
+    string text = essay.substr(firstSpace+1); // texte sans langue et niveau
+    m_textSize = text.size();
+    m_nbLetter = 0;
+    m_nbSentences = 0;
+    m_nbFinishING = 0;
+    m_nbFirstCaps = 0;
+    m_nbI = 0;
+    m_nbi = 0;
+    m_nbPronoms = 0;
+    m_nbThe = 0;
+    m_nbComma = 0;
+
+    splitEssay(' ', dic, text);
+
+    langDico.emplace(m_lang);
+}
+
 Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3, map<string, int>& dic, std::set<std::string> &langDico) throw()
 {
     size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)

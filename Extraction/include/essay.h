@@ -13,7 +13,7 @@ class Essay
     public:
         /** Constructeurs && Destructeur **/
         Essay(const std::string& essay, const std::string& labels, const std::string& labelsOcc1, const std::string& labelsOcc2, const std::string& labelsOcc3, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
-        //Essay(const std::string& essay, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
+        Essay(const std::string& essay, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
         Essay(const Essay& other);
         Essay(Essay &&rvalue);
         //virtual ~Essay();
