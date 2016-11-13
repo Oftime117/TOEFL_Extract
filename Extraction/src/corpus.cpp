@@ -44,14 +44,12 @@ Corpus::Corpus(const std::vector<std::string>& languages, std::map<std::string, 
 
 }
 
-
 Corpus::Corpus(const Corpus& other)
     : m_numTrain(other.m_numTrain), m_languages(other.m_languages), m_featuresDico(other.m_featuresDico),
     m_langMatrix(other.m_langMatrix), m_trainCorpus(other.m_trainCorpus), m_testCorpus(other.m_testCorpus)
 {
     //copy ctor
 }
-
 
 float Corpus::train(bool verbose)
 {

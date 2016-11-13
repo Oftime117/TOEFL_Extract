@@ -22,7 +22,6 @@ size_t Tools::getMaxIndex(const int tab[], const size_t& taille)
     return maxInd;
 }
 
-
 int Tools::getVectorIndex(const vector<string>& vec, const string& value)
 {
     for(size_t i=0; i<vec.size(); i++){
@@ -31,3 +30,13 @@ int Tools::getVectorIndex(const vector<string>& vec, const string& value)
     return -1;
 }
 
+bool Tools::addIfAbsent(std::map<std::string, int> &myMap, const string &val){
+    try{
+        myMap.at(val);
+    }
+    catch(out_of_range &oor){
+        myMap.emplace(val, myMap.size());
+        return true;
+    }
+    return false;
+}

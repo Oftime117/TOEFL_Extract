@@ -30,14 +30,16 @@
 	"essay.h"
 	"model.h"
 
-1478957728 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\essay.cpp
+1479046013 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\essay.cpp
 	"essay.h"
 	<iostream>
 	<fstream>
 	<sstream>
 	<algorithm>
+	<thread>
+	"tools.h"
 
-1478956418 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\essay.h
+1478987964 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\essay.h
 	<string>
 	<vector>
 	<map>
@@ -63,30 +65,35 @@
 	<vector>
 	"essay.h"
 
-1478944410 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\main.cpp
+1479046980 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\main.cpp
 	<string>
 	<sstream>
 	<iostream>
-	<iostream>
 	<fstream>
 	<chrono>
+	<thread>
 	"essay.h"
 	"model.h"
 
-1478956404 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\model.h
+1478987964 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\model.h
 	<algorithm>
 	<map>
 	<set>
 	<vector>
 	"essay.h"
 
-1478958845 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\model.cpp
+1478987964 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\model.cpp
 	<iostream>
 	<fstream>
 	<sstream>
+	<thread>
+	<future>
+	<random>
+	<chrono>
 	"tools.h"
 	"model.h"
 	"essay.h"
+	"corpus.h"
 
 1477336490 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/essay.cpp
 	"essay.h"
@@ -149,13 +156,28 @@
 
 1478955807 
 
-1478011826 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\tools.cpp
+1479046072 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\tools.cpp
 	"tools.h"
 
-1478011826 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\tools.h
+1479046137 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\tools.h
 	<string>
 	<vector>
 	<set>
+	<map>
 
 1478011826 ime117/TOEFL_Extract/master
+
+1479043643 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\corpus.cpp
+	"corpus.h"
+	<algorithm>
+	<iostream>
+	<set>
+	<thread>
+	"tools.h"
+
+1479046921 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\corpus.h
+	<vector>
+	<map>
+	<string>
+	"essay.h"
 

@@ -21,7 +21,7 @@ class Corpus
         //Corpus& operator=(const Corpus& other);
 
         /** Méthodes **/
-        float train(bool verbose = false);
+        float train(bool verbose = true);
 
     protected:
 

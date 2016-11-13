@@ -24,14 +24,6 @@ const unsigned int Essay::AVG_POINT[2] = {13, 18};
 const unsigned int Essay::AVG_COMMA[2] = {10, 16};
 
 
-const unsigned int Essay::SZ_CORPUS_INF = 326;
-const unsigned int Essay::SZ_CORPUS_SUP = 372;
-const unsigned int Essay::NB_LETTER_INF = 1660;
-const unsigned int Essay::NB_LETTER_SUP = 1936;
-const float Essay::SZ_WORD_INF = 5.08;
-const float Essay::SZ_WORD_SUP = 5.23;
-
-
 Essay::Essay(const string& essay, /* const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3,*/ map<string, int>& dic, std::set<std::string> &langDico) throw()
 {
     size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)
@@ -80,7 +72,6 @@ Essay::Essay(const Essay& other) :m_textSize(other.m_textSize), m_nbLetter(other
 
 }
 
-
 /* À modifier suivant les champs de la classe ajoutés dans le future
  * Amirali
  */
@@ -102,7 +93,6 @@ Essay::Essay(Essay&& rvalue)
 }
 
 /*** Opérateurs ***/
-
 /* À modifier suivant les champs de la classe ajoutés dans le future
  * Amirali
  */
@@ -151,7 +141,6 @@ Essay& Essay::operator=(const Essay& other)
 }
 
 /*** Méthodes publiques ***/
-
 size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
         vector<vector<float> >& langMatrix, set<int>& foundFeatures /* = set<int>() - Amirali */)
 {
@@ -159,11 +148,6 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
 
     const vector<string> wordsList = getWordsList();
     /*** Caractéristiques personnalisées ***/
-    /* Il faudrait une troisième borne pour chaque,
-     * deux ça suffit pas, il faut mettre la caractéristique pour quand
-     * c'est compris entre les deux valeurs
-     * Amirali
-     */
     size_t corpusSize = wordsList.size();
 
     /** Nb de mots dans l'essai **/
@@ -218,18 +202,8 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     /** 1 = pire +++ / 2 = pire ++ / 3 = mieux **/
     evaluerFeature(m_nbComma, AVG_COMMA, "AVG_COMMA", foundFeatures, featuresDico, 3); //0
 
-//    /*** Caractéristiques sur les mots ***/
-//    for(size_t i=0; i<corpusSize; i++)
-//    {
-//        addIfFound(foundFeatures, "NB_W_" + wordsList[i], featuresDico);
-//    }
-//
-//    /*** Caractéristiques sur les paires de mots ***/
-//    for(size_t i=0; i<corpusSize-1; i++)
-//    {
-//        addIfFound(foundFeatures, "NB_2W_" + wordsList[i] + "_" + wordsList[i+1], featuresDico);
-//    }
 
+    /** Caractéristiques auto sur le texte **/
     for(size_t i=0; i<corpusSize-1; i++)
     {
         /*** Caractéristiques sur les mots ***/
@@ -259,7 +233,6 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     return Tools::getMaxIndex(score, nbLang);
 }
 
-
 /* Méthodes evaluer pour le test final / À améliorer pour retirer la création du set- Amirali */
  size_t Essay::evaluer(const size_t& nbLang, std::map<std::string, int>& featuresDico,
         std::vector<std::vector<float> >& langMatrix)
@@ -269,7 +242,6 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
 }
 
 /*** Méthodes privées ***/
-
 void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& text)
 {
     istringstream ss(text);
@@ -344,11 +316,11 @@ void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& t
          * Amirali
          */
         m_nbLetter += length;
-        dic.emplace("NB_W_" + buff, dic.size());
+        Tools::addIfAbsent(dic, "NB_W_" + buff);
 
         if(previousWord != "")
         {
-            dic.emplace("NB_2W_" + previousWord + "_" + buff, dic.size());
+            Tools::addIfAbsent(dic, "NB_2W_" + previousWord + "_" + buff);
         }
 
         previousWord = buff;
@@ -356,7 +328,6 @@ void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& t
     }
     m_avgSizeWord = m_nbLetter/(float)m_wordsList.size();
 }
-
 
 void Essay::addIfFound(set<int> &found, const string &feature, map<string, int>& featuresDico)
 {
@@ -403,7 +374,6 @@ void Essay::evaluerFeature(const float &val, const float borne[], const string &
         }
     }
 }
-
 
 /* Florian
 void Essay::splitLabels(char delim, map<string, int>& dic)
