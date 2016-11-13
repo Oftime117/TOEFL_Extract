@@ -14,6 +14,9 @@
 using namespace std;
 
 // Constantes
+const bool Model::printTrainConfusionMatrix = true;
+
+
 const unsigned int Model::AVG_WORD_CORPUS[2] = {324, 373};
 const unsigned int Model::AVG_LETTER_CORPUS[2] = {1653, 1942};
 const float Model::AVG_S_WORD[2] = {5.08, 5.23};
@@ -26,15 +29,6 @@ const unsigned int Model::AVG_THE[2] = {13, 18};
 const unsigned int Model::AVG_S_SENTENCE[2] = {19, 25};
 const unsigned int Model::AVG_POINT[2] = {13, 18};
 const unsigned int Model::AVG_COMMA[2] = {10, 16};
-
-/* A enlever surement - Amirali */
-const unsigned int Model::SZ_CORPUS_INF = 326;
-const unsigned int Model::SZ_CORPUS_SUP = 372;
-const unsigned int Model::NB_LETTER_INF = 1660;
-const unsigned int Model::NB_LETTER_SUP = 1936;
-const float Model::SZ_WORD_INF = 5.08;
-const float Model::SZ_WORD_SUP = 5.23;
-
 
 
 Model::Model(string corpusPath, string featuresOut, string langMatrixOut)
@@ -54,25 +48,12 @@ m_langMatrixPath(langMatrixIn), m_languages(), m_featuresDico(), m_langMatrix(),
     loadLangDictionnary();
 }
 
-/* Pourquoi les autres variables ne sont pas initialisé?
- * Amirali
- */
-Model::Model(vector<Essay> &corpusList):m_corpusList(corpusList)
-{
-
-    cout<<"m_corpusList taille ==== "<<m_corpusList.size()<<endl;
-
-    // Initialisation de la matrice avec des 0
-    m_langMatrix = vector<vector<float> >(m_featuresDico.size(), vector<float>(m_languages.size(), 0));
-}
-
 //Model::~Model()
 //{
 //    //dtor
 //}
 
 /*** Méthodes publiques ***/
-
 /* Cette fonction est encore utile?
  * Amirali
  */
@@ -84,6 +65,7 @@ void Model::trainAll()
 float Model::trainByDiv3(const size_t& nbDiv)
 {
     float err[nbDiv];
+    std::vector<std::vector<int>> confusion[nbDiv];
     vector<future<float> > futures;
     vector<Corpus> corpusTab;
     /*** Lancement de l'entrainement en cross validation ***/
@@ -123,11 +105,39 @@ float Model::trainByDiv3(const size_t& nbDiv)
         {
             future<float> fut = move(futures.back());
             futures.pop_back();
+            /** extraire le taux d'erreur **/
             err[i] = fut.get();
+            /** extraire la matrice de confusion **/
+            Tools::sumMatrix(m_confusionMatrix, corpusTab[i].getConfusionMatrix());
+            if(printTrainConfusionMatrix)
+            {
+                stringstream s; s << "data/confusion_"<<i<<".txt";
+                corpusTab[i].printConfusionMatrix(s.str());
+            }
             i++;
         }
+
         float errMoy = Tools::floatArrayAVG(err, nbDiv);
         cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
+
+
+        /*** Sauvegarde des résultats de chaque train dans un fichier ***/
+        string path = "data/history.txt";
+        cout << path << endl;
+        cout << ">> Sauvegarde des resultats de " << nbDiv << " entrainement" << (nbDiv>1?"s":"") << "\n\n";
+
+        ofstream cFile(path, ios::out | ios::app);
+        if(!cFile)
+        {
+            //throw une exception
+            return -1;
+        }
+        for(size_t i=0; i<nbDiv; i++)
+        {
+            cFile << "Train " << i << " = " << err[i] << " %\n";
+        }
+        cFile << "Moyenne = " << errMoy << endl;
+        cFile.close();
     }
     catch(const system_error& e)
     {
@@ -144,6 +154,7 @@ float Model::trainByDiv3(const size_t& nbDiv)
 
     return 0.0f;
 }
+
 float Model::trainByDiv2(const size_t& nbDiv)
 {
     float err[nbDiv];
@@ -164,8 +175,7 @@ float Model::trainByDiv2(const size_t& nbDiv)
 
 
     /*** Sauvegarde des résultats de chaque train dans un fichier ***/
-    size_t pos = m_featuresPath.find(".");
-    string path = m_featuresPath.substr(0, pos) + "_train.txt";
+    string path = "data/history.txt";
     cout << path << endl;
     cout << ">> Sauvegarde des resultats de " << nbDiv << " entrainements\n\n";
 
@@ -285,7 +295,6 @@ float Model::trainByDiv(const size_t& nbDiv, const size_t& stop)
     return errMoy;
 }
 
-//retourne l'indice de la langue
 /** unsigned int features **/
 void Model::evaluerFeature(const unsigned int &val, const unsigned int borne[], const string &featureName, set<int> &found, const unsigned int &mode){
     if(mode==1 || mode==2)
@@ -325,7 +334,6 @@ void Model::evaluerFeature(const float &val, const float borne[], const string &
         }
     }
 }
-
 
 void Model::save()
 {
@@ -374,9 +382,7 @@ void Model::printConfusionMatrix(const string& path) const{
     }
 }
 
-
 /*** Méthodes Privées ***/
-
 void Model::initModel()
 {
     /*** lancement du script (wapiti) ***/
@@ -398,7 +404,6 @@ void Model::initModel()
 
         /*** Lecture du corpus et enregistrement des caractéristiques ***/
         set<string> langSet;
-        //map<string, int> tempFeatures;
         string line/*, labeledline*/;
         /* Attention ici mettre des && entre les getlines n'est pas correct ! On sortirait du while
          * dès que l'on aurait fini de lire un des fichiers
@@ -420,28 +425,11 @@ void Model::initModel()
         corpusFile.close();
         m_languages = Tools::setToVector(langSet);
 
-        /* Je vois pas trop l'utilité de copier le dico d'une variable temp au champ de classe
-         * Autant direct mettre les features dans le champ de la classe m_featuresDico
-         * Amirali
-         */
 
         cout << "featuresDico size: " << m_featuresDico.size() << endl;
 
 
         /*** Ajout des caractéristiques personnalisées ***/
-//<<<<<<< HEAD
-//
-//        /* Créer variable locale pour la taille du dico,
-//         * Appeler size tout le temps est pas opti
-//         * Amirali
-//         */
-//        m_featuresDico.emplace("SZ_CORPUS_INF", m_featuresDico.size());
-//        m_featuresDico.emplace("SZ_CORPUS_SUP", m_featuresDico.size());
-//        m_featuresDico.emplace("NB_LETTER_INF", m_featuresDico.size());
-//        m_featuresDico.emplace("NB_LETTER_SUP", m_featuresDico.size());
-//        m_featuresDico.emplace("SZ_WORD_INF", m_featuresDico.size());
-//        m_featuresDico.emplace("NB_WORD_SUP", m_featuresDico.size());
-//=======
         addFeaturePerso("AVG_WORD_CORPUS");
         addFeaturePerso("AVG_LETTER_CORPUS");
         addFeaturePerso("AVG_S_WORD");
@@ -609,14 +597,12 @@ void Model::addFeaturePerso(const string &f){
 }
 
 void Model::addFeatureAndResize(const string &f){
-    try{
-        m_featuresDico.at(f);
-    }
-    catch(const out_of_range &oor){
-        m_featuresDico.emplace(f, m_featuresDico.size());
+    if(Tools::addIfAbsent(m_featuresDico, f))
+    {
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
     }
 }
+
 void Model::addIfFound(set<int> &found, const string &feature)
 {
     map<string, int>::iterator it = m_featuresDico.find(feature);

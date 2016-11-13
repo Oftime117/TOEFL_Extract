@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <set>
 #include <thread>
 
@@ -10,14 +11,15 @@
 using namespace std;
 
 
-
+/*** constructeur de cross-validation ***/
 Corpus::Corpus(const std::vector<std::string>& languages,
                std::map<std::string, int>& featuresDico,
               /*const?*/ std::vector<Essay>& trainingCorpusList, const size_t& nbDiv, const size_t& numTrain)
     : m_numTrain(numTrain), m_languages(languages), m_featuresDico(featuresDico),
-      m_langMatrix(), m_trainCorpus(), m_testCorpus()
+      m_langMatrix(), m_confusionMatrix(), m_trainCorpus(), m_testCorpus()
 {
     m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
+    resetConfusionMatrix();
 
     int l[m_languages.size()] = {0};
     /*** Sélection du corpus de textes pour la cross validation ***/
@@ -39,19 +41,17 @@ Corpus::Corpus(const std::vector<std::string>& languages,
 Corpus::Corpus(const std::vector<std::string>& languages, std::map<std::string, int>& featuresDico,
                std::vector<Essay>& testCorpusList)
     : m_numTrain(0), m_languages(languages), m_featuresDico(featuresDico),
-      m_langMatrix(), m_trainCorpus(), m_testCorpus(testCorpusList)
+      m_langMatrix(), m_confusionMatrix(), m_trainCorpus(), m_testCorpus(testCorpusList)
 {
-
+    resetConfusionMatrix();
 }
-
 
 Corpus::Corpus(const Corpus& other)
     : m_numTrain(other.m_numTrain), m_languages(other.m_languages), m_featuresDico(other.m_featuresDico),
-    m_langMatrix(other.m_langMatrix), m_trainCorpus(other.m_trainCorpus), m_testCorpus(other.m_testCorpus)
+    m_langMatrix(other.m_langMatrix), m_confusionMatrix(other.m_confusionMatrix), m_trainCorpus(other.m_trainCorpus), m_testCorpus(other.m_testCorpus)
 {
     //copy ctor
 }
-
 
 float Corpus::train(bool verbose)
 {
@@ -88,6 +88,35 @@ float Corpus::train(bool verbose)
     return errorPer;
 }
 
+void Corpus::resetConfusionMatrix() {
+    /** initialisation de la matrice de confusion a 0 partout */
+    m_confusionMatrix.clear();
+    m_confusionMatrix.resize(m_languages.size(), vector<int>(m_languages.size()));
+}
+
+void Corpus::printConfusionMatrix(const string& path) const{
+    ofstream mFile(path, ios::out);
+    if(!mFile)
+    {
+       cerr << "Impossible d'ouvrir le fichier " << path << endl;
+    }
+    else
+    {
+        size_t taille = m_confusionMatrix.size();
+        mFile << "\t";
+        for(string lang : m_languages){
+            mFile << lang << "\t";
+        }
+        for(size_t i=0; i<taille; i++){
+            mFile << endl << m_languages[i] << "\t";;
+            for(size_t j=0; j<taille; j++){
+                mFile << m_confusionMatrix[i][j] << "\t";
+            }
+        }
+        mFile.close();
+    }
+}
+
 /*** Méthodes Privées ***/
 int Corpus::evaluer(vector<Essay>& subCorpus, const float& forceCorrection)
 {
@@ -111,18 +140,14 @@ int Corpus::evaluer(vector<Essay>& subCorpus, const float& forceCorrection)
         size_t langFoundInd = currentEssay.evaluer(m_languages.size(), m_featuresDico, m_langMatrix, featuresFound);
         string trueLang = currentEssay.getLang();
         int numLangText = Tools::getVectorIndex(m_languages, trueLang);
-        /* Comparer directement les indices ->
-         * Amirali
-         */
-        //int numLangText = Tools::getVectorIndex(m_languages, currentEssay.getLang());
 
         /*** ajouter a la matrice de confusion ***/
-//        if(forceCorrection == 0)
-//        {   /* lorsqu'il y a evaluation sans amelioration de l'entrainement */
-//            m_confusionMatrix[langFoundInd][numLangText] += 1;
-//        }
+        if(forceCorrection == 0)
+        {   /* lorsqu'il y a evaluation sans amelioration de l'entrainement */
+            m_confusionMatrix[langFoundInd][numLangText] ++;
+        }
 
-        if(trueLang != m_languages[langFoundInd])
+        if(numLangText != langFoundInd)
         {
             if(forceCorrection > 0)
             {

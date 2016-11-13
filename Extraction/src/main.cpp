@@ -11,40 +11,42 @@
 
 using namespace std;
 
+string printTempsEcoulee(chrono::time_point<chrono::system_clock> startTime,
+                       chrono::time_point<chrono::system_clock> endTime)
+{
+    auto elapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
+                             (endTime-startTime).count();
+    stringstream result;
+    result << elapsedMilli/60000 << ":" << elapsedMilli/1000%60 << "." << elapsedMilli%1000;
+    return result.str();
+
+}
 
 int main(/*int argc, char** argv*/)
 {
-    chrono::time_point<chrono::system_clock> startTime, endTime;
-    startTime = chrono::system_clock::now();
+    chrono::time_point<chrono::system_clock> t1, t2, t3;
+    t1 = chrono::system_clock::now();
 
     //Entraînement en partant de rien
 
     Model modele("data/train.txt", "data/features.txt", "data/model.txt");
 
-    endTime = chrono::system_clock::now();
+    t2 = chrono::system_clock::now();
 
-    auto loadElapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
-                             (endTime-startTime).count();
-    cout << "*** Temps de chargement des caracteristiques: " << loadElapsedMilli / 60000 << ":"
-         << loadElapsedMilli/1000%60 << "." <<loadElapsedMilli % 1000 << " ***"<< endl << endl;
+    cout << "*** Temps de chargement des caracteristiques: " << printTempsEcoulee(t1, t2) << " ***\n\n";
     cout <<"nb threads " << thread::hardware_concurrency() << endl;
 
+    modele.resetConfusionMatrix();
     modele.trainByDiv3(10);
+    modele.printConfusionMatrix("data/confusion.txt");
 
-//    modele.resetConfusionMatrix();
-//    modele.trainByDiv(10, 2);
-//    modele.printConfusionMatrix("data/confusion.txt");
-
-    startTime = chrono::system_clock::now();
-    auto CVTrainElapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
-                             (startTime-endTime).count();
-    cout << "*** Temps de l'entrainement: " << CVTrainElapsedMilli / 60000 << ":"
-         << CVTrainElapsedMilli/1000%60 <<"."<< CVTrainElapsedMilli % 1000 << " ***"<< endl << endl;
+    t3 = chrono::system_clock::now();
+    cout << "*** Temps de l'entrainement: " << printTempsEcoulee(t2, t3) << " ***\n\n";
 /*
     //Estimer la qualité de l'entraînement
     Model modele2("data/train.txt", "data/features.txt", "data/model.txt");
-    modele2.trainByDiv(10);
-    modele2.save();
+    modele2.trainByDiv(10, 1);
+    modele2.ssave();
 */
 /*
     //Test d'une solution en se servant d'un modèle entraîné
@@ -53,11 +55,7 @@ int main(/*int argc, char** argv*/)
     m.setOutFiles("data/features_2.txt", "data/model_2.txt");
     m.save();
 */
-    endTime = chrono::system_clock::now();
-
-    auto elapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
-                             (endTime-startTime).count();
-    cout<<"Ellapsed time: "<<elapsedMilli/60000<<":"<<elapsedMilli/1000%60<<"."<<elapsedMilli%1000<<endl;
+    cout<<"*** Temps total: " << printTempsEcoulee(t1, t3) << " ***\n\n";
 
 
     ofstream outFile("data/history.txt", ios::out | ios::app);
@@ -65,7 +63,7 @@ int main(/*int argc, char** argv*/)
         //throw une exception
         return -1;
     }
-    outFile<<"Temps d'execution = "<<elapsedMilli/60000<<":"<<elapsedMilli/1000%60<<"."<<elapsedMilli%1000<<endl<<endl;
+    outFile<<"Temps d'execution = "<<printTempsEcoulee(t1, t3)<<endl<<endl;
     outFile.close();
 
     return 0;

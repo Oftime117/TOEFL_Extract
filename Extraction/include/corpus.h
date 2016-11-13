@@ -23,6 +23,10 @@ class Corpus
         /** Méthodes **/
         float train(bool verbose = false);
 
+        void resetConfusionMatrix();
+        std::vector<std::vector<int>>& getConfusionMatrix(){ return m_confusionMatrix; }
+        void printConfusionMatrix(const std::string &path) const;
+
     protected:
 
     private:
@@ -41,6 +45,7 @@ class Corpus
         const std::vector<std::string>& m_languages;
         std::map<std::string, int>& m_featuresDico;
         std::vector<std::vector<float>> m_langMatrix;
+        std::vector<std::vector<int>> m_confusionMatrix;
         std::vector<Essay> m_trainCorpus;
         std::vector<Essay> m_testCorpus;
 

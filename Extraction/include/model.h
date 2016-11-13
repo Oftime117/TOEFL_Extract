@@ -60,12 +60,7 @@ class Model
         std::vector<Essay> m_corpusList;
 
         /** Const **/
-        const static unsigned int SZ_CORPUS_INF;
-        const static unsigned int SZ_CORPUS_SUP;
-        const static unsigned int NB_LETTER_INF;
-        const static unsigned int NB_LETTER_SUP;
-        const static float SZ_WORD_INF;
-        const static float SZ_WORD_SUP;
+        const static bool printTrainConfusionMatrix;
 
         static const unsigned int AVG_WORD_CORPUS[];
         static const unsigned int AVG_LETTER_CORPUS[];
