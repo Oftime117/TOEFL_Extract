@@ -5,27 +5,28 @@
 	<sstream>
 	<vector>
 
-1478022262 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\essay.cpp
+1478985818 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\essay.cpp
 	"essay.h"
 	<iostream>
 	<fstream>
 	<sstream>
 	<algorithm>
+	<thread>
+	"tools.h"
 
-1478022232 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\essay.h
+1478985700 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\essay.h
 	<string>
 	<vector>
 	<map>
 	<set>
 
-1478029639 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\main.cpp
+1478984076 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\main.cpp
 	<string>
 	<sstream>
 	<iostream>
-	<iostream>
 	<fstream>
 	<chrono>
-	<vector>
+	<thread>
 	"essay.h"
 	"model.h"
 
@@ -42,15 +43,20 @@
 	<map>
 	<set>
 
-1478029639 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\model.cpp
+1478984076 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\model.cpp
 	<iostream>
 	<fstream>
 	<sstream>
+	<thread>
+	<future>
+	<random>
+	<chrono>
 	"tools.h"
 	"model.h"
 	"essay.h"
+	"corpus.h"
 
-1478026995 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\model.h
+1478967368 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\model.h
 	<algorithm>
 	<map>
 	<set>
@@ -117,13 +123,31 @@
 	"model.h"
 	"essay.h"
 
-1477930573 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\tools.cpp
+1478954230 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\tools.cpp
 	"tools.h"
 
-1477930573 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\tools.h
+1478955515 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\tools.h
 	<string>
 	<vector>
 	<set>
+
+1478955515 D
+
+1478981624 source:d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\src\corpus.cpp
+	"corpus.h"
+	<algorithm>
+	<iostream>
+	<set>
+	<thread>
+	"tools.h"
+
+1478955807 d:\amirali ghazi\documents\cours\informatique\et5\extraction\projet\extraction\include\corpus.h
+	<vector>
+	<map>
+	<string>
+	"essay.h"
+
+1478955807 
 
 1478011826 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\tools.cpp
 	"tools.h"
@@ -132,4 +156,6 @@
 	<string>
 	<vector>
 	<set>
+
+1478011826 ime117/TOEFL_Extract/master
 

@@ -1,9 +1,10 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <iostream>
 #include <fstream>
 #include <chrono>
+#include <thread>
+
 
 #include "essay.h"
 #include "model.h"
@@ -11,7 +12,7 @@
 using namespace std;
 
 
-int main(int argc, char** argv)
+int main(/*int argc, char** argv*/)
 {
     chrono::time_point<chrono::system_clock> startTime, endTime;
     startTime = chrono::system_clock::now();
@@ -19,12 +20,26 @@ int main(int argc, char** argv)
     //Entraînement en partant de rien
 
     Model modele("data/train.txt", "data/features.txt", "data/model.txt");
-    modele.resetConfusionMatrix();
-    modele.trainByDiv(10, 10);
-    modele.printConfusionMatrix("data/confusion.txt");
 
+    endTime = chrono::system_clock::now();
 
+    auto loadElapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
+                             (endTime-startTime).count();
+    cout << "*** Temps de chargement des caracteristiques: " << loadElapsedMilli / 60000 << ":"
+         << loadElapsedMilli/1000%60 << "." <<loadElapsedMilli % 1000 << " ***"<< endl << endl;
+    cout <<"nb threads " << thread::hardware_concurrency() << endl;
 
+    modele.trainByDiv3(10);
+
+//    modele.resetConfusionMatrix();
+//    modele.trainByDiv(10, 2);
+//    modele.printConfusionMatrix("data/confusion.txt");
+
+    startTime = chrono::system_clock::now();
+    auto CVTrainElapsedMilli = chrono::duration_cast<std::chrono::milliseconds>
+                             (startTime-endTime).count();
+    cout << "*** Temps de l'entrainement: " << CVTrainElapsedMilli / 60000 << ":"
+         << CVTrainElapsedMilli/1000%60 <<"."<< CVTrainElapsedMilli % 1000 << " ***"<< endl << endl;
 /*
     //Estimer la qualité de l'entraînement
     Model modele2("data/train.txt", "data/features.txt", "data/model.txt");
