@@ -14,6 +14,7 @@ class Tools
         static size_t getMaxIndex(const int tab[], const std::size_t& taille);
         static int getVectorIndex(const std::vector<std::string>& vec, const std::string& value);
         static bool addIfAbsent(std::map<std::string, int> &myMap, const std::string &val);
+        static void sumMatrix(std::vector<std::vector<int>> &mat, const std::vector<std::vector<int>> &matConst);
         template<typename T>
         static std::vector<T> setToVector(std::set<T> setCollection)
         {

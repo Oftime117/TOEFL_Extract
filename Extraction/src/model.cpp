@@ -14,6 +14,9 @@
 using namespace std;
 
 // Constantes
+const bool Model::printTrainConfusionMatrix = true;
+
+
 const unsigned int Model::AVG_WORD_CORPUS[2] = {324, 373};
 const unsigned int Model::AVG_LETTER_CORPUS[2] = {1653, 1942};
 const float Model::AVG_S_WORD[2] = {5.08, 5.23};
@@ -26,15 +29,6 @@ const unsigned int Model::AVG_THE[2] = {13, 18};
 const unsigned int Model::AVG_S_SENTENCE[2] = {19, 25};
 const unsigned int Model::AVG_POINT[2] = {13, 18};
 const unsigned int Model::AVG_COMMA[2] = {10, 16};
-
-/* A enlever surement - Amirali */
-const unsigned int Model::SZ_CORPUS_INF = 326;
-const unsigned int Model::SZ_CORPUS_SUP = 372;
-const unsigned int Model::NB_LETTER_INF = 1660;
-const unsigned int Model::NB_LETTER_SUP = 1936;
-const float Model::SZ_WORD_INF = 5.08;
-const float Model::SZ_WORD_SUP = 5.23;
-
 
 
 Model::Model(string corpusPath, string featuresOut, string langMatrixOut)
@@ -71,6 +65,7 @@ void Model::trainAll()
 float Model::trainByDiv3(const size_t& nbDiv)
 {
     float err[nbDiv];
+    std::vector<std::vector<int>> confusion[nbDiv];
     vector<future<float> > futures;
     vector<Corpus> corpusTab;
     /*** Lancement de l'entrainement en cross validation ***/
@@ -110,9 +105,18 @@ float Model::trainByDiv3(const size_t& nbDiv)
         {
             future<float> fut = move(futures.back());
             futures.pop_back();
+            /** extraire le taux d'erreur **/
             err[i] = fut.get();
+            /** extraire la matrice de confusion **/
+            Tools::sumMatrix(m_confusionMatrix, corpusTab[i].getConfusionMatrix());
+            if(printTrainConfusionMatrix)
+            {
+                stringstream s; s << "data/confusion_"<<i<<".txt";
+                corpusTab[i].printConfusionMatrix(s.str());
+            }
             i++;
         }
+
         float errMoy = Tools::floatArrayAVG(err, nbDiv);
         cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
 

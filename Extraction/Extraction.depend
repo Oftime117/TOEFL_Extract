@@ -65,7 +65,7 @@
 	<vector>
 	"essay.h"
 
-1479046980 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\main.cpp
+1479054637 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\main.cpp
 	<string>
 	<sstream>
 	<iostream>
@@ -75,14 +75,14 @@
 	"essay.h"
 	"model.h"
 
-1478987964 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\model.h
+1479054640 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\model.h
 	<algorithm>
 	<map>
 	<set>
 	<vector>
 	"essay.h"
 
-1478987964 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\model.cpp
+1479052643 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\model.cpp
 	<iostream>
 	<fstream>
 	<sstream>
@@ -156,10 +156,10 @@
 
 1478955807 
 
-1479046072 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\tools.cpp
+1479051609 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\tools.cpp
 	"tools.h"
 
-1479046137 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\tools.h
+1479050981 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\tools.h
 	<string>
 	<vector>
 	<set>
@@ -167,15 +167,16 @@
 
 1478011826 ime117/TOEFL_Extract/master
 
-1479043643 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\corpus.cpp
+1479053832 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\corpus.cpp
 	"corpus.h"
 	<algorithm>
 	<iostream>
+	<fstream>
 	<set>
 	<thread>
 	"tools.h"
 
-1479046921 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\corpus.h
+1479052643 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\corpus.h
 	<vector>
 	<map>
 	<string>
