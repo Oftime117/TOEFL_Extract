@@ -50,7 +50,6 @@ do
 	moyenne["$type"]=$(echo "scale=$SC; $valeur / $n" | bc)
 	valeurs["$type"]=$valeur
 	echo "$valeur $type ${moyenne["$type"]}" >> valeurs-types-moyenneGroupe1.txt
-	
 done < sommeTagGroupe2
 
 # affichage des moyennes et supression des types qui ne sont pas dans moyenne
