@@ -386,14 +386,14 @@ void Model::printConfusionMatrix(const string& path) const{
 void Model::initModel()
 {
     /*** lancement du script (wapiti) ***/
-    //System("../script/script.sh");
-    //ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
-    //ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
-    //ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
-    //ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);
+    //System("../script/script.sh"); //on suppose que les fichiers sont déjà créés
+    /*ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
+    ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
+    ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
+    ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);*/
 
     ifstream corpusFile(m_trainPath, ios::in);
-    if(!corpusFile /* || !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile || !labeledOcc3CorpusFile */)
+    if(!corpusFile /*|| !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile || !labeledOcc3CorpusFile*/)
     {
        cerr << "Impossible d'ouvrir un des fichiers !" << endl;
     }
@@ -404,18 +404,28 @@ void Model::initModel()
 
         /*** Lecture du corpus et enregistrement des caractéristiques ***/
         set<string> langSet;
-        string line/*, labeledline*/;
+        string line/*, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line*/;
         /* Attention ici mettre des && entre les getlines n'est pas correct ! On sortirait du while
          * dès que l'on aurait fini de lire un des fichiers
          * Peut être mieux de lire les fichiers les uns après les autres?
          * Amirali
+         *
+         * TODO: Check j'ai trouvé que good() devrait faire ce que je veux mais du coup je dois faire des cas ensuite
+         * Si tu as une meilleure idée, n'hesite pas
          */
-        while (getline(corpusFile, line) /* && getline(labeledCorpusFile, labeledLine) && getline(labeledOcc1CorpusFile, labeledOcc1Line)
-            && getline(labeledOcc2CorpusFile, labeledOcc2Line) && getline(labeledOcc3CorpusFile, labeledOcc3Line)*/)
+        while (getline(corpusFile, line) /*corpusFile.good() || labeledCorpusFile.good() || labeledOcc1CorpusFile.good()
+            || labeledOcc2CorpusFile.good() || labeledOcc3CorpusFile.good()*/)
         {
+            //if (corpusFile.good()) getline(corpusFile, line);
+            /*if (labeledCorpusFile.good()) getline(labeledCorpusFile, labeledLine);
+            if (labeledOcc1CorpusFile.good()) getline(labeledOcc1CorpusFile, labeledOcc1Line);
+            if (labeledOcc2CorpusFile.good()) getline(labeledOcc2CorpusFile, labeledOcc2Line);
+            if (labeledOcc3CorpusFile.good()) getline(labeledOcc3CorpusFile, labeledOcc3Line);*/
+
             try
             {
-                Essay e(line/*, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line*/, m_featuresDico, langSet);
+                Essay e(line, m_featuresDico, langSet);
+                // Essay e(line, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line, m_featuresDico, langSet);
                 m_corpusList.push_back(std::move(e));
             }catch(const invalid_argument& e)
             {

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <map>
 #include <set>
 
@@ -11,6 +12,7 @@ class Essay
 {
     public:
         /** Constructeurs && Destructeur **/
+        Essay(const std::string& essay, const std::string& labels, const std::string& labelsOcc1, const std::string& labelsOcc2, const std::string& labelsOcc3, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
         Essay(const std::string& essay, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
         Essay(const Essay& other);
         Essay(Essay &&rvalue);
@@ -55,10 +57,10 @@ class Essay
         void evaluerFeature(const unsigned int &val, const unsigned int borne[], const std::string &featureName, std::set<int> &found, std::map<std::string, int>& featuresDico, const unsigned int &mode); /** unsigned int features **/
         void evaluerFeature(const float &val, const float borne[], const std::string &featureName, std::set<int> &found, std::map<std::string, int>& featuresDico, const unsigned int &mode); /** float features **/
 
-//        void splitLabels(char delim, std::map<std::string, int>& dic);
-//        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
-//        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
-//        void Essay::spitLabelsOcc1(char delim, std::map<std::string, int>& dic)
+        void splitLabels(const char& delim, std::map<std::string, int>& dic, const std::string& text);
+        void splitLabelsOcc1(const char& delim, std::map<std::string, int>& dic, const std::string& text);
+        void splitLabelsOcc2(const char& delim, std::map<std::string, int>& dic, const std::string& text);
+        void splitLabelsOcc3(const char& delim, std::map<std::string, int>& dic, const std::string& text);
 
         /** Membres **/
         //std::string m_text;
@@ -69,6 +71,7 @@ class Essay
         unsigned int m_nbSentences;
         std::vector<std::string> m_wordsList;
         std::vector<std::string> m_labelsList;
+        std::unordered_map<std::string, int> m_labelsMap;
         std::string m_lang;
         std::string m_level;
         unsigned int m_nbFinishING;

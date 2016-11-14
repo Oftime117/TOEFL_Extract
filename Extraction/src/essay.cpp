@@ -24,7 +24,7 @@ const unsigned int Essay::AVG_POINT[2] = {13, 18};
 const unsigned int Essay::AVG_COMMA[2] = {10, 16};
 
 
-Essay::Essay(const string& essay, /* const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3,*/ map<string, int>& dic, std::set<std::string> &langDico) throw()
+Essay::Essay(const string& essay, map<string, int>& dic, std::set<std::string> &langDico) throw()
 {
     size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)
     size_t firstComa = essay.find_first_of(',', 0);
@@ -40,10 +40,6 @@ Essay::Essay(const string& essay, /* const string& labels, const string& labelsO
     string text = essay.substr(firstSpace+1); // texte sans langue et niveau
     m_textSize = text.size();
     m_nbLetter = 0;
-    //m_labels = labels.substr(firstSpace+1); // l'entête est la même
-    //m_labelsOcc1 = labelsOcc1.substr(firstSpace+1);
-    //m_labelsOcc2 = labelsOcc2.substr(firstSpace+1);
-    //m_labelsOcc3 = labelsOcc3.substr(firstSpace+1);
     m_nbSentences = 0;
     m_nbFinishING = 0;
     m_nbFirstCaps = 0;
@@ -54,10 +50,47 @@ Essay::Essay(const string& essay, /* const string& labels, const string& labelsO
     m_nbComma = 0;
 
     splitEssay(' ', dic, text);
-    //spitLabels(' ', dic);
-    //spitLabelsOcc1(' ', dic);
-    //spitLabelsOcc2(' ', dic);
-    //spitLabelsOcc3(' ', dic);
+
+    langDico.emplace(m_lang);
+}
+
+Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3, map<string, int>& dic, std::set<std::string> &langDico) throw()
+{
+    size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)
+    size_t firstComa = essay.find_first_of(',', 0);
+    size_t firstCP = essay.find_first_of(')', 0);
+
+    // gestion d'erreur
+    if(firstSpace == string::npos || firstComa == string::npos || firstCP == string::npos)
+        throw invalid_argument(string("Erreur lors de la lecture du fichier text "
+                                      + essay + "\nFichier inccorect."));
+
+    m_lang = essay.substr(1, firstComa-1);
+    m_level = essay.substr(firstComa+1, firstCP-firstComa-1);
+    string text = essay.substr(firstSpace+1); // texte sans langue et niveau
+    m_textSize = text.size();
+    m_nbLetter = 0;
+    /** Partie labels | l'entête est la même que l'essay pour les labels **/
+    string myLabels = labels.substr(firstSpace+1);
+    string myLabelsOcc1 = labelsOcc1.substr(firstSpace+1);
+    string myLabelsOcc2 = labelsOcc2.substr(firstSpace+1);
+    string myLabelsOcc3 = labelsOcc3.substr(firstSpace+1);
+    m_nbSentences = 0;
+    m_nbFinishING = 0;
+    m_nbFirstCaps = 0;
+    m_nbI = 0;
+    m_nbi = 0;
+    m_nbPronoms = 0;
+    m_nbThe = 0;
+    m_nbComma = 0;
+
+    splitEssay(' ', dic, text);
+    /** Partie labels **/
+    splitLabels(' ', dic, myLabels);
+    splitLabelsOcc1(' ', dic, myLabelsOcc1);
+    splitLabelsOcc2(' ', dic, myLabelsOcc2);
+    splitLabelsOcc3(' ', dic, myLabelsOcc3);
+
     langDico.emplace(m_lang);
 }
 
@@ -273,8 +306,7 @@ void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& t
                 m_nbPronoms++;
             }
         }
-        // Compter les points peut suffir à compter les phrases
-        // Florian
+
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
 
 
@@ -375,62 +407,60 @@ void Essay::evaluerFeature(const float &val, const float borne[], const string &
     }
 }
 
-/* Florian
-void Essay::splitLabels(char delim, map<string, int>& dic)
+/** Stocker les labels dans leur liste **/
+void Essay::splitLabels(const char& delim, map<string, int>& dic, const string& text)
 {
     stringstream ss;
-    ss.str(m_labels);
+    ss.str(text);
     string item;
-    vector<string> labelsList;
-    while (getline(ss, occurence, delim) && getline(ss, item, delim))
+    while (getline(ss, item, delim))
     {
-        string buff1 = occurence;
-        string buff2 = item;
+        string buff = item;
         dic.emplace("NB_L_" + buff, dic.size());
-        labelsList.push_back(buff);
+        m_labelsList.push_back(buff);
     }
-    m_labelsList = labelsList;
 }
 
-void Essay::spitLabelsOcc1(char delim, map<string, int>& dic)
+/** Stocker les occurences d'un label dans sa map **/
+void Essay::splitLabelsOcc1(const char& delim, map<string, int>& dic, const string& text)
 {
     stringstream ss;
-    ss.str(m_labelsOcc1);
+    ss.str(text);
+    string occurence;
     string item;
-    map<string, int> labelsMap;
     while (getline(ss, occurence, delim) && getline(ss, item, delim))
     {
         string buff1 = occurence;
         string buff2 = item;
         dic.emplace("ORDRE_L1_" + buff2, dic.size());
-        labelsMap.emplace(buff2, std::stoi(buff1, 10));
+        m_labelsMap.emplace(buff2, std::stoi(buff1));
     }
-    m_labelsMap = labelsMap;
 }
 
-void Essay::spitLabelsOcc2(char delim, map<string, int>& dic)
+/** Stocker les occurences de deux labels dans leur map **/
+void Essay::splitLabelsOcc2(const char& delim, map<string, int>& dic, const string& text)
 {
     stringstream ss;
-    ss.str(m_labelsOcc2);
-    string item;
-    map<string, int> labelsMap;
+    ss.str(text);
+    string occurence;
+    string item1, item2;
     while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim))
     {
         string buff1 = occurence;
         string buff2 = item1;
         string buff3 = item2;
         dic.emplace("ORDRE_L2_" + buff2 + "_" + buff3, dic.size());
-        labelsMap.emplace(buff2 + "_" + buff3, std::stoi(buff1, 10));
+        m_labelsMap.emplace(buff2 + "_" + buff3, std::stoi(buff1));
     }
-    m_labelsMap = labelsMap;
 }
 
-void Essay::spitLabelsOcc3(char delim, map<string, int>& dic)
+/** Stocker les occurences de trois labels dans leur map **/
+void Essay::splitLabelsOcc3(const char& delim, map<string, int>& dic, const string& text)
 {
     stringstream ss;
-    ss.str(m_labelsOcc3);
-    string item;
-    map<string, int> labelsMap;
+    ss.str(text);
+    string occurence;
+    string item1, item2, item3;
     while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim) && getline(ss, item3, delim))
     {
         string buff1 = occurence;
@@ -438,10 +468,9 @@ void Essay::spitLabelsOcc3(char delim, map<string, int>& dic)
         string buff3 = item2;
         string buff4 = item3;
         dic.emplace("ORDRE_L3_" + buff2 + "_" + buff3 + "_" + buff4, dic.size());
-        labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, std::stoi(buff1, 10));
+        m_labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, std::stoi(buff1));
     }
-    m_labelsMap = labelsMap;
-}*/
+}
 
 ostream& operator<< (ostream& stream, const Essay& essay)
 {

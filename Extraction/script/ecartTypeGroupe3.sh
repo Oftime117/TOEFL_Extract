@@ -36,6 +36,7 @@ grep . sommeTagGroupe3 | cut -d" " -f 2 > typesGroupe3
 
 # creation tableau moyenne | valeur
 declare -A moyenne
+declare -A valeurs
 
 SC=9 # on prend 9 chiffres après la virgule
 n=9900 # nombre de ligne dans ..data/train/train.txt
@@ -49,6 +50,7 @@ do
 		continue
 	fi
 	moyenne["$type"]=$(echo "scale=$SC; $valeur / $n" | bc)
+	valeurs["$type"]=$valeur
 done < sommeTagGroupe3
 
 # affichage des moyennes et supression des types qui ne sont pas dans moyenne
@@ -122,7 +124,7 @@ if [ ! -f "tagsommeDesCarresDesDifferencesListGroupe3.txt" ] ; then
 	> tagsommeDesCarresDesDifferencesListGroupe3.txt
 	while read ty ;
 	do
-		echo "$ty ${sum2["$ty"]} ${occ["$type"]}" >> tagsommeDesCarresDesDifferencesListGroupe3.txt
+		echo "$ty ${sum2["$ty"]} ${valeurs["$type"]}" >> tagsommeDesCarresDesDifferencesListGroupe3.txt
 	done < typesGroupe3
 fi
 
@@ -132,8 +134,9 @@ fi
 if [ -f "tagsommeDesCarresDesDifferencesListGroupe3.txt" ]; then
 	while read newline ;
 	do
-		type=`echo "${newline}" | cut -d" " -f 1-2`
-		valeur=`echo "${newline}" | cut -d" " -f 3`
+		type=`echo "${newline}" | cut -d" " -f 1`
+		valeur=`echo "${newline}" | cut -d" " -f 2`
+		nbOcc=`echo "${newline}" | cut -d" " -f 3`
 		if [ ! $valeur ] ; then
 			if [ "$valeur"=="$" ] ; then
 				echo "fin du fichier"
@@ -148,6 +151,7 @@ if [ -f "tagsommeDesCarresDesDifferencesListGroupe3.txt" ]; then
 			break
 		fi
 		sum2["$type"]=$valeur
+		valeurs["$type"]=$nbOcc
 	done < tagsommeDesCarresDesDifferencesListGroupe3.txt
 fi
 
@@ -161,9 +165,7 @@ echo "tableauDesEcartsTypes:"
 while read ty ;
 do
 	# calcul de l'ecart type
-	sdev["$ty"]=$(echo "scale=$SC; sqrt(${sum2["$ty"]} / ${occ["$type"])})" | bc) # racine carré de la moyenne
-	
-	echo "sqrt( sum2[$ty] / n) = sqrt( ${sum2["$ty"]} / ${occ["$type"])} ) = ${sdev["$ty"]} < ${moyenne["$ty"]}"
+	sdev["$ty"]=$(echo "scale=$SC; sqrt(${sum2["$ty"]} / ${valeurs["$ty"])})" | bc) # racine carré de la moyenne
 
 	# création du fichier à lire en c++
 	echo "$ty ${sdev["$ty"]}" >> fichierTypeEcartTypeGroupe3
