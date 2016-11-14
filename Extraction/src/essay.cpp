@@ -45,8 +45,20 @@ const unsigned int Essay::WAP_WRB[2] = {0, 4};
 const unsigned int Essay::WAP_CD[2] = {0, 4};
 const unsigned int Essay::WAP_WDT[2] = {0, 3};
 const unsigned int Essay::WAP_WP[2] = {0, 3};
-const unsigned int Essay::WAP_RBR[2] = {0, 3};
-
+const unsigned int Essay::WAP_DT_NN[2] = {8, 23};
+const unsigned int Essay::WAP_IN_DT[2] = {6, 18};
+const unsigned int Essay::WAP_NN_IN[2] = {5, 16};
+const unsigned int Essay::WAP_TO_VB[2] = {4, 13};
+const unsigned int Essay::WAP_JJ_NN[2] = {4, 13};
+const unsigned int Essay::WAP_JJ_NNS[2] = {2, 11};
+const unsigned int Essay::WAP_PRP_VBP[2] = {2, 11};
+const unsigned int Essay::WAP_DT_JJ[2] = {2, 10};
+const unsigned int Essay::WAP_IN_NN[2] = {2, 9};
+const unsigned int Essay::WAP_MD_VB[2] = {2, 9};
+const unsigned int Essay::WAP_IN_PRP[2] = {1, 7};
+const unsigned int Essay::WAP_NNS_IN[2] = {1, 7};
+const unsigned int Essay::WAP_VB_DT[2] = {1, 6};
+const unsigned int Essay::WAP_DT_NNS[2] = {0, 7};
 
 
 
@@ -261,8 +273,120 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     /** 1 = pire +++ / 2 = pire ++ / 3 = mieux **/
     evaluerFeature(m_nbComma, AVG_COMMA, "AVG_COMMA", foundFeatures, featuresDico, 3); //0
 
+    /*** caractéristiques issus de wapiti **/
     /*** nb de NN **/
-    //evaluerFeature(m_wapNN, WAP_NN, "WAP_NN", foundFeatures, featuresDico, 2);
+    evaluerFeature(m_labelsMap["NN"], WAP_NN, "WAP_NN", foundFeatures, featuresDico, 2);
+
+    /*** nb de IN **/
+    evaluerFeature(m_labelsMap["IN"], WAP_IN, "WAP_IN", foundFeatures, featuresDico, 2);
+
+    /*** nb de DT **/
+    evaluerFeature(m_labelsMap["DT"], WAP_DT, "WAP_DT", foundFeatures, featuresDico, 2);
+
+    /*** nb de NNS **/
+    evaluerFeature(m_labelsMap["NNS"], WAP_NNS, "WAP_NNS", foundFeatures, featuresDico, 2);
+
+    /*** nb de JJ **/
+    evaluerFeature(m_labelsMap["JJ"], WAP_JJ, "WAP_JJ", foundFeatures, featuresDico, 2);
+
+    /*** nb de VB **/
+    evaluerFeature(m_labelsMap["VB"], WAP_VB, "WAP_VB", foundFeatures, featuresDico, 2);
+
+    /*** nb de PRP **/
+    evaluerFeature(m_labelsMap["PRP"], WAP_PRP, "WAP_PRP", foundFeatures, featuresDico, 2);
+
+    /*** nb de RB **/
+    evaluerFeature(m_labelsMap["RB"], WAP_RB, "WAP_RB", foundFeatures, featuresDico, 2);
+
+    /*** nb de VBP **/
+    evaluerFeature(m_labelsMap["VBP"], WAP_VBP, "WAP_VBP", foundFeatures, featuresDico, 2);
+
+    /*** nb de TO **/
+    evaluerFeature(m_labelsMap["TO"], WAP_TO, "WAP_TO", foundFeatures, featuresDico, 2);
+
+    /*** nb de CC **/
+    evaluerFeature(m_labelsMap["CC"], WAP_CC, "WAP_CC", foundFeatures, featuresDico, 2);
+
+    /*** nb de VBZ **/
+    evaluerFeature(m_labelsMap["VBZ"], WAP_VBZ, "WAP_VBZ", foundFeatures, featuresDico, 2);
+
+    /*** nb de MD **/
+    evaluerFeature(m_labelsMap["MD"], WAP_MD, "WAP_MD", foundFeatures, featuresDico, 2);
+
+    /*** nb de VBG **/
+    evaluerFeature(m_labelsMap["VBG"], WAP_VBG, "WAP_VBG", foundFeatures, featuresDico, 2);
+
+    /*** nb de PRP$ **/
+    evaluerFeature(m_labelsMap["PRP$"], WAP_PRP$, "WAP_PRP$", foundFeatures, featuresDico, 2);
+
+    /*** nb de VBN **/
+    evaluerFeature(m_labelsMap["VBN"], WAP_VBN, "WAP_VBN", foundFeatures, featuresDico, 2);
+
+    /*** nb de VBD **/
+    evaluerFeature(m_labelsMap["VBD"], WAP_VBD, "WAP_VBD", foundFeatures, featuresDico, 2);
+
+    /*** nb de JJR **/
+    evaluerFeature(m_labelsMap["JJR"], WAP_JJR, "WAP_JJR", foundFeatures, featuresDico, 2);
+
+    /*** nb de NNP **/
+    evaluerFeature(m_labelsMap["NNP"], WAP_NNP, "WAP_NNP", foundFeatures, featuresDico, 2);
+
+    /*** nb de WRB **/
+    evaluerFeature(m_labelsMap["WRB"], WAP_WRB, "WAP_WRB", foundFeatures, featuresDico, 2);
+
+    /*** nb de CD **/
+    evaluerFeature(m_labelsMap["CD"], WAP_CD, "WAP_CD", foundFeatures, featuresDico, 2);
+
+    /*** nb de WDT **/
+    evaluerFeature(m_labelsMap["WDT"], WAP_WDT, "WAP_WDT", foundFeatures, featuresDico, 2);
+
+    /*** nb de WP **/
+    evaluerFeature(m_labelsMap["WP"], WAP_WP, "WAP_WP", foundFeatures, featuresDico, 2);
+
+    /*** nb de RBR **/
+    evaluerFeature(m_labelsMap["RBR"], WAP_RBR, "WAP_RBR", foundFeatures, featuresDico, 2);
+
+    /*** nb de DT_NN **/
+    evaluerFeature(m_labelsMap["DT_NN"], WAP_DT_NN, "WAP_DT_NN", foundFeatures, featuresDico, 2);
+
+    /*** nb de IN_DT **/
+    evaluerFeature(m_labelsMap["IN_DT"], WAP_IN_DT, "WAP_IN_DT", foundFeatures, featuresDico, 2);
+
+    /*** nb de NN_IN **/
+    evaluerFeature(m_labelsMap["NN_IN"], WAP_NN_IN, "WAP_NN_IN", foundFeatures, featuresDico, 2);
+
+    /*** nb de TO_VB **/
+    evaluerFeature(m_labelsMap["TO_VB"], WAP_TO_VB, "WAP_TO_VB", foundFeatures, featuresDico, 2);
+
+    /*** nb de JJ_NN **/
+    evaluerFeature(m_labelsMap["JJ_NN"], WAP_JJ_NN, "WAP_JJ_NN", foundFeatures, featuresDico, 2);
+
+    /*** nb de JJ_NNS **/
+    evaluerFeature(m_labelsMap["JJ_NNS"], WAP_JJ_NNS, "WAP_JJ_NNS", foundFeatures, featuresDico, 2);
+
+    /*** nb de PRP_VBP **/
+    evaluerFeature(m_labelsMap["PRP_VBP"], WAP_PRP_VBP, "WAP_PRP_VBP", foundFeatures, featuresDico, 2);
+
+    /*** nb de DT_JJ **/
+    evaluerFeature(m_labelsMap["DT_JJ"], WAP_DT_JJ, "WAP_DT_JJ", foundFeatures, featuresDico, 2);
+
+    /*** nb de IN_NN **/
+    evaluerFeature(m_labelsMap["IN_NN"], WAP_IN_NN, "WAP_IN_NN", foundFeatures, featuresDico, 2);
+
+    /*** nb de MD_VB **/
+    evaluerFeature(m_labelsMap["MD_VB"], WAP_MD_VB, "WAP_MD_VB", foundFeatures, featuresDico, 2);
+
+    /*** nb de IN_PRP **/
+    evaluerFeature(m_labelsMap["IN_PRP"], WAP_IN_PRP, "WAP_IN_PRP", foundFeatures, featuresDico, 2);
+
+    /*** nb de NNS_IN **/
+    evaluerFeature(m_labelsMap["NNS_IN"], WAP_NNS_IN, "WAP_NNS_IN", foundFeatures, featuresDico, 2);
+
+    /*** nb de VB_DT **/
+    evaluerFeature(m_labelsMap["VB_DT"], WAP_VB_DT, "WAP_VB_DT", foundFeatures, featuresDico, 2);
+
+    /*** nb de DT_NNS **/
+    evaluerFeature(m_labelsMap["DT_NNS"], WAP_DT_NNS, "WAP_DT_NNS", foundFeatures, featuresDico, 2);
 
 
 

@@ -129,6 +129,20 @@ class Essay
         static const unsigned int WAP_WDT[];
         static const unsigned int WAP_WP[];
         static const unsigned int WAP_RBR[];
+        static const unsigned int WAP_DT_NN[];
+        static const unsigned int WAP_IN_DT[];
+        static const unsigned int WAP_NN_IN[];
+        static const unsigned int WAP_TO_VB[];
+        static const unsigned int WAP_JJ_NN[];
+        static const unsigned int WAP_JJ_NNS[];
+        static const unsigned int WAP_PRP_VBP[];
+        static const unsigned int WAP_DT_JJ[];
+        static const unsigned int WAP_IN_NN[];
+        static const unsigned int WAP_MD_VB[];
+        static const unsigned int WAP_IN_PRP[];
+        static const unsigned int WAP_NNS_IN[];
+        static const unsigned int WAP_VB_DT[];
+        static const unsigned int WAP_DT_NNS[];
 };
 
 #endif // ESSAY_H

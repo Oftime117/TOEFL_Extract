@@ -476,6 +476,21 @@ void Model::initModel()
 		addFeaturePerso("WAP_WDT");
 		addFeaturePerso("WAP_WP");
 		addFeaturePerso("WAP_RBR");
+		addFeaturePerso("WAP_DT_NN");
+		addFeaturePerso("WAP_IN_DT");
+		addFeaturePerso("WAP_NN_IN");
+		addFeaturePerso("WAP_TO_VB");
+		addFeaturePerso("WAP_JJ_NN");
+		addFeaturePerso("WAP_JJ_NNS");
+		addFeaturePerso("WAP_PRP_VBP");
+		addFeaturePerso("WAP_DT_JJ");
+		addFeaturePerso("WAP_IN_NN");
+		addFeaturePerso("WAP_MD_VB");
+		addFeaturePerso("WAP_IN_PRP");
+		addFeaturePerso("WAP_NNS_IN");
+		addFeaturePerso("WAP_VB_DT");
+		addFeaturePerso("WAP_DT_NNS");
+
         /*** Initialisation de la matrice avec des 0 ***/
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
         resetConfusionMatrix();
