@@ -35,4 +35,5 @@
 *.layout
 
 # Always modified when compiling, can't checkout
-Extraction.depend
+*.depend
+

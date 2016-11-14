@@ -1,5 +1,8 @@
 #!/bin/bash
 # Florian TALOUR & Tristan LE NAIR
+input1=$1 # la liste des groupes des 2 à utiliser
+input2=$2 # la liste des groupes des 2 à utiliser avec les occurences par texte
+output=$3 # le nom du fichier de sortie
 
 ########################
 # calcul de la moyenne #
@@ -15,7 +18,7 @@ if [ ! -f "occurence2TagList.txt" ] ; then
 	./groupe2.sh trainTagList.txt occurence2TagList.txt &
 fi
 
-cp list2.txt list2SansLangue.txt
+cp $input1 list2SansLangue.txt
 # créaction des fichiers des moyennes
 if [ ! -f "sommeTagGroupe2" ] ; then
 	sed -i '/^(/d' list2SansLangue.txt		# supprime la langue
@@ -78,9 +81,9 @@ declare -A sum2 # calcul de la variance
 declare -A avg2 # moyenne
 declare -A sdev # ecart type
 	
-#if [ ! -f "valeurs-types-moyenneGroupe2.txt" ] ; then
+if [ ! -f "types-sum2-valeursGroupe2.txt" ] ; then
 	
-	cp occurence2TagList.txt occurence2TagListSansLangue
+	cp $input2 occurence2TagListSansLangue
 
 	sed -i '/^(/d' occurence2TagListSansLangue 			# supprime la langue
 	sed -i 's/^\ \ *//' occurence2TagListSansLangue 	# supprime les multiples espaces
@@ -120,17 +123,17 @@ declare -A sdev # ecart type
 	echo "Fin du calcul de la somme des carrés des différences"
 	
 	# création du fichier qui contient tabel | CarresDesDifferences pour ce label
-	> valeurs-types-moyenneGroupe2.txt
+	> types-sum2-valeursGroupe2.txt
 	while read ty ;
 	do
-		echo "$ty ${sum2["$ty"]} ${valeurs["$ty"]}" >> valeurs-types-moyenneGroupe2.txt
+		echo "$ty ${sum2["$ty"]} ${valeurs["$ty"]}" >> types-sum2-valeursGroupe2.txt
 	done < typesGroupe2
-#fi
+fi
 
 ########################################
 # parser le fichier s'il est déjà créé #
 ########################################
-#if [ -f "valeurs-types-moyenneGroupe2.txt" ]; then
+if [ -f "types-sum2-valeursGroupe2.txt" ]; then
 	while read newline ;
 	do
 		type=`echo "${newline}" | cut -d" " -f 1`
@@ -151,11 +154,11 @@ declare -A sdev # ecart type
 		fi
 		sum2["$type"]=$valeur
 		valeurs["$type"]=$nbOcc
-	done < valeurs-types-moyenneGroupe2.txt
-#fi
+	done < types-sum2-valeursGroupe2.txt
+fi
 
 # fichiers de sortie
-> types-sdevGroupe2
+> $output # types-sdevGroupe2
 
 # calcul à partir de la somme des carrés des differences 
 echo "Lancement de la moyenne des ecarts et de la mise à la racine carré"
@@ -164,12 +167,12 @@ echo "tableauDesEcartsTypes:"
 while read ty ;
 do
 	# calcul de l'ecart type
-	sdev["$ty"]=$(echo "scale=$SC; sqrt(${sum2["$ty"]} / ${valeurs["$ty"])})" | bc) # racine carré de la moyenne
+	sdev["$ty"]=$(echo "scale=$SC; sqrt(${sum2["$ty"]} / $n)" | bc) # racine carré de la moyenne
 
-	echo "sqrt( sum2[$ty] / n) = sqrt( ${sum2["$ty"]} / ${valeurs["$ty"])} ) = ${sdev["$ty"]} < ${moyenne["$ty"]}"
+	echo "$ty ${sum2["$ty"]} ${sdev["$ty"]} ${moyenne["$ty"]}"
 
 	# création du fichier à lire en c++
-	echo "$ty ${sdev["$ty"]}" >> types-sdevGroupe2
+	echo "$ty ${sdev["$ty"]}" >> $output # types-sdevGroupe2
 done < typesGroupe2
 
 echo "Le programme a terminé"
