@@ -105,6 +105,30 @@ class Essay
         static const unsigned int AVG_S_SENTENCE[];
         static const unsigned int AVG_POINT[];
         static const unsigned int AVG_COMMA[];
+        static const unsigned int WAP_NN[];
+        static const unsigned int WAP_IN[];
+        static const unsigned int WAP_DT[];
+        static const unsigned int WAP_NNS[];
+        static const unsigned int WAP_JJ[];
+        static const unsigned int WAP_VB[];
+        static const unsigned int WAP_PRP[];
+        static const unsigned int WAP_RB[];
+        static const unsigned int WAP_VBP[];
+        static const unsigned int WAP_TO[];
+        static const unsigned int WAP_CC[];
+        static const unsigned int WAP_VBZ[];
+        static const unsigned int WAP_MD[];
+        static const unsigned int WAP_VBG[];
+        static const unsigned int WAP_PRP$[];
+        static const unsigned int WAP_VBN[];
+        static const unsigned int WAP_VBD[];
+        static const unsigned int WAP_JJR[];
+        static const unsigned int WAP_NNP[];
+        static const unsigned int WAP_WRB[];
+        static const unsigned int WAP_CD[];
+        static const unsigned int WAP_WDT[];
+        static const unsigned int WAP_WP[];
+        static const unsigned int WAP_RBR[];
 };
 
 #endif // ESSAY_H

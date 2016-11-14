@@ -22,6 +22,32 @@ const unsigned int Essay::AVG_THE[2] = {13, 18};
 const unsigned int Essay::AVG_S_SENTENCE[2] = {19, 25};
 const unsigned int Essay::AVG_POINT[2] = {13, 18};
 const unsigned int Essay::AVG_COMMA[2] = {10, 16};
+const unsigned int Essay::WAP_NN[2] = {30, 60};
+const unsigned int Essay::WAP_IN[2] = {27, 51};
+const unsigned int Essay::WAP_DT[2] = {18,42};
+const unsigned int Essay::WAP_NNS[2] = {14, 35};
+const unsigned int Essay::WAP_JJ[2] = {14, 33};
+const unsigned int Essay::WAP_VB[2] = {12, 27};
+const unsigned int Essay::WAP_PRP[2] = {9, 28};
+const unsigned int Essay::WAP_RB[2] = {10, 25};
+const unsigned int Essay::WAP_VBP[2] = {8, 21};
+const unsigned int Essay::WAP_TO[2] = {6, 16};
+const unsigned int Essay::WAP_CC[2] = {6, 16};
+const unsigned int Essay::WAP_VBZ[2] = {4, 14};
+const unsigned int Essay::WAP_MD[2] = {3, 11};
+const unsigned int Essay::WAP_VBG[2] = {2, 11};
+const unsigned int Essay::WAP_PRP$[2] = {1, 9};
+const unsigned int Essay::WAP_VBN[2] = {1, 7};
+const unsigned int Essay::WAP_VBD[2] = {0, 7};
+const unsigned int Essay::WAP_JJR[2] = {0, 6};
+const unsigned int Essay::WAP_NNP[2] = {0, 11};
+const unsigned int Essay::WAP_WRB[2] = {0, 4};
+const unsigned int Essay::WAP_CD[2] = {0, 4};
+const unsigned int Essay::WAP_WDT[2] = {0, 3};
+const unsigned int Essay::WAP_WP[2] = {0, 3};
+const unsigned int Essay::WAP_RBR[2] = {0, 3};
+
+
 
 
 Essay::Essay(const string& essay, map<string, int>& dic, std::set<std::string> &langDico) throw()
@@ -234,6 +260,10 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     /*** nb de virgules **/
     /** 1 = pire +++ / 2 = pire ++ / 3 = mieux **/
     evaluerFeature(m_nbComma, AVG_COMMA, "AVG_COMMA", foundFeatures, featuresDico, 3); //0
+
+    /*** nb de NN **/
+    //evaluerFeature(m_wapNN, WAP_NN, "WAP_NN", foundFeatures, featuresDico, 2);
+
 
 
     /** Caractéristiques auto sur le texte **/

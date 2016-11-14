@@ -452,7 +452,30 @@ void Model::initModel()
         addFeaturePerso("AVG_S_SENTENCE");
         addFeaturePerso("AVG_POINT");
         addFeaturePerso("AVG_COMMA");
-
+		addFeaturePerso("WAP_NN");
+		addFeaturePerso("WAP_IN");
+		addFeaturePerso("WAP_DT");
+		addFeaturePerso("WAP_NNS");
+		addFeaturePerso("WAP_JJ");
+		addFeaturePerso("WAP_VB");
+		addFeaturePerso("WAP_PRP");
+		addFeaturePerso("WAP_RB");
+		addFeaturePerso("WAP_VBP");
+		addFeaturePerso("WAP_TO");
+		addFeaturePerso("WAP_CC");
+		addFeaturePerso("WAP_VBZ");
+		addFeaturePerso("WAP_MD");
+		addFeaturePerso("WAP_VBG");
+		addFeaturePerso("WAP_PRP$");
+		addFeaturePerso("WAP_VBN");
+		addFeaturePerso("WAP_VBD");
+		addFeaturePerso("WAP_JJR");
+		addFeaturePerso("WAP_NNP");
+		addFeaturePerso("WAP_WRB");
+		addFeaturePerso("WAP_CD");
+		addFeaturePerso("WAP_WDT");
+		addFeaturePerso("WAP_WP");
+		addFeaturePerso("WAP_RBR");
         /*** Initialisation de la matrice avec des 0 ***/
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
         resetConfusionMatrix();
