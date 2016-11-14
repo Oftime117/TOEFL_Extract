@@ -387,10 +387,10 @@ void Model::initModel()
 {
     /*** lancement du script (wapiti) ***/
     //System("../script/script.sh"); //on suppose que les fichiers sont déjà créés
-    //ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
-    //ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
-    //ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
-    //ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);
+    /*ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
+    ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
+    ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
+    ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);*/
 
     ifstream corpusFile(m_trainPath, ios::in);
     if(!corpusFile /*|| !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile || !labeledOcc3CorpusFile*/)
@@ -413,7 +413,7 @@ void Model::initModel()
          * TODO: Check j'ai trouvé que good() devrait faire ce que je veux mais du coup je dois faire des cas ensuite
          * Si tu as une meilleure idée, n'hesite pas
          */
-        while (getline(corpusFile, line) /*|| labeledCorpusFile.good() || labeledOcc1CorpusFile.good()
+        while (getline(corpusFile, line) /*corpusFile.good() || labeledCorpusFile.good() || labeledOcc1CorpusFile.good()
             || labeledOcc2CorpusFile.good() || labeledOcc3CorpusFile.good()*/)
         {
             //if (corpusFile.good()) getline(corpusFile, line);
