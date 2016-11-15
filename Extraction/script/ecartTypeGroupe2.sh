@@ -1,8 +1,8 @@
 #!/bin/bash
 # Florian TALOUR & Tristan LE NAIR
-input1=$1 # la liste des groupes des 2 à utiliser
-input2=$2 # la liste des groupes des 2 à utiliser avec les occurences par texte
-output=$3 # le nom du fichier de sortie
+#input1=$1 # la liste des groupes des 2 à utiliser
+#input2=$2 # la liste des groupes des 2 à utiliser avec les occurences par texte
+#output=$3 # le nom du fichier de sortie
 
 ########################
 # calcul de la moyenne #
@@ -18,7 +18,7 @@ if [ ! -f "occurence2TagList.txt" ] ; then
 	./groupe2.sh trainTagList.txt occurence2TagList.txt &
 fi
 
-cp $input1 list2SansLangue.txt
+cp list2.txt list2SansLangue.txt
 # créaction des fichiers des moyennes
 if [ ! -f "sommeTagGroupe2" ] ; then
 	sed -i '/^(/d' list2SansLangue.txt		# supprime la langue
@@ -40,6 +40,8 @@ grep . sommeTagGroupe2 | cut -d" " -f 2 > typesGroupe2
 declare -A moyenne
 declare -A valeurs
 
+> valeurs-types-moyenneGroupe2.txt
+
 SC=9 # on prend 9 chiffres après la virgule
 n=9900 # nombre de ligne dans ..data/train/train.txt
 while read newline ;
@@ -52,7 +54,7 @@ do
 	fi
 	moyenne["$type"]=$(echo "scale=$SC; $valeur / $n" | bc)
 	valeurs["$type"]=$valeur
-	echo "$valeur $type ${moyenne["$type"]}" >> valeurs-types-moyenneGroupe1.txt
+	echo "$valeur $type ${moyenne["$type"]}" >> valeurs-types-moyenneGroupe2.txt
 done < sommeTagGroupe2
 
 # affichage des moyennes et supression des types qui ne sont pas dans moyenne
@@ -83,7 +85,7 @@ declare -A sdev # ecart type
 	
 if [ ! -f "types-sum2-valeursGroupe2.txt" ] ; then
 	
-	cp $input2 occurence2TagListSansLangue
+	cp occurence2TagList.txt occurence2TagListSansLangue
 
 	sed -i '/^(/d' occurence2TagListSansLangue 			# supprime la langue
 	sed -i 's/^\ \ *//' occurence2TagListSansLangue 	# supprime les multiples espaces
@@ -158,7 +160,7 @@ if [ -f "types-sum2-valeursGroupe2.txt" ]; then
 fi
 
 # fichiers de sortie
-> $output # types-sdevGroupe2
+> types-sdevGroupe2
 
 # calcul à partir de la somme des carrés des differences 
 echo "Lancement de la moyenne des ecarts et de la mise à la racine carré"
@@ -172,7 +174,7 @@ do
 	echo "$ty ${sum2["$ty"]} ${sdev["$ty"]} ${moyenne["$ty"]}"
 
 	# création du fichier à lire en c++
-	echo "$ty ${sdev["$ty"]}" >> $output # types-sdevGroupe2
+	echo "$ty ${sdev["$ty"]}" >> types-sdevGroupe2
 done < typesGroupe2
 
 echo "Le programme a terminé"
