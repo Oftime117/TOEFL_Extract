@@ -12,7 +12,7 @@ class Essay
 {
     public:
         /** Constructeurs && Destructeur **/
-        Essay(const std::string& essay, const std::string& labels, const std::string& labelsOcc1, const std::string& labelsOcc2, const std::string& labelsOcc3, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
+        Essay(const std::string& essay, const std::string& labels, const std::string& labelsOcc1, const std::string& labelsOcc2, const std::string& labelsOcc3, const std::string& wordsOcc1, const std::string& wordsOcc2, const std::string& wordsOcc3, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
         Essay(const std::string& essay, std::map<std::string, int>& dic, std::set<std::string> &langDico) throw();
         Essay(const Essay& other);
         Essay(Essay &&rvalue);
@@ -62,6 +62,10 @@ class Essay
         void splitLabelsOcc2(const char& delim, std::map<std::string, int>& dic, const std::string& text);
         void splitLabelsOcc3(const char& delim, std::map<std::string, int>& dic, const std::string& text);
 
+        void splitWordsOcc1(const char& delim, std::map<std::string, int>& dic, const std::string& text);
+        void splitWordsOcc2(const char& delim, std::map<std::string, int>& dic, const std::string& text);
+        void splitWordsOcc3(const char& delim, std::map<std::string, int>& dic, const std::string& text);
+
         /** Membres **/
         //std::string m_text;
         size_t m_textSize;
@@ -71,7 +75,8 @@ class Essay
         unsigned int m_nbSentences;
         std::vector<std::string> m_wordsList;
         std::vector<std::string> m_labelsList;
-        std::unordered_map<std::string, int> m_labelsMap;
+        std::map<std::string, int> m_wordsMap;
+        std::map<std::string, int> m_labelsMap;
         std::string m_lang;
         std::string m_level;
         unsigned int m_nbFinishING;
@@ -143,6 +148,45 @@ class Essay
         static const unsigned int WAP_NNS_IN[];
         static const unsigned int WAP_VB_DT[];
         static const unsigned int WAP_DT_NNS[];
+        static const unsigned int AVG_TO[];
+        static const unsigned int AVG_AND[];
+        static const unsigned int AVG_OF[];
+        static const unsigned int AVG_IN[];
+        static const unsigned int AVG_A[];
+        static const unsigned int AVG_IS[];
+        static const unsigned int AVG_THAT[];
+        static const unsigned int AVG_PEOPLE[];
+        static const unsigned int AVG_IT[];
+        static const unsigned int AVG_ARE[];
+        static const unsigned int AVG_THEY[];
+        static const unsigned int AVG_FOR[];
+        static const unsigned int AVG_HAVE[];
+        static const unsigned int AVG_NOT[];
+        static const unsigned int AVG_BE[];
+        static const unsigned int AVG_YOU[];
+        static const unsigned int AVG_MORE[];
+        static const unsigned int AVG_CAN[];
+        static const unsigned int AVG_WILL[];
+        static const unsigned int AVG_THEIR[];
+        static const unsigned int AVG_WITH[];
+        static const unsigned int AVG_WE[];
+        static const unsigned int AVG_AS[];
+        static const unsigned int AVG_OR[];
+        static const float AVG_ON[];
+        static const float AVG_BUT[];
+        static const float AVG_IF[];
+        static const float AVG_LIFE[];
+        static const float AVG_THAN[];
+        static const float AVG_ONE[];
+        static const float AVG_YOUNG[];
+        static const float AVG_TIME[];
+        static const float AVG_THERE[];
+        static const float AVG_BY[];
+        static const float AVG_SO[];
+        static const float AVG_BECAUSE[];
+        static const float AVG_MY[];
+        static const float AVG_ABOUT[];
+        static const float AVG_HE[];
 };
 
 #endif // ESSAY_H

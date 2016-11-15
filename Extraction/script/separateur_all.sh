@@ -1,15 +1,15 @@
 #!/bin/bash
 #Florian TALOUR & Tristan LE NAIR
 
-./separateur.sh occurence3TagLine.txt "ARA" "occ3/occurence3TagARA.txt"
-./separateur.sh occurence3TagLine.txt "CHI" "occ3/occurence3TagCHI.txt"
-./separateur.sh occurence3TagLine.txt "FRE" "occ3/occurence3TagFRE.txt"
-./separateur.sh occurence3TagLine.txt "GER" "occ3/occurence3TagGER.txt"
-./separateur.sh occurence3TagLine.txt "HIN" "occ3/occurence3TagHIN.txt"
-./separateur.sh occurence3TagLine.txt "ITA" "occ3/occurence3TagITA.txt"
-./separateur.sh occurence3TagLine.txt "JPN" "occ3/occurence3TagJPN.txt"
-./separateur.sh occurence3TagLine.txt "KOR" "occ3/occurence3TagKOR.txt"
-./separateur.sh occurence3TagLine.txt "SPA" "occ3/occurence3TagSPA.txt"
-./separateur.sh occurence3TagLine.txt "TEL" "occ3/occurence3TagTEL.txt"
-./separateur.sh occurence3TagLine.txt "TUR" "occ3/occurence3TagTUR.txt"
+./separateur.sh occurence1MotLine.txt "ARA" occurence1MotARA.txt
+./separateur.sh occurence1MotLine.txt "CHI" occurence1MotCHI.txt
+./separateur.sh occurence1MotLine.txt "FRE" occurence1MotFRE.txt
+./separateur.sh occurence1MotLine.txt "GER" occurence1MotGER.txt
+./separateur.sh occurence1MotLine.txt "HIN" occurence1MotHIN.txt
+./separateur.sh occurence1MotLine.txt "ITA" occurence1MotITA.txt
+./separateur.sh occurence1MotLine.txt "JPN" occurence1MotJPN.txt
+./separateur.sh occurence1MotLine.txt "KOR" occurence1MotKOR.txt
+./separateur.sh occurence1MotLine.txt "SPA" occurence1MotSPA.txt
+./separateur.sh occurence1MotLine.txt "TEL" occurence1MotTEL.txt
+./separateur.sh occurence1MotLine.txt "TUR" occurence1MotTUR.txt
 

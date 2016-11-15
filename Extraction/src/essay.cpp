@@ -22,6 +22,7 @@ const unsigned int Essay::AVG_THE[2] = {13, 18};
 const unsigned int Essay::AVG_S_SENTENCE[2] = {19, 25};
 const unsigned int Essay::AVG_POINT[2] = {13, 18};
 const unsigned int Essay::AVG_COMMA[2] = {10, 16};
+<<<<<<< HEAD
 const unsigned int Essay::WAP_NN[2] = {30, 60};
 const unsigned int Essay::WAP_IN[2] = {27, 51};
 const unsigned int Essay::WAP_DT[2] = {18,42};
@@ -60,6 +61,47 @@ const unsigned int Essay::WAP_NNS_IN[2] = {1, 7};
 const unsigned int Essay::WAP_VB_DT[2] = {1, 6};
 const unsigned int Essay::WAP_DT_NNS[2] = {0, 7};
 
+=======
+const unsigned int Essay::AVG_TO[2] = {8, 14};
+const unsigned int Essay::AVG_AND[2] = {5, 9};
+const unsigned int Essay::AVG_OF[2] = {5, 9};
+const unsigned int Essay::AVG_IN[2] = {5, 9};
+const unsigned int Essay::AVG_A[2] = {5, 9};
+const unsigned int Essay::AVG_IS[2] = {4, 8};
+const unsigned int Essay::AVG_THAT[2] = {4, 8};
+const unsigned int Essay::AVG_PEOPLE[2] = {2, 6};
+const unsigned int Essay::AVG_IT[2] = {2, 6};
+const unsigned int Essay::AVG_ARE[2] = {2, 6};
+const unsigned int Essay::AVG_THEY[2] = {2, 6};
+const unsigned int Essay::AVG_FOR[2] = {1, 5};
+const unsigned int Essay::AVG_HAVE[2] = {1, 5};
+const unsigned int Essay::AVG_NOT[2] = {1, 5};
+const unsigned int Essay::AVG_BE[2] = {1, 5};
+const unsigned int Essay::AVG_YOU[2] = {1, 5};
+const unsigned int Essay::AVG_MORE[2] = {1, 3};
+const unsigned int Essay::AVG_CAN[2] = {1, 3};
+const unsigned int Essay::AVG_WILL[2] = {1, 3};
+const unsigned int Essay::AVG_THEIR[2] = {1, 3};
+const unsigned int Essay::AVG_WITH[2] = {1, 3};
+const unsigned int Essay::AVG_WE[2] = {1, 3};
+const unsigned int Essay::AVG_AS[2] = {1, 3};
+const unsigned int Essay::AVG_OR[2] = {1, 3};
+const float Essay::AVG_ON[2] = {0.5, 2};
+const float Essay::AVG_BUT[2] = {0.5, 2};
+const float Essay::AVG_IF[2] = {0.5, 2};
+const float Essay::AVG_LIFE[2] = {0.5, 2};
+const float Essay::AVG_THAN[2] = {0.5, 2};
+const float Essay::AVG_ONE[2] = {0.5, 2};
+const float Essay::AVG_YOUNG[2] = {0.5, 2};
+const float Essay::AVG_TIME[2] = {0.5, 2};
+const float Essay::AVG_THERE[2] = {0.5, 2};
+const float Essay::AVG_BY[2] = {0.5, 2};
+const float Essay::AVG_SO[2] = {0.5, 2};
+const float Essay::AVG_BECAUSE[2] = {0.5, 2};
+const float Essay::AVG_MY[2] = {0.5, 2};
+const float Essay::AVG_ABOUT[2] = {0.5, 2};
+const float Essay::AVG_HE[2] = {0.5, 2};
+>>>>>>> 7056f9ecbe7666f0c9c642bc064ed31f078b70bf
 
 
 Essay::Essay(const string& essay, map<string, int>& dic, std::set<std::string> &langDico) throw()
@@ -92,7 +134,7 @@ Essay::Essay(const string& essay, map<string, int>& dic, std::set<std::string> &
     langDico.emplace(m_lang);
 }
 
-Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3, map<string, int>& dic, std::set<std::string> &langDico) throw()
+Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3, const string& wordsOcc1, const string& wordsOcc2, const string& wordsOcc3, map<string, int>& dic, std::set<std::string> &langDico) throw()
 {
     size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)
     size_t firstComa = essay.find_first_of(',', 0);
@@ -113,6 +155,11 @@ Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1
     string myLabelsOcc1 = labelsOcc1.substr(firstSpace+1);
     string myLabelsOcc2 = labelsOcc2.substr(firstSpace+1);
     string myLabelsOcc3 = labelsOcc3.substr(firstSpace+1);
+
+    string myWordsOcc1 = wordsOcc1.substr(firstSpace+1);
+    string myWordsOcc2 = wordsOcc2.substr(firstSpace+1);
+    string myWordsOcc3 = wordsOcc3.substr(firstSpace+1);
+
     m_nbSentences = 0;
     m_nbFinishING = 0;
     m_nbFirstCaps = 0;
@@ -128,6 +175,10 @@ Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1
     splitLabelsOcc1(' ', dic, myLabelsOcc1);
     splitLabelsOcc2(' ', dic, myLabelsOcc2);
     splitLabelsOcc3(' ', dic, myLabelsOcc3);
+
+    splitWordsOcc1(' ', dic, myWordsOcc1);
+    splitWordsOcc2(' ', dic, myWordsOcc2);
+    splitWordsOcc3(' ', dic, myWordsOcc3);
 
     langDico.emplace(m_lang);
 }
@@ -201,7 +252,7 @@ Essay& Essay::operator=(const Essay& other)
     m_lang = other.m_lang;
     m_level = other.m_level;
     m_nbFinishING = other.m_nbFinishING;
-    m_nbFinishING = other.m_nbFirstCaps;
+    m_nbFirstCaps = other.m_nbFirstCaps;
     m_nbI = other.m_nbI;
     m_nbi = other.m_nbi;
     m_nbPronoms = other.m_nbPronoms;
@@ -272,6 +323,7 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     /*** nb de virgules **/
     /** 1 = pire +++ / 2 = pire ++ / 3 = mieux **/
     evaluerFeature(m_nbComma, AVG_COMMA, "AVG_COMMA", foundFeatures, featuresDico, 3); //0
+
 
     /*** caractéristiques issus de wapiti **/
     /*** nb de NN **/
@@ -389,6 +441,47 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     evaluerFeature(m_labelsMap["DT_NNS"], WAP_DT_NNS, "WAP_DT_NNS", foundFeatures, featuresDico, 2);
 
 
+    /*** nouveaux mots à tester ***/
+    /*
+    evaluerFeature(m_nbTO, AVG_TO, "AVG_TO", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbAND, AVG_AND, "AVG_AND", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbOF, AVG_OF, "AVG_OF", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbIN, AVG_IN, "AVG_IN", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbA, AVG_A, "AVG_A", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbIS, AVG_IS, "AVG_IS", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbTHAT, AVG_THAT, "AVG_THAT", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbPEOPLE, AVG_PEOPLE, "AVG_PEOPLE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbIT, AVG_IT, "AVG_IT", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbARE, AVG_ARE, "AVG_ARE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbTHEY, AVG_THEY, "AVG_THEY", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbFOR, AVG_FOR, "AVG_FOR", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbHAVE, AVG_HAVE, "AVG_HAVE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbNOT, AVG_NOT, "AVG_NOT", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbBE, AVG_BE, "AVG_BE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbYOU, AVG_YOU, "AVG_YOU", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbMORE, AVG_MORE, "AVG_MORE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbCAN, AVG_CAN, "AVG_CAN", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbWILL, AVG_WILL, "AVG_WILL", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbTHEIR, AVG_THEIR, "AVG_THEIR", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbWE, AVG_WE, "AVG_WE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbAS, AVG_AS, "AVG_AS", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbOR, AVG_OR, "AVG_OR", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbON, AVG_ON, "AVG_ON", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbBUT, AVG_BUT, "AVG_BUT", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbIF, AVG_IF, "AVG_IF", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbLIFE, AVG_LIFE, "AVG_LIFE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbTHAN, AVG_THAN, "AVG_THAN", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbONE, AVG_ONE, "AVG_ONE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbYOUNG, AVG_YOUNG, "AVG_YOUNG", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbTIME, AVG_TIME, "AVG_TIME", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbBY, AVG_BY, "AVG_BY", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbTHERE, AVG_THERE, "AVG_THERE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbSO, AVG_SO, "AVG_SO", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbBECAUSE, AVG_BECAUSE, "AVG_BECAUSE", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbMY, AVG_MY, "AVG_MY", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbABOUT, AVG_ABOUT, "AVG_ABOUT", foundFeatures, featuresDico, 3);
+    evaluerFeature(m_nbHE, AVG_HE, "AVG_HE", foundFeatures, featuresDico, 3);
+    */
 
     /** Caractéristiques auto sur le texte **/
     for(size_t i=0; i<corpusSize-1; i++)
@@ -623,6 +716,57 @@ void Essay::splitLabelsOcc3(const char& delim, map<string, int>& dic, const stri
         string buff4 = item3;
         dic.emplace("ORDRE_L3_" + buff2 + "_" + buff3 + "_" + buff4, dic.size());
         m_labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, std::stoi(buff1));
+    }
+}
+
+/** Stocker les occurences d'un mot dans sa map **/
+void Essay::splitWordsOcc1(const char& delim, map<string, int>& dic, const string& text)
+{
+    stringstream ss;
+    ss.str(text);
+    string occurence;
+    string item;
+    while (getline(ss, occurence, delim) && getline(ss, item, delim))
+    {
+        string buff1 = occurence;
+        string buff2 = item;
+        dic.emplace("ORDRE_W1_" + buff2, dic.size());
+        m_wordsMap.emplace(buff2, std::stoi(buff1));
+    }
+}
+
+/** Stocker les occurences de deux mots dans leur map **/
+void Essay::splitWordsOcc2(const char& delim, map<string, int>& dic, const string& text)
+{
+    stringstream ss;
+    ss.str(text);
+    string occurence;
+    string item1, item2;
+    while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim))
+    {
+        string buff1 = occurence;
+        string buff2 = item1;
+        string buff3 = item2;
+        dic.emplace("ORDRE_W2_" + buff2 + "_" + buff3, dic.size());
+        m_wordsMap.emplace(buff2 + "_" + buff3, std::stoi(buff1));
+    }
+}
+
+/** Stocker les occurences de trois mots dans leur map **/
+void Essay::splitWordsOcc3(const char& delim, map<string, int>& dic, const string& text)
+{
+    stringstream ss;
+    ss.str(text);
+    string occurence;
+    string item1, item2, item3;
+    while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim) && getline(ss, item3, delim))
+    {
+        string buff1 = occurence;
+        string buff2 = item1;
+        string buff3 = item2;
+        string buff4 = item3;
+        dic.emplace("ORDRE_W3_" + buff2 + "_" + buff3 + "_" + buff4, dic.size());
+        m_wordsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, std::stoi(buff1));
     }
 }
 

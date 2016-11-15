@@ -28,7 +28,47 @@ const unsigned int Model::AVG_PRONOMS[2] = {16, 19};
 const unsigned int Model::AVG_THE[2] = {13, 18};
 const unsigned int Model::AVG_S_SENTENCE[2] = {19, 25};
 const unsigned int Model::AVG_POINT[2] = {13, 18};
-const unsigned int Model::AVG_COMMA[2] = {10, 16};
+const unsigned int Model::AVG_TO[2] = {8, 14};
+const unsigned int Model::AVG_AND[2] = {5, 9};
+const unsigned int Model::AVG_OF[2] = {5, 9};
+const unsigned int Model::AVG_IN[2] = {5, 9};
+const unsigned int Model::AVG_A[2] = {5, 9};
+const unsigned int Model::AVG_IS[2] = {4, 8};
+const unsigned int Model::AVG_THAT[2] = {4, 8};
+const unsigned int Model::AVG_PEOPLE[2] = {2, 6};
+const unsigned int Model::AVG_IT[2] = {2, 6};
+const unsigned int Model::AVG_ARE[2] = {2, 6};
+const unsigned int Model::AVG_THEY[2] = {2, 6};
+const unsigned int Model::AVG_FOR[2] = {1, 5};
+const unsigned int Model::AVG_HAVE[2] = {1, 5};
+const unsigned int Model::AVG_NOT[2] = {1, 5};
+const unsigned int Model::AVG_BE[2] = {1, 5};
+const unsigned int Model::AVG_YOU[2] = {1, 5};
+const unsigned int Model::AVG_MORE[2] = {1, 3};
+const unsigned int Model::AVG_CAN[2] = {1, 3};
+const unsigned int Model::AVG_WILL[2] = {1, 3};
+const unsigned int Model::AVG_THEIR[2] = {1, 3};
+const unsigned int Model::AVG_WITH[2] = {1, 3};
+const unsigned int Model::AVG_WE[2] = {1, 3};
+const unsigned int Model::AVG_AS[2] = {1, 3};
+const unsigned int Model::AVG_OR[2] = {1, 3};
+const float Model::AVG_ON[2] = {0.5, 2};
+const float Model::AVG_BUT[2] = {0.5, 2};
+const float Model::AVG_IF[2] = {0.5, 2};
+const float Model::AVG_LIFE[2] = {0.5, 2};
+const float Model::AVG_THAN[2] = {0.5, 2};
+const float Model::AVG_ONE[2] = {0.5, 2};
+const float Model::AVG_YOUNG[2] = {0.5, 2};
+const float Model::AVG_TIME[2] = {0.5, 2};
+const float Model::AVG_THERE[2] = {0.5, 2};
+const float Model::AVG_BY[2] = {0.5, 2};
+const float Model::AVG_SO[2] = {0.5, 2};
+const float Model::AVG_BECAUSE[2] = {0.5, 2};
+const float Model::AVG_MY[2] = {0.5, 2};
+const float Model::AVG_ABOUT[2] = {0.5, 2};
+const float Model::AVG_HE[2] = {0.5, 2};
+
+
 
 
 Model::Model(string corpusPath, string featuresOut, string langMatrixOut)
@@ -392,8 +432,14 @@ void Model::initModel()
     ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
     ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);*/
 
+    /*** Mots et occurences ***/
+    /*ifstream wordOcc1CorpusFile("../script/occurence1MotLine.txt", ios::in);
+    ifstream wordOcc2CorpusFile("../script/occurence2MotLine.txt", ios::in);
+    ifstream wordOcc3CorpusFile("../script/occurence3MotLine.txt", ios::in);*/
+
     ifstream corpusFile(m_trainPath, ios::in);
-    if(!corpusFile /*|| !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile || !labeledOcc3CorpusFile*/)
+    if(!corpusFile/* || !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile
+        || !labeledOcc3CorpusFile || !wordOcc1CorpusFile || !wordOcc2CorpusFile || !wordOcc3CorpusFile*/)
     {
        cerr << "Impossible d'ouvrir un des fichiers !" << endl;
     }
@@ -405,6 +451,7 @@ void Model::initModel()
         /*** Lecture du corpus et enregistrement des caractéristiques ***/
         set<string> langSet;
         string line/*, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line*/;
+        //string wordOcc1Line, wordOcc2Line, wordOcc3Line;
         /* Attention ici mettre des && entre les getlines n'est pas correct ! On sortirait du while
          * dès que l'on aurait fini de lire un des fichiers
          * Peut être mieux de lire les fichiers les uns après les autres?
@@ -413,19 +460,23 @@ void Model::initModel()
          * TODO: Check j'ai trouvé que good() devrait faire ce que je veux mais du coup je dois faire des cas ensuite
          * Si tu as une meilleure idée, n'hesite pas
          */
-        while (getline(corpusFile, line) /*corpusFile.good() || labeledCorpusFile.good() || labeledOcc1CorpusFile.good()
+        while (corpusFile.good()/* || labeledCorpusFile.good() || labeledOcc1CorpusFile.good()
             || labeledOcc2CorpusFile.good() || labeledOcc3CorpusFile.good()*/)
         {
-            //if (corpusFile.good()) getline(corpusFile, line);
+            if (corpusFile.good()) getline(corpusFile, line);
             /*if (labeledCorpusFile.good()) getline(labeledCorpusFile, labeledLine);
             if (labeledOcc1CorpusFile.good()) getline(labeledOcc1CorpusFile, labeledOcc1Line);
             if (labeledOcc2CorpusFile.good()) getline(labeledOcc2CorpusFile, labeledOcc2Line);
-            if (labeledOcc3CorpusFile.good()) getline(labeledOcc3CorpusFile, labeledOcc3Line);*/
+            if (labeledOcc3CorpusFile.good()) getline(labeledOcc3CorpusFile, labeledOcc3Line);
+
+            if (wordOcc1CorpusFile.good()) getline(wordOcc1CorpusFile, wordOcc1Line);
+            if (wordOcc2CorpusFile.good()) getline(wordOcc2CorpusFile, wordOcc2Line);
+            if (wordOcc3CorpusFile.good()) getline(wordOcc3CorpusFile, wordOcc3Line);*/
 
             try
             {
                 Essay e(line, m_featuresDico, langSet);
-                // Essay e(line, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line, m_featuresDico, langSet);
+                //Essay e(line, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line, wordOcc1Line, wordOcc2Line, wordOcc3Line, m_featuresDico, langSet);
                 m_corpusList.push_back(std::move(e));
             }catch(const invalid_argument& e)
             {
@@ -490,6 +541,47 @@ void Model::initModel()
 		addFeaturePerso("WAP_NNS_IN");
 		addFeaturePerso("WAP_VB_DT");
 		addFeaturePerso("WAP_DT_NNS");
+        addFeaturePerso("AVG_TO");
+        addFeaturePerso("AVG_AND");
+        addFeaturePerso("AVG_OF");
+        addFeaturePerso("AVG_IN");
+        addFeaturePerso("AVG_A");
+        addFeaturePerso("AVG_IS");
+        addFeaturePerso("AVG_THAT");
+        addFeaturePerso("AVG_PEOPLE");
+        addFeaturePerso("AVG_IT");
+        addFeaturePerso("AVG_ARE");
+        addFeaturePerso("AVG_THEY");
+        addFeaturePerso("AVG_FOR");
+        addFeaturePerso("AVG_HAVE");
+        addFeaturePerso("AVG_NOT");
+        addFeaturePerso("AVG_BE");
+        addFeaturePerso("AVG_YOU");
+        addFeaturePerso("AVG_MORE");
+        addFeaturePerso("AVG_CAN");
+        addFeaturePerso("AVG_WILL");
+        addFeaturePerso("AVG_THEIR");
+        addFeaturePerso("AVG_WITH");
+        addFeaturePerso("AVG_DO");
+        addFeaturePerso("AVG_THIS");
+        addFeaturePerso("AVG_WE");
+        addFeaturePerso("AVG_AS");
+        addFeaturePerso("AVG_OR");
+        addFeaturePerso("AVG_ON");
+        addFeaturePerso("AVG_BUT");
+        addFeaturePerso("AVG_IF");
+        addFeaturePerso("AVG_LIFE");
+        addFeaturePerso("AVG_THAN");
+        addFeaturePerso("AVG_ONE");
+        addFeaturePerso("AVG_YOUNG");
+        addFeaturePerso("AVG_TIME");
+        addFeaturePerso("AVG_THERE");
+        addFeaturePerso("AVG_BY");
+        addFeaturePerso("AVG_SO");
+        addFeaturePerso("AVG_BECAUSE");
+        addFeaturePerso("AVG_MY");
+        addFeaturePerso("AVG_ABOUT");
+        addFeaturePerso("AVG_HE");
 
         /*** Initialisation de la matrice avec des 0 ***/
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));

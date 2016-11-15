@@ -32,8 +32,12 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-std=c++11" />
+					<Add option="-lpthread -pthread" />
 					<Add directory="include" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add option="-lpthread -pthread" />
+				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>

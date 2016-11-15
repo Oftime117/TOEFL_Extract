@@ -1,8 +1,9 @@
 #!/bin/bash
 # Florian TALOUR & Tristan LE NAIR
 datatrainLoc=../data/train.txt
-filename=$1 # $1 représente train.txt
-outfile=$2 # $2 est le nom du fichier de sortie
+filename=$1 # $1 représente un fichier traité par grep "(" $1 | cut -d ")" -f 2- | tr " " "\n"  
+			# OU par ./extract_l.sh ../data/train.txt trainTagList.txt
+outfile=$2 	# $2 est le nom du fichier de sortie
 
 > $outfile # creation du fichier de sortie
 
@@ -51,4 +52,4 @@ done < ${filename}
 rm temp3.txt
 rm temp3NoPonct.txt
 
-echo ">> Fin du calcul des occurences par texte pour trois labels consécutifs"
+echo ">> Fin du calcul des occurences par texte pour trois entités consécutives"

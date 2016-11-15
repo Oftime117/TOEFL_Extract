@@ -79,7 +79,7 @@ declare -A sum2 # calcul de la variance
 declare -A avg2 # moyenne
 declare -A sdev # ecart type
 	
-if [ ! -f "tagsommeDesCarresDesDifferencesListGroupe3.txt" ] ; then
+if [ ! -f "types-sum2-valeursGroupe3.txt" ] ; then
 	
 	cp occurence3TagList.txt occurence3TagListSansLangue
 
@@ -121,17 +121,17 @@ if [ ! -f "tagsommeDesCarresDesDifferencesListGroupe3.txt" ] ; then
 	echo "Fin du calcul de la somme des carrés des différences"
 	
 	# création du fichier qui contient tabel | CarresDesDifferences pour ce label
-	> tagsommeDesCarresDesDifferencesListGroupe3.txt
+	> types-sum2-valeursGroupe3.txt
 	while read ty ;
 	do
-		echo "$ty ${sum2["$ty"]} ${valeurs["$type"]}" >> tagsommeDesCarresDesDifferencesListGroupe3.txt
+		echo "$ty ${sum2["$ty"]} ${valeurs["$type"]}" >> types-sum2-valeursGroupe3.txt
 	done < typesGroupe3
 fi
 
 ########################################
 # parser le fichier s'il est déjà créé #
 ########################################
-if [ -f "tagsommeDesCarresDesDifferencesListGroupe3.txt" ]; then
+if [ -f "types-sum2-valeursGroupe3.txt" ]; then
 	while read newline ;
 	do
 		type=`echo "${newline}" | cut -d" " -f 1`
@@ -152,7 +152,7 @@ if [ -f "tagsommeDesCarresDesDifferencesListGroupe3.txt" ]; then
 		fi
 		sum2["$type"]=$valeur
 		valeurs["$type"]=$nbOcc
-	done < tagsommeDesCarresDesDifferencesListGroupe3.txt
+	done < types-sum2-valeursGroupe3.txt
 fi
 
 # fichiers de sortie
@@ -165,7 +165,7 @@ echo "tableauDesEcartsTypes:"
 while read ty ;
 do
 	# calcul de l'ecart type
-	sdev["$ty"]=$(echo "scale=$SC; sqrt(${sum2["$ty"]} / ${valeurs["$ty"])})" | bc) # racine carré de la moyenne
+	sdev["$ty"]=$(echo "scale=$SC; sqrt(${sum2["$ty"]} / $n)" | bc) # racine carré de la moyenne
 
 	# création du fichier à lire en c++
 	echo "$ty ${sdev["$ty"]}" >> fichierTypeEcartTypeGroupe3
