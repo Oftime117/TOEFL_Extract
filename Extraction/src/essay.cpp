@@ -399,7 +399,7 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     evaluerFeature(m_labelsMap["WP"], WAP_WP, "WAP_WP", foundFeatures, featuresDico, 2);
 
     /*** nb de RBR **/
-    //evaluerFeature(m_labelsMap["RBR"], WAP_RBR, "WAP_RBR", foundFeatures, featuresDico, 2);
+    evaluerFeature(m_labelsMap["RBR"], WAP_RBR, "WAP_RBR", foundFeatures, featuresDico, 2);
 /*** paires de wapiti ***/
 //    /*** nb de DT_NN **/
 //    evaluerFeature(m_labelsMap["DT_NN"], WAP_DT_NN, "WAP_DT_NN", foundFeatures, featuresDico, 2);
@@ -497,6 +497,10 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     /*** dernier mot ***/
     addIfFound(foundFeatures, "NB_W_" + wordsList[corpusSize-1], featuresDico);
 
+    for(size_t i=0; i<m_labelsList.size(); i++){
+        /*** Caractéristiques sur les mots wapiti ***/
+        addIfFound(foundFeatures, "NB_L_" + m_labelsList[i], featuresDico);
+    }
 
 
     /*** Calcul du score de chaque langue ***/
@@ -556,9 +560,7 @@ void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& t
                 m_nbPronoms++;
             }
         }
-
         transform(buff.begin(), buff.end(), buff.begin(), ::tolower);
-
 
         /** Pronoms : you, he, she, it, we, they **/
         if(buff.compare("you")==0 || buff.compare("he")==0 || buff.compare("she")==0 || buff.compare("it")==0 || buff.compare("we")==0 || buff.compare("they")==0 )
@@ -656,7 +658,7 @@ void Essay::splitLabels(const char& delim, map<string, int>& dic, const string& 
     while (getline(ss, item, delim))
     {
         string buff = item;
-        dic.emplace("NB_L_" + buff, dic.size());
+        Tools::addIfAbsent(dic, "NB_L_" + buff);
         m_labelsList.push_back(buff);
     }
 }
@@ -673,7 +675,7 @@ void Essay::splitLabelsOcc1(const char& delim, map<string, int>& dic, const stri
         stringstream s_occurence; s_occurence.str(occurence);
         int buff1; s_occurence >> buff1;
         string buff2 = item;
-        dic.emplace("ORDRE_L1_" + buff2, dic.size());
+        Tools::addIfAbsent(dic, "ORDRE_L1_" + buff2);
         m_labelsMap.emplace(buff2, buff1);
     }
 }
@@ -691,7 +693,7 @@ void Essay::splitLabelsOcc2(const char& delim, map<string, int>& dic, const stri
         int buff1; s_occurence >> buff1;
         string buff2 = item1;
         string buff3 = item2;
-        dic.emplace("ORDRE_L2_" + buff2 + "_" + buff3, dic.size());
+        Tools::addIfAbsent(dic, "ORDRE_L2_" + buff2 + "_" + buff3);
         m_labelsMap.emplace(buff2 + "_" + buff3, buff1);
     }
 }
@@ -710,7 +712,7 @@ void Essay::splitLabelsOcc3(const char& delim, map<string, int>& dic, const stri
         string buff2 = item1;
         string buff3 = item2;
         string buff4 = item3;
-        dic.emplace("ORDRE_L3_" + buff2 + "_" + buff3 + "_" + buff4, dic.size());
+        Tools::addIfAbsent(dic, "ORDRE_L3_" + buff2 + "_" + buff3 + "_" + buff4);
         m_labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, buff1);
     }
 }
@@ -727,7 +729,7 @@ void Essay::splitWordsOcc1(const char& delim, map<string, int>& dic, const strin
         stringstream s_occurence; s_occurence.str(occurence);
         int buff1; s_occurence >> buff1;
         string buff2 = item;
-        dic.emplace("ORDRE_W1_" + buff2, dic.size());
+        Tools::addIfAbsent(dic, "ORDRE_W1_" + buff2);
         m_wordsMap.emplace(buff2, buff1);
     }
 }
@@ -745,7 +747,7 @@ void Essay::splitWordsOcc2(const char& delim, map<string, int>& dic, const strin
         int buff1; s_occurence >> buff1;
         string buff2 = item1;
         string buff3 = item2;
-        dic.emplace("ORDRE_W2_" + buff2 + "_" + buff3, dic.size());
+        Tools::addIfAbsent(dic, "ORDRE_W2_" + buff2 + "_" + buff3);
         m_wordsMap.emplace(buff2 + "_" + buff3, buff1);
     }
 }
@@ -764,7 +766,7 @@ void Essay::splitWordsOcc3(const char& delim, map<string, int>& dic, const strin
         string buff2 = item1;
         string buff3 = item2;
         string buff4 = item3;
-        dic.emplace("ORDRE_W3_" + buff2 + "_" + buff3 + "_" + buff4, dic.size());
+        Tools::addIfAbsent(dic, "ORDRE_W3_" + buff2 + "_" + buff3 + "_" + buff4);
         m_wordsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, buff1);
     }
 }
