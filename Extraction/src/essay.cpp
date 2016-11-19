@@ -10,82 +10,84 @@
 using namespace std;
 
 /*** Constantes ***/
-const unsigned int Essay::AVG_WORD_CORPUS[2] = {324, 373};
-const unsigned int Essay::AVG_LETTER_CORPUS[2] = {1653, 1942};
-const float Essay::AVG_S_WORD[2] = {5.08, 5.23};
-const unsigned int Essay::AVG_WEND_ING[2] = {8, 11};
-const unsigned int Essay::AVG_FIRSTCAPS[2] = {18, 23};
-const unsigned int Essay::AVG_I_CAPS[2] = {2, 5};
-const unsigned int Essay::AVG_I_LOW[2] = {0, 1};
-const unsigned int Essay::AVG_PRONOMS[2] = {16, 19};
-const unsigned int Essay::AVG_THE[2] = {13, 18};
-const unsigned int Essay::AVG_S_SENTENCE[2] = {19, 25};
-const unsigned int Essay::AVG_POINT[2] = {13, 18};
-const unsigned int Essay::AVG_COMMA[2] = {10, 16};
-<<<<<<< HEAD
-const unsigned int Essay::WAP_NN[2] = {30, 60};
-const unsigned int Essay::WAP_IN[2] = {27, 51};
-const unsigned int Essay::WAP_DT[2] = {18,42};
-const unsigned int Essay::WAP_NNS[2] = {14, 35};
-const unsigned int Essay::WAP_JJ[2] = {14, 33};
-const unsigned int Essay::WAP_VB[2] = {12, 27};
-const unsigned int Essay::WAP_PRP[2] = {9, 28};
-const unsigned int Essay::WAP_RB[2] = {10, 25};
-const unsigned int Essay::WAP_VBP[2] = {8, 21};
-const unsigned int Essay::WAP_TO[2] = {6, 16};
-const unsigned int Essay::WAP_CC[2] = {6, 16};
-const unsigned int Essay::WAP_VBZ[2] = {4, 14};
-const unsigned int Essay::WAP_MD[2] = {3, 11};
-const unsigned int Essay::WAP_VBG[2] = {2, 11};
-const unsigned int Essay::WAP_PRP$[2] = {1, 9};
-const unsigned int Essay::WAP_VBN[2] = {1, 7};
-const unsigned int Essay::WAP_VBD[2] = {0, 7};
-const unsigned int Essay::WAP_JJR[2] = {0, 6};
-const unsigned int Essay::WAP_NNP[2] = {0, 11};
-const unsigned int Essay::WAP_WRB[2] = {0, 4};
-const unsigned int Essay::WAP_CD[2] = {0, 4};
-const unsigned int Essay::WAP_WDT[2] = {0, 3};
-const unsigned int Essay::WAP_WP[2] = {0, 3};
-const unsigned int Essay::WAP_DT_NN[2] = {8, 23};
-const unsigned int Essay::WAP_IN_DT[2] = {6, 18};
-const unsigned int Essay::WAP_NN_IN[2] = {5, 16};
-const unsigned int Essay::WAP_TO_VB[2] = {4, 13};
-const unsigned int Essay::WAP_JJ_NN[2] = {4, 13};
-const unsigned int Essay::WAP_JJ_NNS[2] = {2, 11};
-const unsigned int Essay::WAP_PRP_VBP[2] = {2, 11};
-const unsigned int Essay::WAP_DT_JJ[2] = {2, 10};
-const unsigned int Essay::WAP_IN_NN[2] = {2, 9};
-const unsigned int Essay::WAP_MD_VB[2] = {2, 9};
-const unsigned int Essay::WAP_IN_PRP[2] = {1, 7};
-const unsigned int Essay::WAP_NNS_IN[2] = {1, 7};
-const unsigned int Essay::WAP_VB_DT[2] = {1, 6};
-const unsigned int Essay::WAP_DT_NNS[2] = {0, 7};
 
-=======
-const unsigned int Essay::AVG_TO[2] = {8, 14};
-const unsigned int Essay::AVG_AND[2] = {5, 9};
-const unsigned int Essay::AVG_OF[2] = {5, 9};
-const unsigned int Essay::AVG_IN[2] = {5, 9};
-const unsigned int Essay::AVG_A[2] = {5, 9};
-const unsigned int Essay::AVG_IS[2] = {4, 8};
-const unsigned int Essay::AVG_THAT[2] = {4, 8};
-const unsigned int Essay::AVG_PEOPLE[2] = {2, 6};
-const unsigned int Essay::AVG_IT[2] = {2, 6};
-const unsigned int Essay::AVG_ARE[2] = {2, 6};
-const unsigned int Essay::AVG_THEY[2] = {2, 6};
-const unsigned int Essay::AVG_FOR[2] = {1, 5};
-const unsigned int Essay::AVG_HAVE[2] = {1, 5};
-const unsigned int Essay::AVG_NOT[2] = {1, 5};
-const unsigned int Essay::AVG_BE[2] = {1, 5};
-const unsigned int Essay::AVG_YOU[2] = {1, 5};
-const unsigned int Essay::AVG_MORE[2] = {1, 3};
-const unsigned int Essay::AVG_CAN[2] = {1, 3};
-const unsigned int Essay::AVG_WILL[2] = {1, 3};
-const unsigned int Essay::AVG_THEIR[2] = {1, 3};
-const unsigned int Essay::AVG_WITH[2] = {1, 3};
-const unsigned int Essay::AVG_WE[2] = {1, 3};
-const unsigned int Essay::AVG_AS[2] = {1, 3};
-const unsigned int Essay::AVG_OR[2] = {1, 3};
+const float Essay::AVG_WORD_CORPUS[2] = {324, 373};
+const float Essay::AVG_LETTER_CORPUS[2] = {1653, 1942};
+const float Essay::AVG_S_SENTENCE[2] = {19, 25};
+const float Essay::AVG_S_WORD[2] = {5.08, 5.23};
+/*** pourcentage d'apparition dans un texte ***/
+const float Essay::AVG_WEND_ING[2] = {2.46, 3.05};
+const float Essay::AVG_FIRSTCAPS[2] = {4.98, 6.82};
+const float Essay::AVG_I_CAPS[2] = {0.63, 1.58};
+const float Essay::AVG_I_LOW[2] = {0.08, 0.32};
+const float Essay::AVG_PRONOMS[2] = {4.54, 5.68};
+const float Essay::AVG_THE[2] = {13, 18};
+const float Essay::AVG_POINT[2] = {3.89, 5.12};
+const float Essay::AVG_COMMA[2] = {2.83, 4.58};
+/*** wapiti ***/
+const float Essay::WAP_NN[2] = {30, 60};
+const float Essay::WAP_IN[2] = {27, 51};
+const float Essay::WAP_DT[2] = {18,42};
+const float Essay::WAP_NNS[2] = {14, 35};
+const float Essay::WAP_JJ[2] = {14, 33};
+const float Essay::WAP_VB[2] = {12, 27};
+const float Essay::WAP_PRP[2] = {9, 28};
+const float Essay::WAP_RB[2] = {10, 25};
+const float Essay::WAP_VBP[2] = {8, 21};
+const float Essay::WAP_TO[2] = {6, 16};
+const float Essay::WAP_CC[2] = {6, 16};
+const float Essay::WAP_VBZ[2] = {4, 14};
+const float Essay::WAP_MD[2] = {3, 11};
+const float Essay::WAP_VBG[2] = {2, 11};
+const float Essay::WAP_PRP$[2] = {1, 9};
+const float Essay::WAP_VBN[2] = {1, 7};
+const float Essay::WAP_VBD[2] = {0, 7};
+const float Essay::WAP_JJR[2] = {0, 6};
+const float Essay::WAP_NNP[2] = {0, 11};
+const float Essay::WAP_WRB[2] = {0, 4};
+const float Essay::WAP_CD[2] = {0, 4};
+const float Essay::WAP_WDT[2] = {0, 3};
+const float Essay::WAP_WP[2] = {0, 3};
+const float Essay::WAP_RBR[2] = {0, 3};
+const float Essay::WAP_DT_NN[2] = {8, 23};
+const float Essay::WAP_IN_DT[2] = {6, 18};
+const float Essay::WAP_NN_IN[2] = {5, 16};
+const float Essay::WAP_TO_VB[2] = {4, 13};
+const float Essay::WAP_JJ_NN[2] = {4, 13};
+const float Essay::WAP_JJ_NNS[2] = {2, 11};
+const float Essay::WAP_PRP_VBP[2] = {2, 11};
+const float Essay::WAP_DT_JJ[2] = {2, 10};
+const float Essay::WAP_IN_NN[2] = {2, 9};
+const float Essay::WAP_MD_VB[2] = {2, 9};
+const float Essay::WAP_IN_PRP[2] = {1, 7};
+const float Essay::WAP_NNS_IN[2] = {1, 7};
+const float Essay::WAP_VB_DT[2] = {1, 6};
+const float Essay::WAP_DT_NNS[2] = {0, 7};
+
+const float Essay::AVG_TO[2] = {8, 14};
+const float Essay::AVG_AND[2] = {5, 9};
+const float Essay::AVG_OF[2] = {5, 9};
+const float Essay::AVG_IN[2] = {5, 9};
+const float Essay::AVG_A[2] = {5, 9};
+const float Essay::AVG_IS[2] = {4, 8};
+const float Essay::AVG_THAT[2] = {4, 8};
+const float Essay::AVG_PEOPLE[2] = {2, 6};
+const float Essay::AVG_IT[2] = {2, 6};
+const float Essay::AVG_ARE[2] = {2, 6};
+const float Essay::AVG_THEY[2] = {2, 6};
+const float Essay::AVG_FOR[2] = {1, 5};
+const float Essay::AVG_HAVE[2] = {1, 5};
+const float Essay::AVG_NOT[2] = {1, 5};
+const float Essay::AVG_BE[2] = {1, 5};
+const float Essay::AVG_YOU[2] = {1, 5};
+const float Essay::AVG_MORE[2] = {1, 3};
+const float Essay::AVG_CAN[2] = {1, 3};
+const float Essay::AVG_WILL[2] = {1, 3};
+const float Essay::AVG_THEIR[2] = {1, 3};
+const float Essay::AVG_WITH[2] = {1, 3};
+const float Essay::AVG_WE[2] = {1, 3};
+const float Essay::AVG_AS[2] = {1, 3};
+const float Essay::AVG_OR[2] = {1, 3};
 const float Essay::AVG_ON[2] = {0.5, 2};
 const float Essay::AVG_BUT[2] = {0.5, 2};
 const float Essay::AVG_IF[2] = {0.5, 2};
@@ -101,7 +103,6 @@ const float Essay::AVG_BECAUSE[2] = {0.5, 2};
 const float Essay::AVG_MY[2] = {0.5, 2};
 const float Essay::AVG_ABOUT[2] = {0.5, 2};
 const float Essay::AVG_HE[2] = {0.5, 2};
->>>>>>> 7056f9ecbe7666f0c9c642bc064ed31f078b70bf
 
 
 Essay::Essay(const string& essay, map<string, int>& dic, std::set<std::string> &langDico) throw()
@@ -120,22 +121,24 @@ Essay::Essay(const string& essay, map<string, int>& dic, std::set<std::string> &
     string text = essay.substr(firstSpace+1); // texte sans langue et niveau
     m_textSize = text.size();
     m_nbLetter = 0;
-    m_nbSentences = 0;
-    m_nbFinishING = 0;
-    m_nbFirstCaps = 0;
-    m_nbI = 0;
-    m_nbi = 0;
-    m_nbPronoms = 0;
-    m_nbThe = 0;
-    m_nbComma = 0;
+    m_nbSentences = 0.f;
+    m_nbFinishING = 0.f;
+    m_nbFirstCaps = 0.f;
+    m_nbI = 0.f;
+    m_nbi = 0.f;
+    m_nbPronoms = 0.f;
+    m_nbThe = 0.f;
+    m_nbComma = 0.f;
 
     splitEssay(' ', dic, text);
 
     langDico.emplace(m_lang);
 }
 
+int test = 0;
 Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1, const string& labelsOcc2, const string& labelsOcc3, const string& wordsOcc1, const string& wordsOcc2, const string& wordsOcc3, map<string, int>& dic, std::set<std::string> &langDico) throw()
 {
+    test++;
     size_t firstSpace = essay.find_first_of(' ', 0); // (LANGUE,NIVEAU)
     size_t firstComa = essay.find_first_of(',', 0);
     size_t firstCP = essay.find_first_of(')', 0);
@@ -144,7 +147,6 @@ Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1
     if(firstSpace == string::npos || firstComa == string::npos || firstCP == string::npos)
         throw invalid_argument(string("Erreur lors de la lecture du fichier text "
                                       + essay + "\nFichier inccorect."));
-
     m_lang = essay.substr(1, firstComa-1);
     m_level = essay.substr(firstComa+1, firstCP-firstComa-1);
     string text = essay.substr(firstSpace+1); // texte sans langue et niveau
@@ -153,32 +155,33 @@ Essay::Essay(const string& essay, const string& labels, const string& labelsOcc1
     /** Partie labels | l'entête est la même que l'essay pour les labels **/
     string myLabels = labels.substr(firstSpace+1);
     string myLabelsOcc1 = labelsOcc1.substr(firstSpace+1);
-    string myLabelsOcc2 = labelsOcc2.substr(firstSpace+1);
-    string myLabelsOcc3 = labelsOcc3.substr(firstSpace+1);
+//    string myLabelsOcc2 = labelsOcc2.substr(firstSpace+1);
+//    string myLabelsOcc3 = labelsOcc3.substr(firstSpace+1);
 
     string myWordsOcc1 = wordsOcc1.substr(firstSpace+1);
-    string myWordsOcc2 = wordsOcc2.substr(firstSpace+1);
-    string myWordsOcc3 = wordsOcc3.substr(firstSpace+1);
+//    string myWordsOcc2 = wordsOcc2.substr(firstSpace+1);
+//    string myWordsOcc3 = wordsOcc3.substr(firstSpace+1);
 
-    m_nbSentences = 0;
-    m_nbFinishING = 0;
-    m_nbFirstCaps = 0;
-    m_nbI = 0;
-    m_nbi = 0;
-    m_nbPronoms = 0;
-    m_nbThe = 0;
-    m_nbComma = 0;
+    m_nbSentences = 0.f;
+    m_nbFinishING = 0.f;
+    m_nbFirstCaps = 0.f;
+    m_nbI = 0.f;
+    m_nbi = 0.f;
+    m_nbPronoms = 0.f;
+    m_nbThe = 0.f;
+    m_nbComma = 0.f;
 
+
+/// cout << labels << "    " << labelsOcc1 << "    " << labelsOcc2 << "    " << labelsOcc3 << endl;
     splitEssay(' ', dic, text);
-    /** Partie labels **/
     splitLabels(' ', dic, myLabels);
     splitLabelsOcc1(' ', dic, myLabelsOcc1);
-    splitLabelsOcc2(' ', dic, myLabelsOcc2);
-    splitLabelsOcc3(' ', dic, myLabelsOcc3);
+//    splitLabelsOcc2(' ', dic, myLabelsOcc2);
+//    splitLabelsOcc3(' ', dic, myLabelsOcc3);
 
     splitWordsOcc1(' ', dic, myWordsOcc1);
-    splitWordsOcc2(' ', dic, myWordsOcc2);
-    splitWordsOcc3(' ', dic, myWordsOcc3);
+//    splitWordsOcc2(' ', dic, myWordsOcc2);
+//    splitWordsOcc3(' ', dic, myWordsOcc3);
 
     langDico.emplace(m_lang);
 }
@@ -396,49 +399,49 @@ size_t Essay::evaluer(const size_t& nbLang, map<string, int> & featuresDico,
     evaluerFeature(m_labelsMap["WP"], WAP_WP, "WAP_WP", foundFeatures, featuresDico, 2);
 
     /*** nb de RBR **/
-    evaluerFeature(m_labelsMap["RBR"], WAP_RBR, "WAP_RBR", foundFeatures, featuresDico, 2);
-
-    /*** nb de DT_NN **/
-    evaluerFeature(m_labelsMap["DT_NN"], WAP_DT_NN, "WAP_DT_NN", foundFeatures, featuresDico, 2);
-
-    /*** nb de IN_DT **/
-    evaluerFeature(m_labelsMap["IN_DT"], WAP_IN_DT, "WAP_IN_DT", foundFeatures, featuresDico, 2);
-
-    /*** nb de NN_IN **/
-    evaluerFeature(m_labelsMap["NN_IN"], WAP_NN_IN, "WAP_NN_IN", foundFeatures, featuresDico, 2);
-
-    /*** nb de TO_VB **/
-    evaluerFeature(m_labelsMap["TO_VB"], WAP_TO_VB, "WAP_TO_VB", foundFeatures, featuresDico, 2);
-
-    /*** nb de JJ_NN **/
-    evaluerFeature(m_labelsMap["JJ_NN"], WAP_JJ_NN, "WAP_JJ_NN", foundFeatures, featuresDico, 2);
-
-    /*** nb de JJ_NNS **/
-    evaluerFeature(m_labelsMap["JJ_NNS"], WAP_JJ_NNS, "WAP_JJ_NNS", foundFeatures, featuresDico, 2);
-
-    /*** nb de PRP_VBP **/
-    evaluerFeature(m_labelsMap["PRP_VBP"], WAP_PRP_VBP, "WAP_PRP_VBP", foundFeatures, featuresDico, 2);
-
-    /*** nb de DT_JJ **/
-    evaluerFeature(m_labelsMap["DT_JJ"], WAP_DT_JJ, "WAP_DT_JJ", foundFeatures, featuresDico, 2);
-
-    /*** nb de IN_NN **/
-    evaluerFeature(m_labelsMap["IN_NN"], WAP_IN_NN, "WAP_IN_NN", foundFeatures, featuresDico, 2);
-
-    /*** nb de MD_VB **/
-    evaluerFeature(m_labelsMap["MD_VB"], WAP_MD_VB, "WAP_MD_VB", foundFeatures, featuresDico, 2);
-
-    /*** nb de IN_PRP **/
-    evaluerFeature(m_labelsMap["IN_PRP"], WAP_IN_PRP, "WAP_IN_PRP", foundFeatures, featuresDico, 2);
-
-    /*** nb de NNS_IN **/
-    evaluerFeature(m_labelsMap["NNS_IN"], WAP_NNS_IN, "WAP_NNS_IN", foundFeatures, featuresDico, 2);
-
-    /*** nb de VB_DT **/
-    evaluerFeature(m_labelsMap["VB_DT"], WAP_VB_DT, "WAP_VB_DT", foundFeatures, featuresDico, 2);
-
-    /*** nb de DT_NNS **/
-    evaluerFeature(m_labelsMap["DT_NNS"], WAP_DT_NNS, "WAP_DT_NNS", foundFeatures, featuresDico, 2);
+    //evaluerFeature(m_labelsMap["RBR"], WAP_RBR, "WAP_RBR", foundFeatures, featuresDico, 2);
+/*** paires de wapiti ***/
+//    /*** nb de DT_NN **/
+//    evaluerFeature(m_labelsMap["DT_NN"], WAP_DT_NN, "WAP_DT_NN", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de IN_DT **/
+//    evaluerFeature(m_labelsMap["IN_DT"], WAP_IN_DT, "WAP_IN_DT", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de NN_IN **/
+//    evaluerFeature(m_labelsMap["NN_IN"], WAP_NN_IN, "WAP_NN_IN", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de TO_VB **/
+//    evaluerFeature(m_labelsMap["TO_VB"], WAP_TO_VB, "WAP_TO_VB", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de JJ_NN **/
+//    evaluerFeature(m_labelsMap["JJ_NN"], WAP_JJ_NN, "WAP_JJ_NN", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de JJ_NNS **/
+//    evaluerFeature(m_labelsMap["JJ_NNS"], WAP_JJ_NNS, "WAP_JJ_NNS", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de PRP_VBP **/
+//    evaluerFeature(m_labelsMap["PRP_VBP"], WAP_PRP_VBP, "WAP_PRP_VBP", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de DT_JJ **/
+//    evaluerFeature(m_labelsMap["DT_JJ"], WAP_DT_JJ, "WAP_DT_JJ", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de IN_NN **/
+//    evaluerFeature(m_labelsMap["IN_NN"], WAP_IN_NN, "WAP_IN_NN", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de MD_VB **/
+//    evaluerFeature(m_labelsMap["MD_VB"], WAP_MD_VB, "WAP_MD_VB", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de IN_PRP **/
+//    evaluerFeature(m_labelsMap["IN_PRP"], WAP_IN_PRP, "WAP_IN_PRP", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de NNS_IN **/
+//    evaluerFeature(m_labelsMap["NNS_IN"], WAP_NNS_IN, "WAP_NNS_IN", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de VB_DT **/
+//    evaluerFeature(m_labelsMap["VB_DT"], WAP_VB_DT, "WAP_VB_DT", foundFeatures, featuresDico, 2);
+//
+//    /*** nb de DT_NNS **/
+//    evaluerFeature(m_labelsMap["DT_NNS"], WAP_DT_NNS, "WAP_DT_NNS", foundFeatures, featuresDico, 2);
 
 
     /*** nouveaux mots à tester ***/
@@ -605,33 +608,23 @@ void Essay::splitEssay(const char& delim, map<string, int>& dic, const string& t
         previousWord = buff;
         m_wordsList.push_back(move(buff));
     }
-    m_avgSizeWord = m_nbLetter/(float)m_wordsList.size();
+    float nbMots = m_wordsList.size();
+    m_avgSizeWord = m_nbLetter/nbMots;
+
+    m_nbFinishING /= nbMots;
+    m_nbFirstCaps /= nbMots;
+    m_nbI /= nbMots;
+    m_nbi /= nbMots;
+    m_nbPronoms /= nbMots;
+    m_nbThe /= nbMots;
+    m_nbSentences /= nbMots;
+    m_nbComma /= nbMots;
 }
 
 void Essay::addIfFound(set<int> &found, const string &feature, map<string, int>& featuresDico)
 {
     map<string, int>::iterator it = featuresDico.find(feature);
     if(it!=featuresDico.end()) found.emplace(it->second);
-}
-
-/** unsigned int features **/
-void Essay::evaluerFeature(const unsigned int &val, const unsigned int borne[], const string &featureName, set<int> &found, map<string, int>& featuresDico, const unsigned int &mode){
-    if(mode==1 || mode==2)
-    {
-        if(val <= borne[0]){
-            addIfFound(found, featureName + "_INF", featuresDico);
-        }
-        else if(val >= borne[1])
-        {
-            addIfFound(found, featureName + "_SUP", featuresDico);
-        }
-    }
-    if(mode==2 || mode==3){
-        if(val > borne[0] && val < borne[1])
-        {
-            addIfFound(found, featureName + "_BET", featuresDico);
-        }
-    }
 }
 
 /** float features **/
@@ -677,10 +670,11 @@ void Essay::splitLabelsOcc1(const char& delim, map<string, int>& dic, const stri
     string item;
     while (getline(ss, occurence, delim) && getline(ss, item, delim))
     {
-        string buff1 = occurence;
+        stringstream s_occurence; s_occurence.str(occurence);
+        int buff1; s_occurence >> buff1;
         string buff2 = item;
         dic.emplace("ORDRE_L1_" + buff2, dic.size());
-        m_labelsMap.emplace(buff2, std::stoi(buff1));
+        m_labelsMap.emplace(buff2, buff1);
     }
 }
 
@@ -693,11 +687,12 @@ void Essay::splitLabelsOcc2(const char& delim, map<string, int>& dic, const stri
     string item1, item2;
     while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim))
     {
-        string buff1 = occurence;
+        stringstream s_occurence; s_occurence.str(occurence);
+        int buff1; s_occurence >> buff1;
         string buff2 = item1;
         string buff3 = item2;
         dic.emplace("ORDRE_L2_" + buff2 + "_" + buff3, dic.size());
-        m_labelsMap.emplace(buff2 + "_" + buff3, std::stoi(buff1));
+        m_labelsMap.emplace(buff2 + "_" + buff3, buff1);
     }
 }
 
@@ -710,12 +705,13 @@ void Essay::splitLabelsOcc3(const char& delim, map<string, int>& dic, const stri
     string item1, item2, item3;
     while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim) && getline(ss, item3, delim))
     {
-        string buff1 = occurence;
+        stringstream s_occurence; s_occurence.str(occurence);
+        int buff1; s_occurence >> buff1;
         string buff2 = item1;
         string buff3 = item2;
         string buff4 = item3;
         dic.emplace("ORDRE_L3_" + buff2 + "_" + buff3 + "_" + buff4, dic.size());
-        m_labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, std::stoi(buff1));
+        m_labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, buff1);
     }
 }
 
@@ -728,10 +724,11 @@ void Essay::splitWordsOcc1(const char& delim, map<string, int>& dic, const strin
     string item;
     while (getline(ss, occurence, delim) && getline(ss, item, delim))
     {
-        string buff1 = occurence;
+        stringstream s_occurence; s_occurence.str(occurence);
+        int buff1; s_occurence >> buff1;
         string buff2 = item;
         dic.emplace("ORDRE_W1_" + buff2, dic.size());
-        m_wordsMap.emplace(buff2, std::stoi(buff1));
+        m_wordsMap.emplace(buff2, buff1);
     }
 }
 
@@ -744,11 +741,12 @@ void Essay::splitWordsOcc2(const char& delim, map<string, int>& dic, const strin
     string item1, item2;
     while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim))
     {
-        string buff1 = occurence;
+        stringstream s_occurence; s_occurence.str(occurence);
+        int buff1; s_occurence >> buff1;
         string buff2 = item1;
         string buff3 = item2;
         dic.emplace("ORDRE_W2_" + buff2 + "_" + buff3, dic.size());
-        m_wordsMap.emplace(buff2 + "_" + buff3, std::stoi(buff1));
+        m_wordsMap.emplace(buff2 + "_" + buff3, buff1);
     }
 }
 
@@ -761,12 +759,13 @@ void Essay::splitWordsOcc3(const char& delim, map<string, int>& dic, const strin
     string item1, item2, item3;
     while (getline(ss, occurence, delim) && getline(ss, item1, delim) && getline(ss, item2, delim) && getline(ss, item3, delim))
     {
-        string buff1 = occurence;
+        stringstream s_occurence; s_occurence.str(occurence);
+        int buff1; s_occurence >> buff1;
         string buff2 = item1;
         string buff3 = item2;
         string buff4 = item3;
         dic.emplace("ORDRE_W3_" + buff2 + "_" + buff3 + "_" + buff4, dic.size());
-        m_wordsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, std::stoi(buff1));
+        m_wordsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, buff1);
     }
 }
 
