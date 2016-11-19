@@ -56,7 +56,61 @@
 1479080312 source:/home/florian/git/TOEFL_Extract/Extraction/src/tools.cpp
 	"tools.h"
 
-1479173478 source:/home/florian/git/TOEFL_Extract/Extraction/src/model.cpp
+1479073312 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/corpus.cpp
+	"corpus.h"
+	<algorithm>
+	<iostream>
+	<fstream>
+	<set>
+	<thread>
+	"tools.h"
+
+1479073312 /media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/include/corpus.h
+	<vector>
+	<map>
+	<string>
+	"essay.h"
+
+1479161041 /media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/include/essay.h
+	<string>
+	<vector>
+	<unordered_map>
+	<map>
+	<set>
+
+1479073312 /media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/include/tools.h
+	<string>
+	<vector>
+	<set>
+	<map>
+
+1479160880 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/essay.cpp
+	"essay.h"
+	<iostream>
+	<fstream>
+	<sstream>
+	<algorithm>
+	<thread>
+	"tools.h"
+
+1479073312 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/main.cpp
+	<string>
+	<sstream>
+	<iostream>
+	<fstream>
+	<chrono>
+	<thread>
+	"essay.h"
+	"model.h"
+
+1479073312 /media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/include/model.h
+	<algorithm>
+	<map>
+	<set>
+	<vector>
+	"essay.h"
+
+1479161207 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/model.cpp
 	<iostream>
 	<fstream>
 	<sstream>
@@ -69,3 +123,5 @@
 	"essay.h"
 	"corpus.h"
 
+1479073312 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/tools.cpp
+	"tools.h"e
