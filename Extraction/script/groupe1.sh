@@ -17,24 +17,25 @@ grep "(" $datatrainLoc | cut -d " " -f -1 > listLanguage
 while read newline ;
 do
 
-	if [ -z "$newline" ]; then # on passe au texte suivant
+	if [ -z "$newline" ]; then # on passe au texte suivant (la ligne est vide)
 		# traitement à la vollée
 		sed -n "$numline p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
 		let "numline = numline + 1"
-		./supprPonctu.sh temp1.txt temp1NoPonct.txt
-		sort temp1NoPonct.txt | uniq -c | sort -bnr >> $outfile
+		#./supprPonctu.sh temp1.txt temp1NoPonct.txt
+		sort temp1.txt | uniq -c | sort -bnr >> $outfile
 		echo "" >> $outfile
 		
 		> temp1.txt
 		
-		read newline < ${filename}
+		newline=""
+	else
+		echo "$newline" >> temp1.txt
 	fi
-
-	echo "$newline" >> temp1.txt
+	
 done < ${filename}
 
 rm temp1.txt
-rm temp1NoPonct.txt
+#rm temp1NoPonct.txt
 
 echo ">> Fin du calcul des occurences par texte pour une entité seule"
 

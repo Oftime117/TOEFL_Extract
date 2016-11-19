@@ -1,7 +1,3 @@
 #!/bin/bash
 #Florian TALOUR & Tristan LE NAIR
-cat $1 | tr "\n" " " | tr "(" "\n" > $2
-sed -i '1d' $2
-sed -i 's/^/(/' $2
-sed -i "s/\ \ */\ /g" $2
-sed -i 's/.$//' $2
+cat $1 | sed '/^$/d' | sed 's/\(^([A-Z]\{3\},\)/§§§§§\1/g' | tr '\n' ' ' | sed 's/§§§§§/\n/g' | sed 's/\ \ */\ /g' > $2

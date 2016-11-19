@@ -5,12 +5,12 @@ filename=$1 #  $1 est la sortie de extract_l.sh
 outfile=$2 #  $2 est le nom de la sortie pour la liste des tags dans le même format que train.txt
 
 # Partie 1: ajoute la language qui correspond à l'essay
-let "numline0 = 1"
+let "numline = 1"
 grep "(" $datatrainLoc | cut -d " " -f -1 > listLanguage
 
 # initialisation
-sed -n "$numline0 p" listLanguage > temp0.txt # ajout de la langue qui correspond au groupe
-let "numline0 = numline0 + 1"
+sed -n "$numline p" listLanguage > temp0.txt # ajout de la langue qui correspond au groupe
+let "numline = numline + 1"
 
 while read newline ;
 do
@@ -18,8 +18,8 @@ do
 	if [ -z "$newline" ]; then # on passe au texte suivant
 		# traitement à la vollée
 		echo "" >> temp0.txt
-		sed -n "$numline0 p" listLanguage >> temp0.txt # ajout de la langue qui correspond au groupe
-		let "numline0 = numline0 + 1"
+		sed -n "$numline p" listLanguage >> temp0.txt # ajout de la langue qui correspond au groupe
+		let "numline = numline + 1"
 		
 		read newline < ${filename}
 	fi
