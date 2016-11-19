@@ -126,3 +126,73 @@
 1479073312 source:/media/hdd/Documents/Polytech/Github/TOEFL_Extract/Extraction/src/tools.cpp
 	"tools.h"
 
+1479053832 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\corpus.cpp
+	"corpus.h"
+	<algorithm>
+	<iostream>
+	<fstream>
+	<set>
+	<thread>
+	"tools.h"
+
+1479554216 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\corpus.h
+	<vector>
+	<map>
+	<string>
+	"essay.h"
+
+1479509983 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\essay.h
+	<string>
+	<vector>
+	<unordered_map>
+	<map>
+	<set>
+
+1479050981 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\tools.h
+	<string>
+	<vector>
+	<set>
+	<map>
+
+1479054637 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\main.cpp
+	<string>
+	<sstream>
+	<iostream>
+	<fstream>
+	<chrono>
+	<thread>
+	"essay.h"
+	"model.h"
+
+1479505986 c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\include\model.h
+	<algorithm>
+	<map>
+	<set>
+	<vector>
+	"essay.h"
+
+1479051609 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\tools.cpp
+	"tools.h"
+
+1479554607 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\essay.cpp
+	"essay.h"
+	<iostream>
+	<fstream>
+	<sstream>
+	<algorithm>
+	<thread>
+	"tools.h"
+
+1479554988 source:c:\users\vincent\desktop\polytech\et5\eit\toefl_extract\extraction\src\model.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<thread>
+	<future>
+	<random>
+	<chrono>
+	"tools.h"
+	"model.h"
+	"essay.h"
+	"corpus.h"
+

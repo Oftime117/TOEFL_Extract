@@ -17,60 +17,6 @@ using namespace std;
 const bool Model::printTrainConfusionMatrix = true;
 
 
-const unsigned int Model::AVG_WORD_CORPUS[2] = {324, 373};
-const unsigned int Model::AVG_LETTER_CORPUS[2] = {1653, 1942};
-const float Model::AVG_S_WORD[2] = {5.08, 5.23};
-const unsigned int Model::AVG_WEND_ING[2] = {8, 11};
-const unsigned int Model::AVG_FIRSTCAPS[2] = {18, 23};
-const unsigned int Model::AVG_I_CAPS[2] = {2, 5};
-const unsigned int Model::AVG_I_LOW[2] = {0, 1};
-const unsigned int Model::AVG_PRONOMS[2] = {16, 19};
-const unsigned int Model::AVG_THE[2] = {13, 18};
-const unsigned int Model::AVG_S_SENTENCE[2] = {19, 25};
-const unsigned int Model::AVG_POINT[2] = {13, 18};
-const unsigned int Model::AVG_TO[2] = {8, 14};
-const unsigned int Model::AVG_AND[2] = {5, 9};
-const unsigned int Model::AVG_OF[2] = {5, 9};
-const unsigned int Model::AVG_IN[2] = {5, 9};
-const unsigned int Model::AVG_A[2] = {5, 9};
-const unsigned int Model::AVG_IS[2] = {4, 8};
-const unsigned int Model::AVG_THAT[2] = {4, 8};
-const unsigned int Model::AVG_PEOPLE[2] = {2, 6};
-const unsigned int Model::AVG_IT[2] = {2, 6};
-const unsigned int Model::AVG_ARE[2] = {2, 6};
-const unsigned int Model::AVG_THEY[2] = {2, 6};
-const unsigned int Model::AVG_FOR[2] = {1, 5};
-const unsigned int Model::AVG_HAVE[2] = {1, 5};
-const unsigned int Model::AVG_NOT[2] = {1, 5};
-const unsigned int Model::AVG_BE[2] = {1, 5};
-const unsigned int Model::AVG_YOU[2] = {1, 5};
-const unsigned int Model::AVG_MORE[2] = {1, 3};
-const unsigned int Model::AVG_CAN[2] = {1, 3};
-const unsigned int Model::AVG_WILL[2] = {1, 3};
-const unsigned int Model::AVG_THEIR[2] = {1, 3};
-const unsigned int Model::AVG_WITH[2] = {1, 3};
-const unsigned int Model::AVG_WE[2] = {1, 3};
-const unsigned int Model::AVG_AS[2] = {1, 3};
-const unsigned int Model::AVG_OR[2] = {1, 3};
-const float Model::AVG_ON[2] = {0.5, 2};
-const float Model::AVG_BUT[2] = {0.5, 2};
-const float Model::AVG_IF[2] = {0.5, 2};
-const float Model::AVG_LIFE[2] = {0.5, 2};
-const float Model::AVG_THAN[2] = {0.5, 2};
-const float Model::AVG_ONE[2] = {0.5, 2};
-const float Model::AVG_YOUNG[2] = {0.5, 2};
-const float Model::AVG_TIME[2] = {0.5, 2};
-const float Model::AVG_THERE[2] = {0.5, 2};
-const float Model::AVG_BY[2] = {0.5, 2};
-const float Model::AVG_SO[2] = {0.5, 2};
-const float Model::AVG_BECAUSE[2] = {0.5, 2};
-const float Model::AVG_MY[2] = {0.5, 2};
-const float Model::AVG_ABOUT[2] = {0.5, 2};
-const float Model::AVG_HE[2] = {0.5, 2};
-
-
-
-
 Model::Model(string corpusPath, string featuresOut, string langMatrixOut)
     : m_trainPath(corpusPath), m_featuresPath(featuresOut), m_langMatrixPath(langMatrixOut),
     m_languages(), m_featuresDico(), m_langMatrix(), m_confusionMatrix(), m_corpusList()
@@ -88,18 +34,13 @@ m_langMatrixPath(langMatrixIn), m_languages(), m_featuresDico(), m_langMatrix(),
     loadLangDictionnary();
 }
 
-//Model::~Model()
-//{
-//    //dtor
-//}
-
 /*** Méthodes publiques ***/
 /* Cette fonction est encore utile?
  * Amirali
  */
 void Model::trainAll()
 {
-    train(m_corpusList);
+    //train(m_corpusList);
 }
 
 float Model::trainByDiv3(const size_t& nbDiv)
@@ -235,146 +176,6 @@ float Model::trainByDiv2(const size_t& nbDiv)
     return errMoy;
 }
 
-float Model::trainByDiv(const size_t& nbDiv, const size_t& stop)
-{
-    vector<Essay> trainCorpus;
-    vector<Essay> testCorpus;
-
-    float err[nbDiv];
-    size_t nbTrainingEff = nbDiv;
-    /*** Lancement de l'entrainement en cross validation ***/
-    for(size_t numTrain=0; numTrain<nbDiv; ++numTrain)
-    {
-
-        cout<<"=== Train "<<numTrain+1<<" / "<<nbDiv<<" ===\n";
-        // reset avec des 0 partout
-        m_langMatrix.clear();
-        m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
-
-        trainCorpus.clear();
-        testCorpus.clear();
-
-        int l[m_languages.size()] = {0};
-        /*** Sélection du corpus de textes pour la cross validation ***/
-        for(size_t i=0; i<m_corpusList.size(); i++)
-        {
-            int indexLang = Tools::getVectorIndex(m_languages, m_corpusList[i].getLang());
-            if(l[indexLang]%nbDiv == numTrain)
-            {
-                testCorpus.push_back(m_corpusList[i]);
-            }
-            else
-            {
-                trainCorpus.push_back(m_corpusList[i]);
-            }
-            l[indexLang]++;
-        }
-
-        /*** Entrainement du corpus d'entrainement ***/
-        train(trainCorpus);
-
-        cout << "featuresDico size (trainbydivST): " << m_featuresDico.size() << endl;
-
-        /* estimation du taux d'erreur sur ce corpus */
-
-        /*** Shuffle et test du programme sur le corpus de test ***/
-
-        /*******************
-         Shuffle marche
-        *******************/
-        //if(numTrain==0) cout << "Avant shuffle :\n" << testCorpus[0] << endl;
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-        shuffle(testCorpus.begin(), testCorpus.end(), std::default_random_engine(seed));
-        //if(numTrain==0) cout << "Apres shuffle :\n" << testCorpus[0] << endl;
-        size_t nbErrors = 0;
-        for(vector<Essay>::iterator it=testCorpus.begin(); it!=testCorpus.end(); ++it)
-        {
-            if( ! evaluer(*it))
-            {
-                nbErrors++;
-            }
-        }
-        err[numTrain] = ((float)nbErrors / (float)testCorpus.size()) * (float)100;
-
-        cout << "Erreurs : " << nbErrors << " / " << testCorpus.size() << " (" << err[numTrain] << " %)\n\n";
-
-        /* arreter avant la fin */
-        if(numTrain == stop-1)
-        {
-            nbTrainingEff = stop;
-            break;
-        }
-    }
-
-    /* Reset de la matrice (0 partout) */
-    m_langMatrix.clear();
-    m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
-
-    float errMoy = Tools::floatArrayAVG(err, nbTrainingEff);
-    cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
-
-
-    /*** Sauvegarde des résultats de chaque train dans un fichier ***/
-    string path = "data/history.txt";
-    cout << path << endl;
-    cout << ">> Sauvegarde des resultats de " << nbTrainingEff << " entrainement" << (nbTrainingEff>1?"s":"") << "\n\n";
-
-    ofstream cFile(path, ios::out | ios::app);
-    if(!cFile)
-    {
-        //throw une exception
-        return -1;
-    }
-    for(size_t i=0; i<nbTrainingEff; i++)
-    {
-        cFile << "Train " << i << " = " << err[i] << " %\n";
-    }
-    cFile << "Moyenne = " << errMoy << endl;
-    cFile.close();
-
-    return errMoy;
-}
-
-/** unsigned int features **/
-void Model::evaluerFeature(const unsigned int &val, const unsigned int borne[], const string &featureName, set<int> &found, const unsigned int &mode){
-    if(mode==1 || mode==2)
-    {
-        if(val <= borne[0]){
-            addIfFound(found, featureName + "_INF");
-        }
-        else if(val >= borne[1])
-        {
-            addIfFound(found, featureName + "_SUP");
-        }
-    }
-    if(mode==2 || mode==3){
-        if(val > borne[0] && val < borne[1])
-        {
-            addIfFound(found, featureName + "_BET");
-        }
-    }
-}
-
-/** float features **/
-void Model::evaluerFeature(const float &val, const float borne[], const string &featureName, set<int> &found, const unsigned int &mode){
-    if(mode==1 || mode==2)
-    {
-        if(val <= borne[0]){
-            addIfFound(found, featureName + "_INF");
-        }
-        else if(val >= borne[1])
-        {
-            addIfFound(found, featureName + "_SUP");
-        }
-    }
-    if(mode==2 || mode==3){
-        if(val > borne[0] && val < borne[1])
-        {
-            addIfFound(found, featureName + "_BET");
-        }
-    }
-}
-
 void Model::save()
 {
     try
@@ -426,22 +227,24 @@ void Model::printConfusionMatrix(const string& path) const{
 void Model::initModel()
 {
     /*** lancement du script (wapiti) ***/
-    //System("../script/script.sh"); //on suppose que les fichiers sont déjà créés
-    /*ifstream labeledCorpusFile("../script/trainTagLine.txt", ios::in);
-    ifstream labeledOcc1CorpusFile("../script/occurence1TagLine.txt", ios::in);
-    ifstream labeledOcc2CorpusFile("../script/occurence2TagLine.txt", ios::in);
-    ifstream labeledOcc3CorpusFile("../script/occurence3TagLine.txt", ios::in);*/
+    //on suppose que les fichiers sont déjà créés
+    /*** récupération des résultats wapiti ***/
+    ifstream labeledCorpusFile("script/trainTagLine.txt", ios::in);
+    ifstream labeledOcc1CorpusFile("script/occurence1TagLine.txt", ios::in);
+    //ifstream labeledOcc2CorpusFile("script/occurence2TagLine.txt", ios::in);
+    //ifstream labeledOcc3CorpusFile("script/occurence3TagLine.txt", ios::in);
 
     /*** Mots et occurences ***/
-    /*ifstream wordOcc1CorpusFile("../script/occurence1MotLine.txt", ios::in);
-    ifstream wordOcc2CorpusFile("../script/occurence2MotLine.txt", ios::in);
-    ifstream wordOcc3CorpusFile("../script/occurence3MotLine.txt", ios::in);*/
+    ifstream wordOcc1CorpusFile("script/occurence1MotLine.txt", ios::in);
+    //ifstream wordOcc2CorpusFile("script/occurence2MotLine.txt", ios::in);
+    //ifstream wordOcc3CorpusFile("script/occurence3MotLine.txt", ios::in);
 
     ifstream corpusFile(m_trainPath, ios::in);
-    if(!corpusFile/* || !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile
-        || !labeledOcc3CorpusFile || !wordOcc1CorpusFile || !wordOcc2CorpusFile || !wordOcc3CorpusFile*/)
+    if(!corpusFile || !labeledCorpusFile || !labeledOcc1CorpusFile/* || !labeledOcc2CorpusFile
+        || !labeledOcc3CorpusFile*/ || !wordOcc1CorpusFile/* || !wordOcc2CorpusFile || !wordOcc3CorpusFile*/)
     {
        cerr << "Impossible d'ouvrir un des fichiers !" << endl;
+       throw -1;
     }
     else
     {
@@ -450,8 +253,8 @@ void Model::initModel()
 
         /*** Lecture du corpus et enregistrement des caractéristiques ***/
         set<string> langSet;
-        string line/*, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line*/;
-        //string wordOcc1Line, wordOcc2Line, wordOcc3Line;
+        string line, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line;
+        string wordOcc1Line, wordOcc2Line, wordOcc3Line;
         /* Attention ici mettre des && entre les getlines n'est pas correct ! On sortirait du while
          * dès que l'on aurait fini de lire un des fichiers
          * Peut être mieux de lire les fichiers les uns après les autres?
@@ -460,28 +263,39 @@ void Model::initModel()
          * TODO: Check j'ai trouvé que good() devrait faire ce que je veux mais du coup je dois faire des cas ensuite
          * Si tu as une meilleure idée, n'hesite pas
          */
-        while (corpusFile.good()/* || labeledCorpusFile.good() || labeledOcc1CorpusFile.good()
-            || labeledOcc2CorpusFile.good() || labeledOcc3CorpusFile.good()*/)
+//         cout << "coucou" <<endl;
+        bool b0 = getline(corpusFile, line);
+        bool b1 = getline(labeledCorpusFile, labeledLine);
+        bool b2 = getline(labeledOcc1CorpusFile, labeledOcc1Line);
+        //bool b3 = getline(labeledOcc2CorpusFile, labeledOcc2Line);
+        //bool b4 = getline(labeledOcc3CorpusFile, labeledOcc3Line);
+        bool b5 = getline(wordOcc1CorpusFile, wordOcc1Line);
+        //bool b6 = getline(wordOcc2CorpusFile, wordOcc2Line);
+        //bool b7 = getline(wordOcc3CorpusFile, wordOcc3Line);
+        while (b0 && b1 && b2/* && b3 && b4*/ && b5/* && b6 && b7*/)
         {
-            if (corpusFile.good()) getline(corpusFile, line);
-            /*if (labeledCorpusFile.good()) getline(labeledCorpusFile, labeledLine);
-            if (labeledOcc1CorpusFile.good()) getline(labeledOcc1CorpusFile, labeledOcc1Line);
-            if (labeledOcc2CorpusFile.good()) getline(labeledOcc2CorpusFile, labeledOcc2Line);
-            if (labeledOcc3CorpusFile.good()) getline(labeledOcc3CorpusFile, labeledOcc3Line);
-
-            if (wordOcc1CorpusFile.good()) getline(wordOcc1CorpusFile, wordOcc1Line);
-            if (wordOcc2CorpusFile.good()) getline(wordOcc2CorpusFile, wordOcc2Line);
-            if (wordOcc3CorpusFile.good()) getline(wordOcc3CorpusFile, wordOcc3Line);*/
-
             try
             {
-                Essay e(line, m_featuresDico, langSet);
-                //Essay e(line, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line, wordOcc1Line, wordOcc2Line, wordOcc3Line, m_featuresDico, langSet);
+                //Essay e(line, m_featuresDico, langSet);
+//cout << i << " ";
+//cout << "1" << endl;
+                Essay e(line, labeledLine, labeledOcc1Line, labeledOcc2Line, labeledOcc3Line, wordOcc1Line, wordOcc2Line, wordOcc3Line, m_featuresDico, langSet);
+//cout << "2" << endl;
                 m_corpusList.push_back(std::move(e));
+//cout << "3" << endl;
             }catch(const invalid_argument& e)
             {
                 cerr << e.what() << endl;
             }
+
+            b0 = getline(corpusFile, line);
+            b1 = getline(labeledCorpusFile, labeledLine);
+            b2 = getline(labeledOcc1CorpusFile, labeledOcc1Line);
+            //b3 = getline(labeledOcc2CorpusFile, labeledOcc2Line);
+            //b4 = getline(labeledOcc3CorpusFile, labeledOcc3Line);
+            b5 = getline(wordOcc1CorpusFile, wordOcc1Line);
+            //b6 = getline(wordOcc2CorpusFile, wordOcc2Line);
+            //b7 = getline(wordOcc3CorpusFile, wordOcc3Line);
         }
         corpusFile.close();
         m_languages = Tools::setToVector(langSet);
@@ -527,6 +341,7 @@ void Model::initModel()
 		addFeaturePerso("WAP_WDT");
 		addFeaturePerso("WAP_WP");
 		addFeaturePerso("WAP_RBR");
+/*
 		addFeaturePerso("WAP_DT_NN");
 		addFeaturePerso("WAP_IN_DT");
 		addFeaturePerso("WAP_NN_IN");
@@ -541,6 +356,8 @@ void Model::initModel()
 		addFeaturePerso("WAP_NNS_IN");
 		addFeaturePerso("WAP_VB_DT");
 		addFeaturePerso("WAP_DT_NNS");
+*/
+/*
         addFeaturePerso("AVG_TO");
         addFeaturePerso("AVG_AND");
         addFeaturePerso("AVG_OF");
@@ -582,151 +399,11 @@ void Model::initModel()
         addFeaturePerso("AVG_MY");
         addFeaturePerso("AVG_ABOUT");
         addFeaturePerso("AVG_HE");
-
+*/
         /*** Initialisation de la matrice avec des 0 ***/
         m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
         resetConfusionMatrix();
     }
-}
-
-void Model::train(vector<Essay> &corpus)
-{
-    size_t i=0, x=10;
-    float forceCorrection = 1.0f;
-    int nbErrors = 1;
-
-    while(i<x && nbErrors>0)
-    { /* Condition d'arrêt : x = nombre de tours max OU zero erreur au tour précédent */
-        nbErrors = 0;
-        forceCorrection = (float)1/(float)(i+1);
-
-        /* evaluer chaque essay de train
-         * shuffle trainCorpus
-         */
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-        shuffle(corpus.begin(), corpus.end(), std::default_random_engine(seed));
-        //random_shuffle(corpus.begin(), corpus.end());
-
-        for(size_t j=0; j<corpus.size(); j++)
-        {
-            if( ! evaluer(corpus[j], forceCorrection))
-            {
-                nbErrors++;
-            }
-        }
-
-        float err = ((float)nbErrors / (float)corpus.size()) * (float)100;
-        cout << "Step " << i << " - Erreurs : " << nbErrors << " / " << corpus.size() << " (" << err << " %)\n";
-
-        i++;
-    }
-}
-
-//retourne l'indice de la langue
-bool Model::evaluer(Essay &e, const float& forceCorrection)
-{
-    set<int> found;
-
-    const vector<string> wordsList = e.getWordsList();
-    /*** Caractéristiques personnalisées ***/
-
-    size_t corpusSize = wordsList.size();
-    unsigned int nbPhrases = e.getNbSentences();
-
-    /** Nb de mots dans l'essai **/
-    /** 1 = pire / 2 = mieux / 3 = mieux + **/
-    evaluerFeature(corpusSize, AVG_WORD_CORPUS, "AVG_WORD_CORPUS", found, 3); //2
-
-    /** Nb de lettres dans l'essai **/
-    /** 1 = pire / 2 = mieux + / 3 = mieux ++ **/
-    evaluerFeature(e.getTextSize(), AVG_LETTER_CORPUS, "AVG_LETTER_CORPUS", found, 3); //2
-
-    /** Moyenne de lettres par mots **/
-    /** 1 = rien / 2 = rien / 3 = rien **/
-    evaluerFeature(e.getSizeWord(), AVG_S_WORD, "AVG_S_WORD", found, 0); //0
-
-    /** nb de mots finissant par ING **/
-    /** 1 = mieux ++ / 2 = mieux + / 3 = pire **/
-    evaluerFeature(e.getNbFinishING(), AVG_WEND_ING, "AVG_WEND_ING", found, 1); //3
-
-    /*** nb de mots commençant par une majuscule ***/
-    /** 1 = mieux + / 2 = mieux ++ / 3 = mieux **/
-    evaluerFeature(e.getNbFirstCaps(), AVG_FIRSTCAPS, "AVG_FIRSTCAPS", found, 2); //2
-
-    /*** nb de mots "I" (en majuscule) ***/
-    /** 1 = pire / 2 = mieux(rien) / 3 = mieux(quasi rien) **/
-    evaluerFeature(e.getNbI(), AVG_I_CAPS, "AVG_I_CAPS", found, 0); //2
-
-    /*** nb de mots "i" (en minuscule) ***/
-    /** 1 = pire ++ / 2 = pire ++ / 3 = rien **/
-    evaluerFeature(e.getNbi(), AVG_I_LOW, "AVG_I_LOW", found, 0); //2
-
-    /*** nb de pronoms "i,you,he,she,it,we,they" (majuscule ou minuscule) ***/
-    /** 1 = mieux -- / 2 = mieux / 3 = mieux - **/
-    evaluerFeature(e.getNbPronoms(), AVG_PRONOMS, "AVG_PRONOMS", found, 2); //2
-
-    /*** nb de "the" ***/
-    /** 1 = pire / 2 = pire + / 3 = pire(presque rien) **/
-    evaluerFeature(e.getNbThe(), AVG_THE, "AVG_THE", found, 0); //2
-
-    /*** nb de mots par phrase **/
-    /** 1 = mieux + / 2 = mieux ++ / 3 = mieux **/
-    evaluerFeature(corpusSize/(float)nbPhrases, AVG_S_SENTENCE, "AVG_S_SENTENCE", found, 2); //0
-
-    /*** nb de phrases (nb de points) **/
-    /** 1 = mieux + / 2 = mieux ++ / 3 = mieux **/
-    evaluerFeature(nbPhrases, AVG_POINT, "AVG_POINT", found, 2); //0
-
-    /*** nb de virgules **/
-    /** 1 = pire +++ / 2 = pire ++ / 3 = mieux **/
-    evaluerFeature(e.getNbComma(), AVG_COMMA, "AVG_COMMA", found, 3); //0
-
-
-    for(size_t i=0; i<corpusSize-1; i++)
-    {
-        /*** Caractéristiques sur les mots ***/
-        addIfFound(found, "NB_W_" + wordsList[i]);
-        /*** Caractéristiques sur les paires de mots ***/
-        if(forceCorrection > 0)
-        {   /* si entrainement en cours, ajouter la paire de mots */
-            addFeatureAndResize("NB_2W_" + wordsList[i] + "_" + wordsList[i+1]);
-        }
-        /* si evaluation sans amelioration de l'entrainement */
-        addIfFound(found, "NB_2W_" + wordsList[i] + "_" + wordsList[i+1]);
-    }
-    /*** dernier mot ***/
-    addIfFound(found, "NB_W_" + wordsList[corpusSize-1]);
-
-
-
-    /*** Calcul du score de chaque langue ***/
-    int score[m_languages.size()] = {0};
-    for(int i : found)
-    {
-        for(size_t j=0; j<m_languages.size(); j++)
-        {
-            score[j] += m_langMatrix[i][j];
-        }
-    }
-
-    /** avoir le numero supose de la langue du texte **/
-    int lang = Tools::getMaxIndex(score, m_languages.size());
-    /** avoir le numero de la langue du texte **/
-    int numLangText = Tools::getVectorIndex(m_languages, e.getLang());
-    /*** ajouter a la matrice de confusion ***/
-    if(forceCorrection == 0)
-    {   /* lorsqu'il y a evaluation sans amelioration de l'entrainement */
-        m_confusionMatrix[lang][numLangText] += 1;
-    }
-    if(m_languages[lang] != e.getLang())
-    {
-         if(forceCorrection > 0)
-        {
-            corrigerMatrice(forceCorrection, lang, numLangText, found);
-        }
-        return false;
-    }
-    return true;
 }
 
 /* Transformer m_featuresDico en local */
@@ -734,19 +411,6 @@ void Model::addFeaturePerso(const string &f){
     m_featuresDico.emplace(f + "_INF", m_featuresDico.size());
     m_featuresDico.emplace(f + "_SUP", m_featuresDico.size());
     m_featuresDico.emplace(f + "_BET", m_featuresDico.size());
-}
-
-void Model::addFeatureAndResize(const string &f){
-    if(Tools::addIfAbsent(m_featuresDico, f))
-    {
-        m_langMatrix.resize(m_featuresDico.size(), vector<float>(m_languages.size()));
-    }
-}
-
-void Model::addIfFound(set<int> &found, const string &feature)
-{
-    map<string, int>::iterator it = m_featuresDico.find(feature);
-    if(it!=m_featuresDico.end()) found.emplace(it->second);
 }
 
 /* Transformer langMatrix en local */
