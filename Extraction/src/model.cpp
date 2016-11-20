@@ -88,6 +88,10 @@ float Model::trainByDiv3(const size_t& nbDiv)
             futures.pop_back();
             /** extraire le taux d'erreur **/
             err[i] = fut.get();
+            i++;
+        }
+        for(i=0; i<nbDiv; i++)
+        {
             /** extraire la matrice de confusion **/
             Tools::sumMatrix(m_confusionMatrix, corpusTab[i].getConfusionMatrix());
             if(printTrainConfusionMatrix)
@@ -95,12 +99,10 @@ float Model::trainByDiv3(const size_t& nbDiv)
                 stringstream s; s << "data/confusion_"<<i<<".txt";
                 corpusTab[i].printConfusionMatrix(s.str());
             }
-            i++;
         }
 
         float errMoy = Tools::floatArrayAVG(err, nbDiv);
         cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
-
 
         /*** Sauvegarde des résultats de chaque train dans un fichier ***/
         string path = "data/history.txt";
@@ -235,9 +237,9 @@ void Model::initModel()
     //ifstream labeledOcc3CorpusFile("script/occurence3TagLine.txt", ios::in);
 
     /*** Mots et occurences ***/
-    ifstream wordOcc1CorpusFile("script/occurence1MotLine.txt", ios::in);
-    //ifstream wordOcc2CorpusFile("script/occurence2MotLine.txt", ios::in);
-    //ifstream wordOcc3CorpusFile("script/occurence3MotLine.txt", ios::in);
+    ifstream wordOcc1CorpusFile("script/occurence1MotLineLower.txt", ios::in);
+    //ifstream wordOcc2CorpusFile("script/occurence2MotLineLower.txt", ios::in);
+    //ifstream wordOcc3CorpusFile("script/occurence3MotLineLower.txt", ios::in);
 
     ifstream corpusFile(m_trainPath, ios::in);
     if(!corpusFile || !labeledCorpusFile || !labeledOcc1CorpusFile/* || !labeledOcc2CorpusFile
