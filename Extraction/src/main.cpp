@@ -36,9 +36,9 @@ int main(/*int argc, char** argv*/)
     cout << "*** Temps de chargement des caracteristiques: " << printTempsEcoulee(t1, t2) << " ***\n\n";
     cout <<"nb threads " << thread::hardware_concurrency() << endl;
 
-    //modele.resetConfusionMatrix();
-    modele.trainByDiv3(10);
-    //modele.printConfusionMatrix("data/confusion.txt");
+    modele.resetConfusionMatrix();
+    modele.trainByDiv2(10);
+    modele.printConfusionMatrix("data/confusion.txt");
 
     t3 = chrono::system_clock::now();
     cout << "*** Temps de l'entrainement: " << printTempsEcoulee(t2, t3) << " ***\n\n";

@@ -46,7 +46,6 @@ void Model::trainAll()
 float Model::trainByDiv3(const size_t& nbDiv)
 {
     float err[nbDiv];
-    std::vector<std::vector<int>> confusion[nbDiv];
     vector<future<float> > futures;
     vector<Corpus> corpusTab;
     /*** Lancement de l'entrainement en cross validation ***/
@@ -141,7 +140,6 @@ float Model::trainByDiv3(const size_t& nbDiv)
 float Model::trainByDiv2(const size_t& nbDiv)
 {
     float err[nbDiv];
-    vector<future<float> > futures;
     /*** Lancement de l'entrainement en cross validation ***/
     for(size_t numTrain=0; numTrain<nbDiv; ++numTrain)
     {
@@ -151,11 +149,18 @@ float Model::trainByDiv2(const size_t& nbDiv)
         Corpus trainCorpus(m_languages, m_featuresDico, m_corpusList, nbDiv, numTrain);
 
         err[numTrain] = trainCorpus.train();
+
+        /** extraire la matrice de confusion **/
+        Tools::sumMatrix(m_confusionMatrix, trainCorpus.getConfusionMatrix());
+        if(printTrainConfusionMatrix)
+        {
+            stringstream s; s << "data/confusion_"<<numTrain<<".txt";
+            trainCorpus.printConfusionMatrix(s.str());
+        }
     }
 
     float errMoy = Tools::floatArrayAVG(err, nbDiv);
     cout << "Moyenne erreurs = " << errMoy << " %\n\n" ;
-
 
     /*** Sauvegarde des résultats de chaque train dans un fichier ***/
     string path = "data/history.txt";
@@ -233,17 +238,17 @@ void Model::initModel()
     /*** récupération des résultats wapiti ***/
     ifstream labeledCorpusFile("script/trainTagLine.txt", ios::in);
     ifstream labeledOcc1CorpusFile("script/occurence1TagLine.txt", ios::in);
-    //ifstream labeledOcc2CorpusFile("script/occurence2TagLine.txt", ios::in);
+    ifstream labeledOcc2CorpusFile("script/occurence2TagLine.txt", ios::in);
     //ifstream labeledOcc3CorpusFile("script/occurence3TagLine.txt", ios::in);
 
     /*** Mots et occurences ***/
     ifstream wordOcc1CorpusFile("script/occurence1MotLineLower.txt", ios::in);
-    //ifstream wordOcc2CorpusFile("script/occurence2MotLineLower.txt", ios::in);
+    ifstream wordOcc2CorpusFile("script/occurence2MotLineLower.txt", ios::in);
     //ifstream wordOcc3CorpusFile("script/occurence3MotLineLower.txt", ios::in);
 
     ifstream corpusFile(m_trainPath, ios::in);
-    if(!corpusFile || !labeledCorpusFile || !labeledOcc1CorpusFile/* || !labeledOcc2CorpusFile
-        || !labeledOcc3CorpusFile*/ || !wordOcc1CorpusFile/* || !wordOcc2CorpusFile || !wordOcc3CorpusFile*/)
+    if(!corpusFile || !labeledCorpusFile || !labeledOcc1CorpusFile || !labeledOcc2CorpusFile
+        /*|| !labeledOcc3CorpusFile*/ || !wordOcc1CorpusFile || !wordOcc2CorpusFile /*|| !wordOcc3CorpusFile*/)
     {
        cerr << "Impossible d'ouvrir un des fichiers !" << endl;
        throw -1;
@@ -269,12 +274,12 @@ void Model::initModel()
         bool b0 = getline(corpusFile, line);
         bool b1 = getline(labeledCorpusFile, labeledLine);
         bool b2 = getline(labeledOcc1CorpusFile, labeledOcc1Line);
-        //bool b3 = getline(labeledOcc2CorpusFile, labeledOcc2Line);
+        bool b3 = getline(labeledOcc2CorpusFile, labeledOcc2Line);
         //bool b4 = getline(labeledOcc3CorpusFile, labeledOcc3Line);
         bool b5 = getline(wordOcc1CorpusFile, wordOcc1Line);
-        //bool b6 = getline(wordOcc2CorpusFile, wordOcc2Line);
+        bool b6 = getline(wordOcc2CorpusFile, wordOcc2Line);
         //bool b7 = getline(wordOcc3CorpusFile, wordOcc3Line);
-        while (b0 && b1 && b2/* && b3 && b4*/ && b5/* && b6 && b7*/)
+        while (b0 && b1 && b2 && b3/* && b4*/ && b5 && b6/* && b7*/)
         {
             try
             {
@@ -293,10 +298,10 @@ void Model::initModel()
             b0 = getline(corpusFile, line);
             b1 = getline(labeledCorpusFile, labeledLine);
             b2 = getline(labeledOcc1CorpusFile, labeledOcc1Line);
-            //b3 = getline(labeledOcc2CorpusFile, labeledOcc2Line);
+            b3 = getline(labeledOcc2CorpusFile, labeledOcc2Line);
             //b4 = getline(labeledOcc3CorpusFile, labeledOcc3Line);
             b5 = getline(wordOcc1CorpusFile, wordOcc1Line);
-            //b6 = getline(wordOcc2CorpusFile, wordOcc2Line);
+            b6 = getline(wordOcc2CorpusFile, wordOcc2Line);
             //b7 = getline(wordOcc3CorpusFile, wordOcc3Line);
         }
         corpusFile.close();
