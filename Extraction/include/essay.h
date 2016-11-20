@@ -73,7 +73,7 @@ class Essay
         std::vector<std::string> m_wordsList;
         std::vector<std::string> m_labelsList;
         std::map<std::string, int> m_wordsMap;
-        std::map<std::string, int> m_labelsMap;
+        std::map<std::string, float> m_labelsMap;
         std::string m_lang;
         std::string m_level;
         unsigned int m_nbFinishING;

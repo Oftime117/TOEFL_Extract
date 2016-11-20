@@ -91,7 +91,7 @@ const float Essay::AVG_OR[2] = {0.000558729, 0.009689773};
 const float Essay::AVG_ON[2] = {0.000522994, 0.00918971};
 const float Essay::AVG_BUT[2] = {0.000901355, 0.008407619};
 const float Essay::AVG_IF[2] = {0.000129629, 0.008491207};
-const float Essay::AVG_LIFE[2] = {0, 0,011099005};
+const float Essay::AVG_LIFE[2] = {0, 0.011099005};
 const float Essay::AVG_THAN[2] = {0.000156779, 0.008208611};
 const float Essay::AVG_ONE[2] = {0, 0.009036869};
 const float Essay::AVG_YOUNG[2] = {0, 0.011784698};
@@ -676,7 +676,7 @@ void Essay::splitLabelsOcc1(const char& delim, map<string, int>& dic, const stri
         int buff1; s_occurence >> buff1;
         string buff2 = item;
         Tools::addIfAbsent(dic, "ORDRE_L1_" + buff2);
-        m_labelsMap.emplace(buff2, buff1);
+        m_labelsMap.emplace(buff2, (float) buff1/ (float) m_wordsList.size());
     }
 }
 
@@ -694,7 +694,7 @@ void Essay::splitLabelsOcc2(const char& delim, map<string, int>& dic, const stri
         string buff2 = item1;
         string buff3 = item2;
         Tools::addIfAbsent(dic, "ORDRE_L2_" + buff2 + "_" + buff3);
-        m_labelsMap.emplace(buff2 + "_" + buff3, buff1);
+        m_labelsMap.emplace(buff2 + "_" + buff3, (float) buff1/ (float) m_wordsList.size());
     }
 }
 
@@ -713,7 +713,7 @@ void Essay::splitLabelsOcc3(const char& delim, map<string, int>& dic, const stri
         string buff3 = item2;
         string buff4 = item3;
         Tools::addIfAbsent(dic, "ORDRE_L3_" + buff2 + "_" + buff3 + "_" + buff4);
-        m_labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, buff1);
+        m_labelsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, (float) buff1/ (float) m_wordsList.size());
     }
 }
 
@@ -730,7 +730,7 @@ void Essay::splitWordsOcc1(const char& delim, map<string, int>& dic, const strin
         int buff1; s_occurence >> buff1;
         string buff2 = item;
         Tools::addIfAbsent(dic, "ORDRE_W1_" + buff2);
-        m_wordsMap.emplace(buff2, buff1);
+        m_wordsMap.emplace(buff2, (float) buff1/ (float) m_wordsList.size());
     }
 }
 
@@ -748,7 +748,7 @@ void Essay::splitWordsOcc2(const char& delim, map<string, int>& dic, const strin
         string buff2 = item1;
         string buff3 = item2;
         Tools::addIfAbsent(dic, "ORDRE_W2_" + buff2 + "_" + buff3);
-        m_wordsMap.emplace(buff2 + "_" + buff3, buff1);
+        m_wordsMap.emplace(buff2 + "_" + buff3, (float) buff1/ (float) m_wordsList.size());
     }
 }
 
@@ -767,7 +767,7 @@ void Essay::splitWordsOcc3(const char& delim, map<string, int>& dic, const strin
         string buff3 = item2;
         string buff4 = item3;
         Tools::addIfAbsent(dic, "ORDRE_W3_" + buff2 + "_" + buff3 + "_" + buff4);
-        m_wordsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, buff1);
+        m_wordsMap.emplace(buff2 + "_" + buff3 + "_" + buff4, (float) buff1/ (float)m_wordsList.size());
     }
 }
 
