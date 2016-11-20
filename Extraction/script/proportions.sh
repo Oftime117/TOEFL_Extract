@@ -3,7 +3,7 @@
 
 declare -A proportion
 
-> proportion1MotListLower.txt
+> proportion1TagList.txt
 
 SC=9
 numtext=1
@@ -14,16 +14,16 @@ do
 		
 	if [ -z "$newline" ]; then # texte suivant
 		let "numtext = numtext + 1"
-		echo "" >> proportion1MotListLower.txt
+		echo "" >> proportion1TagList.txt
 		nbMotsTexte=`sed -n "$numtext p" nbMotTexte.txt`
 	else
 		valeur=`echo "${newline}" | cut -d" " -f 1`
 		type=`echo "${newline}" | cut -d" " -f 2`
 		if [ "$type" != "$valeur" ]; then
-			echo "`echo "scale=$SC; $valeur/$nbMotsTexte" | bc` $type" >> proportion1MotListLower.txt
+			echo "`echo "scale=$SC; $valeur/$nbMotsTexte" | bc` $type" >> proportion1TagList.txt
 		else
-			echo $newline >> proportion1MotListLower.txt
+			echo $newline >> proportion1TagList.txt
 		fi
 	fi
 		
-done < occurence1MotListLower.txt
+done < occurence1TagList.txt

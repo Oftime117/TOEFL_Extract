@@ -1,12 +1,15 @@
 #!/bin/bash
 # Florian TALOUR & Tristan LE NAIR
-#input1=$1 # la liste des groupes des 1 à utiliser genre trainTagList.txt ou list1
+#input1=$1 # la liste des groupes des 1 à utiliser genre trainMotList.txt ou list1
 #input2=$2 # la liste des groupes de 1 à utiliser avec les occurences par texte
 #output=$3 # le nom du fichier de sortie
 
 if [ "$1" -eq "1" ]; then # supprimer tout
 	rm sommeMot.txt valeurs-mots-moyenneGroupe1.txt valeurs.txt types.txt mots-sum2-valeursGroupe1.txt proportion1MotListSansLangue.txt mots-sum2-valeursGroupe1_temp.txt 
+elif [ "$1" -eq "2" ]; then # supprimer tout
+	rm valeurs-mots-moyenneGroupe1.txt valeurs.txt types.txt mots-sum2-valeursGroupe1.txt proportion1MotListSansLangue.txt mots-sum2-valeursGroupe1_temp.txt 
 fi
+
 
 ########################
 # calcul de la moyenne #
@@ -14,8 +17,8 @@ fi
 
 # créaction des fichiers des moyennes
 if [ ! -f "sommeMot.txt" ] ; then
-	sed -i '/^(/d' trainMotListLower.txt	# supprime la langue
-	sort trainMotListLower.txt | uniq -c | sort -bnr > sommeMot.txt
+	sed -i '/^(/d' trainMotList.txt	# supprime la langue
+	sort trainMotList.txt | uniq -c | sort -bnr > sommeMot.txt
 	sed -i 's/^\ \ *//' sommeMot.txt	# supprime les multiples espaces
 	sed -i '0,/^\ /s///' sommeMot.txt	# supprime l'espace en début de ligne
 	
@@ -75,7 +78,7 @@ declare -A sdev # ecart type
 
 if [ ! -f "mots-sum2-valeursGroupe1.txt" ] ; then
 
-	cp proportion1MotListLower.txt proportion1MotListSansLangue.txt
+	cp proportion1MotList.txt proportion1MotListSansLangue.txt
 
 	sed -i '/^(/d' proportion1MotListSansLangue.txt 			# supprime la langue
 	sed -i 's/^\ \ *//' proportion1MotListSansLangue.txt 	# supprime les multiples espaces
@@ -175,9 +178,9 @@ do
 	type=`echo "${newline}" | cut -d" " -f 2`
 	
 	# calcul de l'ecart type
-	sdev["$type"]=$(echo "scale=$SC; sqrt(${sum2["$type"]} / ${valeurs["$type"]} )" | bc) # racine carré de la moyenne
+	sdev["$type"]=$(echo "scale=$SC; sqrt(${sum2["$type"]} / 9900 )" | bc) # racine carré de la moyenne
 
-	echo "sqrt( sum2[$type] / n) = sqrt( ${sum2["$type"]} / ${valeurs["$type"]} ) = ${sdev["$type"]} < ${moyenne["$type"]}"
+	echo "sqrt( sum2[$type] / n) = sqrt( ${sum2["$type"]} / 9900 ) = ${sdev["$type"]} < ${moyenne["$type"]}"
 
 	# création du fichier à lire en c++
 	echo "$type ${sdev["$type"]}" >> mots-sdevGroupe1.txt
@@ -185,7 +188,3 @@ do
 done < valeurs-mots-moyenneGroupe1.txt
 
 echo "Le programme a terminé"
-
-
-
-
