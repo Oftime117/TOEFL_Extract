@@ -13,11 +13,14 @@ grep "(" $datatrainLoc | cut -d " " -f -1 > listLanguage
 # initialisation
 
 > temp1.txt
+> nbMotTexte.txt
 
 while read newline ;
 do
 
 	if [ -z "$newline" ]; then # on passe au texte suivant (la ligne est vide)
+		cat temp1.txt | wc -l >> nbMotTexte.txt # compte le nombre de mots dans le texte
+	
 		# traitement à la vollée
 		sed -n "$numline p" listLanguage >> $outfile # ajout de la langue qui correspond au groupe
 		let "numline = numline + 1"

@@ -29,7 +29,7 @@ declare -A moyenne
 declare -A valeurs
 
 SC=9 # on prend 9 chiffres après la virgule
-n=9900 # nombre de ligne dans ..data/train/train.txt
+n=`cat trainMotList.txt | sed "/^$/d" | wc -l` # nombre total de mots dans trainMotList.txt
 
 if [ ! -f valeurs-mots-moyenneGroupe1.txt ] ; then
 	> valeurs-mots-moyenneGroupe1.txt
@@ -37,7 +37,7 @@ if [ ! -f valeurs-mots-moyenneGroupe1.txt ] ; then
 	while read newline ;
 	do
 		valeur=`echo "${newline}" | cut -d" " -f 1`
-		if [ "$valeur" -ge "$n" ]; then 
+		if [ "$valeur" -ge "9900" ]; then 
 			type=`echo "${newline}" | cut -d" " -f 2`
 			if [ ! "$type" ] ; then
 				echo "pas de type pour la valeur: $valeur"
@@ -71,19 +71,19 @@ declare -A sdev # ecart type
 
 if [ ! -f "mots-sum2-valeursGroupe1.txt" ] ; then
 
-	cp occurence1MotListLower.txt occurence1MotListSansLangue
+	cp proportion1MotListLower.txt proportion1MotListSansLangue
 
-	sed -i '/^(/d' occurence1MotListSansLangue 			# supprime la langue
-	sed -i 's/^\ \ *//' occurence1MotListSansLangue 	# supprime les multiples espaces
-	sed -i '0,/^\ /s///' occurence1MotListSansLangue 	# supprime l'espace en début de ligne
-	sed -i '/^$/d' occurence1MotListSansLangue 			# supprime les lignes vides
+	sed -i '/^(/d' proportion1MotListSansLangue 			# supprime la langue
+	sed -i 's/^\ \ *//' proportion1MotListSansLangue 	# supprime les multiples espaces
+	sed -i '0,/^\ /s///' proportion1MotListSansLangue 	# supprime l'espace en début de ligne
+	sed -i '/^$/d' proportion1MotListSansLangue 			# supprime les lignes vides
 	
-	> occurence1MotListSansLangue_temp
+	> proportion1MotListSansLangue_temp
 	
 	while read newline ;
 	do
 		type=`echo "${newline}" | cut -d" " -f 2`
-		grep " $type$" occurence1MotListSansLangue >> occurence1MotListSansLangue_temp
+		grep " $type$" proportion1MotListSansLangue >> proportion1MotListSansLangue_temp
 	done < valeurs-mots-moyenneGroupe1.txt
 
 	> mots-sum2-valeursGroupe1_temp.txt
@@ -115,7 +115,7 @@ if [ ! -f "mots-sum2-valeursGroupe1.txt" ] ; then
 			sum2["$type"]=$(echo "scale=$SC; ${sum2["$type"]} + (${moyenne["$type"]} - $valeur) * (${moyenne["$type"]} - $valeur)" | bc)
 			echo "$type ${sum2["$type"]} $valeur" >> mots-sum2-valeursGroupe1_temp.txt
 
-	done < occurence1MotListSansLangue_temp
+	done < proportion1MotListSansLangue_temp
 
 	echo "Fin du calcul de la somme des carrés des différences"
 	
@@ -129,7 +129,7 @@ if [ ! -f "mots-sum2-valeursGroupe1.txt" ] ; then
 		echo "$type ${sum2["$type"]} ${valeurs["$type"]}" >> mots-sum2-valeursGroupe1.txt
 	done < valeurs-mots-moyenneGroupe1.txt
 	
-	# rm occurence1MotListSansLangue_temp
+	# rm proportion1MotListSansLangue_temp
 elif [ -f "mots-sum2-valeursGroupe1.txt" ]; then
 
 ########################################
@@ -171,9 +171,9 @@ do
 	type=`echo "${newline}" | cut -d" " -f 2`
 	
 	# calcul de l'ecart type
-	sdev["$type"]=$(echo "scale=$SC; sqrt(${sum2["$type"]} / ${valeurs["$type"]} )" | bc) # racine carré de la moyenne
+	sdev["$type"]=$(echo "scale=$SC; sqrt(${sum2["$type"]} / $n )" | bc) # racine carré de la moyenne
 
-	echo "sqrt( sum2[$type] / n) = sqrt( ${sum2["$type"]} / ${valeurs["$type"]} ) = ${sdev["$type"]} < ${moyenne["$type"]}"
+	echo "sqrt( sum2[$type] / n) = sqrt( ${sum2["$type"]} / $n ) = ${sdev["$type"]} < ${moyenne["$type"]}"
 
 	# création du fichier à lire en c++
 	echo "$type ${sdev["$type"]}" >> mots-sdevGroupe1
