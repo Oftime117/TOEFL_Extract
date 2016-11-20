@@ -8,8 +8,6 @@ DEBUG=-g
 CFLAGS=-Wall -c $(DEBUG) -I$(IDIR) 
 LFLAGS=-Wall $(DEBUG)
 
-
-
 LIBS=-lpthread -pthread # additionnal libraries
 
 _DEPS = corpus.h essay.h model.h tools.h
